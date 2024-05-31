@@ -1,7 +1,7 @@
 import React from 'react';
 import { Route, Routes } from 'react-router-dom';
 
-function MainRoute(props) {
+function AdminRoute(props) {
     return (
         <>
             <Routes>
@@ -16,4 +16,4 @@ function MainRoute(props) {
     );
 }
 
-export default MainRoute;
+export default AdminRoute;

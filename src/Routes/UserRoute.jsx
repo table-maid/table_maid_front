@@ -1,6 +1,6 @@
 import React from 'react'
 
-function AuthRoute() {
+function UserRoute() {
     return (
         <div>
         
@@ -8,4 +8,4 @@ function AuthRoute() {
     )
 }
 
-export default AuthRoute
+export default UserRoute
