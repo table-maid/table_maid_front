@@ -6,8 +6,9 @@ export const layout = css`
   display: flex;
   align-items: center;
   justify-content: center;
+  overflow: hidden;
 
-  width: 1020px;
+  width: 1366px;
   height: 800px;
 
   margin: 30px 0;

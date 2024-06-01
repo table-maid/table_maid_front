@@ -8,6 +8,8 @@ export const background = css`
     width: 100%;
     height: 100%;
     background: #dadada;
+
+    
 `
 
 export const layout = css`
