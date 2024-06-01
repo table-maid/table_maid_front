@@ -17,11 +17,11 @@ function App() {
                     </AdminRootContainer>
                 </AdminRootLayout>
 
-                <UserRootLayout>
+                {/* <UserRootLayout>
                     <UserRootContainer>
                         <UserRoute/>
                     </UserRootContainer>
-                </UserRootLayout>
+                </UserRootLayout> */}
             </BackgroundLayout>
         </>
     );

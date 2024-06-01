@@ -6,12 +6,12 @@ export const background = css`
     left: 0px;
     z-index: -999;
     width: 100%;
-    height: 100%;
+    height: 800px;
     background: #dadada;
 `
 
 export const layout = css`
-    display: flex;
+    /* display: flex;
     justify-content: center;
-    align-items: center;
+    align-items: center; */
 `
