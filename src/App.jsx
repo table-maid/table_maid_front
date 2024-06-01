@@ -8,13 +8,14 @@ import AdminRootContainer from "./components/RooutContainer/AdminRootContainer/A
 import UserRootContainer from "./components/RooutContainer/UserRootContainer/UserRootContainer";
 
 function App() {
+  
   return (
     <>
       <BackgroundLayout>
         <AdminRootLayout>
-          <AdminRootContainer>
+          {/* <AdminRootContainer> */}
             <AdminRoute />
-          </AdminRootContainer>
+          {/* </AdminRootContainer> */}
         </AdminRootLayout>
 
         <UserRootLayout>

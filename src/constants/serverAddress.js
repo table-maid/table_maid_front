@@ -3,5 +3,5 @@ const DEPLOY_ADDRESS = '탄력적IP';
 
 
 export default function getServerAddress() {
-    return null;
+    return LOCAL_ADDRESS;
 }
