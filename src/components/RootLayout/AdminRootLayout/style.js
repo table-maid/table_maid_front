@@ -19,7 +19,7 @@ export const layout = css`
 export const container = css`
   width: 99%;
   height: 98%;
-  border-radius: 40px;
+  border-radius: 35px;
 
   background-color: white;
 `;
