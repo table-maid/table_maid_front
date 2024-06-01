@@ -1,7 +1,6 @@
 import { css } from "@emotion/react";
 
 export const layout = css`
-  border: 2px solid white;
   box-sizing: border-box;
   display: flex;
   align-items: center;
@@ -18,9 +17,9 @@ export const layout = css`
 `;
 
 export const container = css`
-  width: 95%;
-  height: 95%;
-  border-radius: 20px;
+  width: 99%;
+  height: 98%;
+  border-radius: 40px;
 
   background-color: white;
 `;
