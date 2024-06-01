@@ -1,30 +1,30 @@
-import './App.css';
-import AdminRoute from './Routes/AdminRoute';
-import UserRoute from './Routes/UserRoute';
-import BackgroundLayout from './components/BackgroundLayout/BackgroundLayout';
-import AdminRootLayout from './components/RootLayout/AdminRootLayout';
-import UserRootLayout from './components/RootLayout/UserRootLayout';
-import AdminRootContainer from './components/RooutContainer/AdminRootContainer'
-import UserRootContainer from './components/RooutContainer/UserRootContainer'
+import "./App.css";
+import AdminRoute from "./Routes/AdminRoute";
+import UserRoute from "./Routes/UserRoute";
+import BackgroundLayout from "./components/BackgroundLayout/BackgroundLayout";
+import AdminRootLayout from "./components/RootLayout/AdminRootLayout/AdminRootLayout";
+import UserRootLayout from "./components/RootLayout/UserRootLayout/UserRootLayout";
+import AdminRootContainer from "./components/RooutContainer/AdminRootContainer/AdminRootContainer";
+import UserRootContainer from "./components/RooutContainer/UserRootContainer/UserRootContainer";
 
 function App() {
-    return (
-        <>
-            <BackgroundLayout>
-                <AdminRootLayout>
-                    <AdminRootContainer>
-                        <AdminRoute/>
-                    </AdminRootContainer>
-                </AdminRootLayout>
+  return (
+    <>
+      <BackgroundLayout>
+        <AdminRootLayout>
+          <AdminRootContainer>
+            <AdminRoute />
+          </AdminRootContainer>
+        </AdminRootLayout>
 
-                <UserRootLayout>
-                    <UserRootContainer>
-                        <UserRoute/>
-                    </UserRootContainer>
-                </UserRootLayout>
-            </BackgroundLayout>
-        </>
-    );
+        <UserRootLayout>
+          <UserRootContainer>
+            <UserRoute />
+          </UserRootContainer>
+        </UserRootLayout>
+      </BackgroundLayout>
+    </>
+  );
 }
 
 export default App;
