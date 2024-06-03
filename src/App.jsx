@@ -1,5 +1,6 @@
 import "./App.css";
 import AdminRoute from "./Routes/AdminRoute";
+import MenuRoute from "./Routes/MenuRoute";
 import UserRoute from "./Routes/UserRoute";
 import BackgroundLayout from "./components/BackgroundLayout/BackgroundLayout";
 import AdminRootLayout from "./components/RootLayout/AdminRootLayout/AdminRootLayout";
@@ -12,9 +13,10 @@ function App() {
     <>
       <BackgroundLayout>
         <AdminRootLayout>
-          <AdminRootContainer>
+          {/* <AdminRootContainer> */}
             <AdminRoute />
-          </AdminRootContainer>
+            <MenuRoute />
+          {/* </AdminRootContainer> */}
         </AdminRootLayout>
 
         <UserRootLayout>
