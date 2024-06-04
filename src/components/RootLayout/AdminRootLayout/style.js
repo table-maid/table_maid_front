@@ -12,14 +12,13 @@ export const layout = css`
 
   margin: 30px 0;
   border-radius: 40px;
-
   background-color: black;
 `;
 
 export const container = css`
   width: 99%;
   height: 98%;
-  border-radius: 40px;
+  border-radius: 35px;
 
   background-color: white;
 `;
