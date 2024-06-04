@@ -1,11 +1,14 @@
-import React from 'react'
+/** @jsxImportSource @emotion/react */
+import * as s from "./style";
 
-function UserRootLayout() {
+function UserRootLayout({ children }) {
   return (
-    <div>
-      
-    </div>
-  )
+    <>
+      <div css={s.layout}>
+        <div css={s.container}>{children}</div>
+      </div>
+    </>
+  );
 }
 
-export default UserRootLayout
+export default UserRootLayout;
