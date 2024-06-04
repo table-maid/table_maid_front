@@ -12,7 +12,6 @@ export const layout = css`
 
   margin: 30px 0;
   border-radius: 40px;
-
   background-color: black;
 `;
 
