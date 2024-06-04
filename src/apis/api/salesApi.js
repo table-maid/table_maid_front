@@ -1,5 +1,5 @@
-import { instance } from "../utils/instance";
+import instansce  from "../utils/instance";
 
 export const getSalesRequest = async () => {
-    return await instance.get("/admin/sales");
+    return await instansce.get("/sales/menu");
 };
