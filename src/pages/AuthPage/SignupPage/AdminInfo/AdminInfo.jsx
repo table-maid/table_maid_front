@@ -6,6 +6,7 @@ import AuthPageInput from '../../../../components/AuthPage/AuthPageInput/AuthPag
 import { useInput } from '../../../../hooks/useInput';
 import { signupRequest } from "../../../../apis/api/signup";
 
+
 function AdminInfo() {
     const [username, userNameChange, usernameMessage, setUsernameValue, setUsernameMessage] = useInput("username");
     const [name, nameChange, nameMessage] = useInput("name");
@@ -13,6 +14,13 @@ function AdminInfo() {
     const [checkPassword, checkPasswordChange] = useInput("checkPassword");
     const [checkPasswordMessage, setCheckPasswordMessage] = useState(null);
     const [email, emailChange, emailMessage] = useInput("email");
+    const [companyNumberST, companyNumberChange, companyNumberMessage] = useInput("companyNumber");
+    const [companyName, companyNameChange, companyNameMessage] = useInput("companyName");
+    const [ownerName, ownerNameChange, ownerNameMessage] = useInput("ownerName");
+    const [companyAddress, companyAddressChange, companyAddressMessage] = useInput("companyAddress");
+
+
+    const [isStoreInfo, setIsStoreInfo] = useState(false);
 
     useEffect(() => {
         if (!checkPassword || !password) {
@@ -37,7 +45,7 @@ function AdminInfo() {
         }
     }, [checkPassword, password]);
 
-    const handleSignupSubmit = () => {
+    const isOpenStroeInfo = () => {
         const checkFlags = [
             usernameMessage?.type,
             passwordMessage?.type,
@@ -51,11 +59,36 @@ function AdminInfo() {
             return;
         }
 
+        setIsStoreInfo(true);
+    }
+
+
+
+
+    const handleSignupSubmit = () => {
+        const checkFlags = [
+            companyNumberMessage?.type,
+            companyNameMessage?.type,
+            ownerNameMessage?.type,
+            companyAddressMessage?.type,
+        ];
+
+        if (checkFlags.includes("error") || checkFlags.includes(undefined) || checkFlags.includes(null)) {
+            alert("매장 정보를 다시 확인하세요.");
+            return;
+        }
+
+        let companyNumber = parseInt(companyNumberST);
+
         signupRequest({
             username,
             name,
             password,
             email,
+            companyNumber,
+            companyName,
+            ownerName,
+            companyAddress
         })
         .then((response) => {
             console.log(response);
@@ -93,51 +126,108 @@ function AdminInfo() {
                 <div>
                     <h1>회원가입</h1>
                 </div>
-                <div>
-                    <AuthPageInput
-                        type={"text"}
-                        name={"name"}
-                        placeholder={"성명"}
-                        value={name}
-                        onChange={nameChange}
-                        message={nameMessage}
-                    />
-                    <AuthPageInput
-                        type={"text"}
-                        name={"username"}
-                        placeholder={"아이디"}
-                        value={username}
-                        onChange={userNameChange}
-                        message={usernameMessage}
-                    />
-                    <AuthPageInput
-                        type={"password"}
-                        name={"password"}
-                        placeholder={"비밀번호"}
-                        value={password}
-                        onChange={passwordChange}
-                        message={passwordMessage}
-                    />
-                    <AuthPageInput
-                        type={"password"}
-                        name={"checkPassword"}
-                        placeholder={"비밀번호 확인"}
-                        value={checkPassword}
-                        onChange={checkPasswordChange}
-                        message={checkPasswordMessage}
-                    />
-                    <AuthPageInput
-                        type={"text"}
-                        name={"email"}
-                        placeholder={"이메일"}
-                        value={email}
-                        onChange={emailChange}
-                        message={emailMessage}
-                    />
-                </div>
-                <button css={s.signinButton} onClick={handleSignupSubmit}>
-                    가입하기
-                </button>
+                {
+                    !isStoreInfo === true
+                    ?
+                    <>
+                        <div>
+                        <AuthPageInput
+                            type={"text"}
+                            name={"name"}
+                            placeholder={"성명"}
+                            value={name}
+                            onChange={nameChange}
+                            message={nameMessage}
+                        />
+                        <AuthPageInput
+                            type={"text"}
+                            name={"username"}
+                            placeholder={"아이디"}
+                            value={username}
+                            onChange={userNameChange}
+                            message={usernameMessage}
+                        />
+                        <AuthPageInput
+                            type={"password"}
+                            name={"password"}
+                            placeholder={"비밀번호"}
+                            value={password}
+                            onChange={passwordChange}
+                            message={passwordMessage}
+                        />
+                        <AuthPageInput
+                            type={"password"}
+                            name={"checkPassword"}
+                            placeholder={"비밀번호 확인"}
+                            value={checkPassword}
+                            onChange={checkPasswordChange}
+                            message={checkPasswordMessage}
+                        />
+                        <AuthPageInput
+                            type={"text"}
+                            name={"email"}
+                            placeholder={"이메일"}
+                            value={email}
+                            onChange={emailChange}
+                            message={emailMessage}
+                        />
+                        </div>
+
+                        <button css={s.signinButton} onClick={isOpenStroeInfo}>
+                            다음
+                        </button>
+                    </>
+
+                    :
+
+                    <>
+                        <AuthPageInput
+                            type={"number"}
+                            name={"companyNumber"}
+                            placeholder={"사업자등록번호"}
+                            value={companyNumberST}
+                            onChange={companyNumberChange}
+                            message={companyNumberMessage}
+                        />
+                        <AuthPageInput
+                            type={"text"}
+                            name={"companyName"}
+                            placeholder={"매장명"}
+                            value={companyName}
+                            onChange={companyNameChange}
+                            message={companyNameMessage}
+                        />
+                        <AuthPageInput
+                            type={"text"}
+                            name={"ownerName"}
+                            placeholder={"대표자명"}
+                            value={ownerName}
+                            onChange={ownerNameChange}
+                            message={ownerNameMessage}
+                        />
+                        <AuthPageInput
+                            type={"text"}
+                            name={"companyAddress"}
+                            placeholder={"사업장 주소"}
+                            value={companyAddress}
+                            onChange={companyAddressChange}
+                            message={companyAddressMessage}
+                        />
+                        
+
+
+
+                        <button css={s.signinButton} onClick={handleSignupSubmit}>
+                            회원가입하기
+                        </button>
+                    </>
+
+
+
+                }
+                
+
+
             </div>
         </div>
     )
