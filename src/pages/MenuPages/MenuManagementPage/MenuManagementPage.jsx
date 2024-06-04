@@ -1,86 +1,59 @@
 /** @jsxImportSource @emotion/react */
-import { searchCategoryRequest, searchMenuRequest, searchOptionRequest } from "../../../apis/api/menuManagentApi";
+import useCategory from "../../../hooks/useCategory";
+import useGetMenus from "../../../hooks/useGetMenu";
+import useGetOption from "../../../hooks/useGetOption";
 import * as s from "./style";
-
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 
 function MenuManagementPage(props) {
-    const [category, setCategory] = useState([]);
-    const [menu, setMenu] = useState([]);
     const [adminId, setAdminId] = useState(1);
-    const [option, setOption] = useState();
+    const { categories, error: categoriesError } = useCategory(adminId);
+    const [ categoryId, setCategoryId ] = useState(0);
+    const { menus, error: menusError, uniqueMenuCategoryNames } = useGetMenus(adminId, categoryId);
+    const { options, error: optionsError } = useGetOption(adminId, 2);
 
-    useEffect(() => {
-        getCategories();
-        getMenus();
-        getOptions();
-    }, [])
-
-    const getCategories = async() => {
-        try {
-            const params = {
-                adminId: 1
-            }
-            const response = await searchCategoryRequest(params)
-            setCategory(response.data)
-            console.log(response.data)
-        } catch (error) {
-            console.log("에러", error);
-        }
-    } 
-
-    const getMenus = async() => {
-        try {
-            const params = {
-                adminId: 1,
-                menuCategoryId: 1
-            }
-            const response = await searchMenuRequest(params)
-            setMenu(response.data)
-            console.log(response.data)
-
-        } catch (error) {
-            console.log("에러", error);
-            
-        }
-    }
-    const getOptions = async() => {
-        try {
-            const params = {
-                adminId: 1,
-                optionMenuId: 2
-            }
-            const response = await searchOptionRequest(params)
-            setOption(response.data)
-            console.log(response.data)
-
-        } catch (error) {
-            console.log("에러", error);
-            
-        }
+    const menu = {
+        categoryName: uniqueMenuCategoryNames,
+        menuName:menus
     }
 
-
+    const handleCategoryId = (category) => {
+        setCategoryId(category)
+    }
 
     return (
-        <div>
-            {category.map(cat => (
-                <div key={cat.menuCategoryId}>{cat.menuCategoryName}</div>
-            ))}
-            {menu.map(menu => (
-                <div>
-                    <div key={menu.menucategoryId}>{menu.menuName}</div>
-                    <div key={menu.menucategoryId}>{menu.menuPrice}</div>
-                    <div key={menu.menucategoryId}>{menu.menuCode}</div>
+        <div css={s.layout}>
+            <div css={s.categoryLayout}>
+                {categoriesError && <div>에러가 발생했습니다: {categoriesError.message}</div>}
+                    <h3 onClick={() => handleCategoryId(0)} >전체</h3>
+                {categories.map(cat => (
+                    <div onClick={() => handleCategoryId(cat.menuCategoryId)} key={cat.menuCategoryId}>{cat.menuCategoryName}</div>
+                ))}
                 </div>
-            ))}
-            {option?.map(option => (
-                <div>
-                    <div key={option.menuId}>{option.titleName}</div>
-                    <div key={option.menuId}>{option.optionNames.map(name =><div>{name}</div>)}</div>
+                <div css={s.menuLayout}>
+                    {menu.categoryName?.map(category => (
+                        <div key={category}>
+                            <h3>{category}</h3>
+                            {menu.menuName
+                                .filter(menuItem => menuItem.menuCategoryName === category)
+                                .map(menuItem => (
+                                    <div key={menuItem.menuCode} style={{display: "flex", width: "100%", justifyContent:"space-between"}}>
+                                        <span>{menuItem.menuName}</span>
+                                        <span css={s.price}>가격: {menuItem.menuPrice}</span>
+                                    </div>
+                                ))}
+                        </div>
+                    ))}
                 </div>
-            ))}
-            <button>asdsad</button>
+            <div css={s.optionLayout}>
+                {optionsError && <div>에러가 발생했습니다: {optionsError.message}</div>}
+                {options?.map(optionItem => (
+                    <div key={optionItem.menuId}>
+                        <div>{optionItem.titleName}</div>
+                        <div>{optionItem.optionNames.map((name, index) => <div key={index}>{name}</div>)}</div>
+                    </div>
+                ))}
+            </div>            
         </div>
     );
 }
