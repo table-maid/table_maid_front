@@ -22,7 +22,6 @@ const AdminSalesChart = ({
       data: sales.map((data) => data[dataKey]),
     },
   ];
-  console.log(sales.map((data) => data[dataKey]));
 
   const options = {
     chart: {
@@ -39,10 +38,10 @@ const AdminSalesChart = ({
     },
     title: {
       text: keyName,
-      align: "left",
+      align: "center",
       style: {
         fontSize: "20px", // 제목 글씨체 크기
-        fontWeight: "bold",
+        
       },
     },
     markers: {
@@ -58,7 +57,7 @@ const AdminSalesChart = ({
       categories: sales.map((data) => getMonthName(data[monthKey])),
       labels: {
         style: {
-          fontSize: "18px", // x축 레이블 글씨체 크기
+          fontSize: "17px", // x축 레이블 글씨체 크기
         },
       },
     },
@@ -66,7 +65,7 @@ const AdminSalesChart = ({
       {
         labels: {
           style: {
-            fontSize: "20px", // y축 레이블 글씨체 크기
+            fontSize: "18px", // y축 레이블 글씨체 크기
           },
         },
       },
@@ -93,7 +92,7 @@ const AdminSalesChart = ({
         options={options}
         series={series}
         type="line"
-        height={350}
+        height={"380px"}
       />
     </div>
   );
