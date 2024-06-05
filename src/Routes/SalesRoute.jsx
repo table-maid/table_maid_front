@@ -1,10 +1,12 @@
-import React from 'react';
+import React from "react";
+import { Route, Routes } from "react-router-dom";
+import AdminSalesPage from "../pages/SalesPage/AdminSalesPage/AdminSalesPage";
 
 function SalesRoute(props) {
     return (
-        <div>
-            
-        </div>
+        <Routes>
+            <Route path="/sale" element={<AdminSalesPage />} />
+        </Routes>
     );
 }
 
