@@ -1,6 +1,6 @@
 import React from 'react'
 
-function TermsAndConditions() {
+function TACPage() {
   return (
     <div>
       
@@ -8,5 +8,5 @@ function TermsAndConditions() {
   )
 }
 
-export default TermsAndConditions
+export default TACPage;
 

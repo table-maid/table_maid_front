@@ -7,17 +7,17 @@ import { useInput } from '../../../../hooks/useInput';
 import { signupRequest } from "../../../../apis/api/signup";
 
 
-function AdminInfo() {
+function AdminInfoPage() {
+    const [adminName, adminNameChange, adminNameMessage] = useInput("adminName");
     const [username, userNameChange, usernameMessage, setUsernameValue, setUsernameMessage] = useInput("username");
-    const [name, nameChange, nameMessage] = useInput("name");
     const [password, passwordChange, passwordMessage] = useInput("password");
     const [checkPassword, checkPasswordChange] = useInput("checkPassword");
     const [checkPasswordMessage, setCheckPasswordMessage] = useState(null);
     const [email, emailChange, emailMessage] = useInput("email");
-    const [companyNumberST, companyNumberChange, companyNumberMessage] = useInput("companyNumber");
+    const [companyNumberST, companyNumberChange, companyNumberMessage, setCompanyNumberValue, setCompanyNumberMessage] = useInput("companyNumber");
     const [companyName, companyNameChange, companyNameMessage] = useInput("companyName");
     const [ownerName, ownerNameChange, ownerNameMessage] = useInput("ownerName");
-    const [companyAddress, companyAddressChange, companyAddressMessage] = useInput("companyAddress");
+    const [companyAddress, companyAddressChange, companyAddressMessage, setCompanyAddressValue, setCompanyAddressMessage] = useInput("companyAddress");
 
 
     const [isStoreInfo, setIsStoreInfo] = useState(false);
@@ -50,7 +50,7 @@ function AdminInfo() {
             usernameMessage?.type,
             passwordMessage?.type,
             checkPasswordMessage?.type,
-            nameMessage?.type,
+            adminNameMessage?.type,
             emailMessage?.type,
         ];
 
@@ -62,6 +62,9 @@ function AdminInfo() {
         setIsStoreInfo(true);
     }
 
+    const isCloseStroeInfo = () => {
+        setIsStoreInfo(false);
+    }
 
 
 
@@ -81,8 +84,8 @@ function AdminInfo() {
         let companyNumber = parseInt(companyNumberST);
 
         signupRequest({
+            adminName,
             username,
-            name,
             password,
             email,
             companyNumber,
@@ -101,6 +104,7 @@ function AdminInfo() {
             if (error.response.status === 400) {
                 const errorMap = error.response.data;
                 const errorEntries = Object.entries(errorMap);
+                console.log(errorMap);
                 for (let [k, v] of errorEntries) {
                     if (k === "username") {
                         setUsernameMessage(() => {
@@ -109,6 +113,20 @@ function AdminInfo() {
                                 text: v,
                             };
                         });
+                    } else if (k === "companyNumber") {
+                        setCompanyNumberMessage(() => {
+                            return {
+                                type: "error",
+                                text: v
+                            }
+                        })
+                    } else if (k === "companyAddress") {
+                        setCompanyAddressMessage(() => {
+                            return {
+                                type: "error",
+                                text: v
+                            }
+                        })
                     }
                 }
             } else {
@@ -133,11 +151,11 @@ function AdminInfo() {
                         <div>
                         <AuthPageInput
                             type={"text"}
-                            name={"name"}
+                            name={"adminName"}
                             placeholder={"성명"}
-                            value={name}
-                            onChange={nameChange}
-                            message={nameMessage}
+                            value={adminName}
+                            onChange={adminNameChange}
+                            message={adminNameMessage}
                         />
                         <AuthPageInput
                             type={"text"}
@@ -181,6 +199,55 @@ function AdminInfo() {
                     :
 
                     <>
+                        <div>
+                        <AuthPageInput
+                            type={"text"}
+                            name={"adminName"}
+                            placeholder={"성명"}
+                            value={adminName}
+                            onChange={adminNameChange}
+                            message={adminNameMessage}
+                            disabled
+                        />
+                        <AuthPageInput
+                            type={"text"}
+                            name={"username"}
+                            placeholder={"아이디"}
+                            value={username}
+                            onChange={userNameChange}
+                            message={usernameMessage}
+                            disabled
+                        />
+                        <AuthPageInput
+                            type={"password"}
+                            name={"password"}
+                            placeholder={"비밀번호"}
+                            value={password}
+                            onChange={passwordChange}
+                            message={passwordMessage}
+                            disabled
+                        />
+                        <AuthPageInput
+                            type={"password"}
+                            name={"checkPassword"}
+                            placeholder={"비밀번호 확인"}
+                            value={checkPassword}
+                            onChange={checkPasswordChange}
+                            message={checkPasswordMessage}
+                            disabled
+                        />
+                        <AuthPageInput
+                            type={"text"}
+                            name={"email"}
+                            placeholder={"이메일"}
+                            value={email}
+                            onChange={emailChange}
+                            message={emailMessage}
+                            disabled
+                        />
+                        </div>
+
+                        <div>
                         <AuthPageInput
                             type={"number"}
                             name={"companyNumber"}
@@ -213,9 +280,12 @@ function AdminInfo() {
                             onChange={companyAddressChange}
                             message={companyAddressMessage}
                         />
+                        </div>
                         
 
-
+                        <button css={s.signinButton} onClick={isCloseStroeInfo}>
+                            뒤로가기
+                        </button>
 
                         <button css={s.signinButton} onClick={handleSignupSubmit}>
                             회원가입하기
@@ -233,4 +303,4 @@ function AdminInfo() {
     )
 }
 
-export default AdminInfo
+export default AdminInfoPage
