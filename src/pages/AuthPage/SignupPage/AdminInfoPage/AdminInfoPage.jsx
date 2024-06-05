@@ -1,6 +1,5 @@
 /** @jsxImportSource @emotion/react */
 import * as s from "./style";
-
 import { useEffect, useState } from 'react'
 import AuthPageInput from '../../../../components/AuthPage/AuthPageInput/AuthPageInput'
 import { useInput } from '../../../../hooks/useInput';
