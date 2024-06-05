@@ -1,8 +1,7 @@
 import React from 'react'
-import TermsAndConditions from './TermsAndConditions/TermsAndConditions'
-import AdminInfo from './AdminInfo/AdminInfo'
+import TermsAndConditions from './TACPage/TACPage'
+import AdminInfo from './AdminInfoPage/AdminInfoPage'
 import { Route, Routes } from 'react-router-dom'
-import StoreInfo from './StoreInfo/StoreInfo'
 
 function SignupPage() {
     return (
@@ -10,7 +9,6 @@ function SignupPage() {
             <Routes>
                 <Route path='/TAC' element={<TermsAndConditions/>} />
                 <Route path='/adminInfo' element={<AdminInfo/>} />
-                <Route path='/storeInfo' element={<StoreInfo/>} />
             </Routes>
         </>
     )
