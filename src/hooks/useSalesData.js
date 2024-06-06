@@ -1,31 +1,39 @@
 import { useEffect, useState } from "react";
 
 const useSalesData = (selectSalesData) => {
-  const [oneweek, setOneweek] = useState([]);
+  const [data, setData] = useState({
+    oneWeekData: [],
+    lastMonthData: []
+  });
 
   useEffect(() => {
     try {
-      const today = new Date();
-      const todayMonth = today.getMonth() + 1;
+      const now = new Date();
+      const sevenDaysAgo = new Date();
+      sevenDaysAgo.setDate(now.getDate() - 7);
 
-      const weekData = selectSalesData.filter((item) => {
-        if (todayMonth === item.month) {
-          return item.day >= today.getDate() - 7 && item.day <= today.getDate();
-        } else {
-          return (
-            (item.month === todayMonth - 1 && item.day >= today.getDate()) ||
-            (item.month === todayMonth && item.day <= today.getDate())
-          );
-        }
+      const lastMonth = now.getMonth() === 0 ? 12 : now.getMonth();
+      const lastYear = now.getMonth() === 0 ? now.getFullYear() - 1 : now.getFullYear();
+
+      const oneWeekData = selectSalesData.filter((item) => {
+        const saleDate = new Date(item.year, item.month - 1, item.day);
+        return saleDate >= sevenDaysAgo && saleDate <= now;
       });
 
-      setOneweek(weekData);
+      const lastMonthData = selectSalesData.filter((item) => {
+        return item.year === lastYear && item.month === (now.getMonth() === 0 ? 12 : now.getMonth());
+      });
+
+      setData({
+        oneWeekData,
+        lastMonthData
+      });
     } catch (error) {
       console.log("에러", error);
     }
   }, [selectSalesData]);
 
-  return oneweek;
+  return data;
 };
 
 export default useSalesData;

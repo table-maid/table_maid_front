@@ -17,8 +17,10 @@ function AdminSalesPage(props) {
   const [selectSalesData, setSelectSalesData] = useState([]);
   const [showWeekData, setShowWeekData] = useState(false);
   const [showMonthData, setShowMonthData] = useState(false);
+  const [startDate, setStartDate] = useState(new Date());
+  const [endDate, setEndDate] = useState(new Date());
 
-  useEffect(() => {
+  useEffect(() => { // 달별 총 매출
     setSalesData(() =>
       sales.map((data) => ({
         totalSales: data.totalSales,
@@ -27,9 +29,9 @@ function AdminSalesPage(props) {
     );
   }, [sales]);
 
-  const oneweek = useSalesData(selectSalesData);
+  const { oneWeekData, lastMonthData } = useSalesData(selectSalesData);
 
-  const salesQuery = useQuery(["salesQuery"], getSalesRequest, {
+  const salesQuery = useQuery(["salesQuery"], getSalesRequest, { // 총 매출
     retry: 0,
     refetchOnWindowFocus: false,
     onSuccess: (response) => {
@@ -41,7 +43,7 @@ function AdminSalesPage(props) {
     },
   });
 
-  const selectSalesQuery = useQuery(
+  const selectSalesQuery = useQuery( // 판매 전체 조회
     ["selectSalesQuery"],
     getSelectSalesRequest,
     {
@@ -96,12 +98,19 @@ function AdminSalesPage(props) {
               </div>
             </div>
             <div css={s.calender}>
-              <Calendar />
+              <Calendar
+                selectedDate={startDate}
+                setSelectedDate={setStartDate}
+              />
+              <Calendar 
+              selectedDate={endDate} 
+              setSelectedDate={setEndDate} />
+              <button disabled={startDate > endDate}>검색</button>
             </div>
           </div>
           <div css={s.list}>
-            {showWeekData && <SalesList salesData={oneweek} />}
-            {showMonthData && <SalesList salesData={selectSalesData} />}
+            {showWeekData && <SalesList salesData={oneWeekData} />}
+            {showMonthData && <SalesList salesData={lastMonthData} />}
           </div>
         </div>
       </div>

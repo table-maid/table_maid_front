@@ -12,7 +12,7 @@ export const layout = css`
 
 export const header = css`
   width: 100%;
-  height: 20%;
+  height: 19%;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -32,13 +32,13 @@ export const main = css`
   flex-direction: column;
   align-items: center;
   width: 100%;
-  height: 80%;
+  height: 70%;
 `;
 
 export const chartContainer = css`
   box-sizing: border-box;
   width: 90%;
-  height: 70%;
+  height: 380px;
   border-radius: 30px;
   box-shadow: 0px 3px 10px 2px hsla(0, 0%, 0%, 0.2);
 `;
@@ -46,7 +46,7 @@ export const salesLayout = css`
   box-sizing: border-box;
   width: 90%;
   height: 100%;
-  margin-top: 30px;
+  margin-top: 32px;
 `;
 
 export const selectBox = css`
@@ -55,7 +55,7 @@ export const selectBox = css`
   box-shadow: rgba(0, 0, 0, 0.25) 0px 15px 20px -12px;
   border-radius: 30px;
   width: 100%;
-  height: 150px;
+  height: 170px;
   display: flex;
   flex-direction: column;
   align-items: center;
