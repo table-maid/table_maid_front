@@ -142,7 +142,7 @@ export const customButton = css`
     background-color: #eee;
   }
 `;
-export const sercher = css`
+export const sercher = (isDisabled) => css`
   box-sizing: border-box;
   padding: 13px 30px;
   font-size: 15px;
@@ -161,6 +161,14 @@ export const sercher = css`
   }
   &:active {
     background-color: #eee;
+  }
+  background-color: ${isDisabled ? "#e4e4e4ad" : "#fefefe;"};
+`;
+
+export const searchIcon = (isDisabled) => css`
+  color: ${isDisabled ? "#ec4a4a" : "#575757;"};
+  & svg {
+    font-size: 19px;
   }
 `;
 

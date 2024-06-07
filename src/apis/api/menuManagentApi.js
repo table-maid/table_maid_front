@@ -1,3 +1,4 @@
+import instance from "../utils/instance";
 import instansce from "../utils/instance";
 
 export const searchCategoryRequest = async (params) => {

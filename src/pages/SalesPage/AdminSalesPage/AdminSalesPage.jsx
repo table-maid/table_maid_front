@@ -12,7 +12,8 @@ import "react-datepicker/dist/react-datepicker.css";
 import useSalesData from "../../../hooks/useSalesData";
 import SalesList from "../../../components/Sales/SalesList/SalesList";
 import { CgDanger } from "react-icons/cg";
-import { IoSearchOutline } from "react-icons/io5";
+import { IoSearchOutline, IoClose } from "react-icons/io5";
+
 
 function AdminSalesPage(props) {
   const [sales, setSales] = useState([]);
@@ -92,6 +93,8 @@ function AdminSalesPage(props) {
     setViewType("custom");
   };
 
+  const isDisabled = startDate > endDate;
+
   return (
     <div css={s.layout}>
       <div css={s.header}>
@@ -148,11 +151,15 @@ function AdminSalesPage(props) {
                 />
               </div>
               <button
-                disabled={startDate > endDate}
+                disabled={isDisabled}
                 onClick={handleSearchClick}
-                css={s.sercher}
+                css={s.sercher(isDisabled)}
               >
-                <IoSearchOutline />
+                {isDisabled ? (
+                  <IoClose css={s.searchIcon(isDisabled)} />
+                ) : (
+                  <IoSearchOutline css={s.searchIcon(isDisabled)} />
+                )}
               </button>
             </div>
           </div>
