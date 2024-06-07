@@ -16,4 +16,6 @@ export const layout = css`
     display: flex;
     justify-content: center;
     align-items: center;
+    
+    
 `

@@ -1,14 +1,14 @@
 import { useState, useEffect } from 'react';
 import { searchOptionRequest } from '../apis/api/menuManagentApi';
 
-const useGetOption = (adminId, optionMenuId) => {
+const useGetOption = (adminId, menuId) => {
     const [options, setOptions] = useState([]);
     const [error, setError] = useState(null);
 
     useEffect(() => {
         const getOptions = async () => {
             try {
-                const params = { adminId, optionMenuId };
+                const params = { adminId, menuId };
                 const response = await searchOptionRequest(params);
                 setOptions(response.data);
                 console.log(response.data);
@@ -19,7 +19,7 @@ const useGetOption = (adminId, optionMenuId) => {
         };
 
         getOptions();
-    }, [adminId, optionMenuId]);
+    }, [adminId, menuId]);
 
     return { options, error };
 };

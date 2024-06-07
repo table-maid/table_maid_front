@@ -33,8 +33,8 @@ export const REGEX = {
         text: "1자리 이상의 회사명을 입력해 주세요.",
     },
     ownerName: {
-        regexr: /^[가-힣a-zA-Z\s.]+$/,
-        text: "대표자명에는 숫자, 특수문자가 들어갈 수 없습니다."
+        regexr: /^[가-힇]{2,}$/,
+        text: "한글문자 형식이어야 합니다"
     },
     companyAddress: {
         regexr: /.{1,}/,
