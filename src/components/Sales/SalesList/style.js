@@ -19,7 +19,7 @@ export const askTitle = css`
   align-items: center;
   justify-content: space-around;
   width: 100%;
-  height: 50px;
+  height: 60px;
   color: white;
 
   & > li {

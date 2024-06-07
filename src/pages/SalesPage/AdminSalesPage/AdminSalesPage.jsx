@@ -12,6 +12,7 @@ import "react-datepicker/dist/react-datepicker.css";
 import useSalesData from "../../../hooks/useSalesData";
 import SalesList from "../../../components/Sales/SalesList/SalesList";
 import { CgDanger } from "react-icons/cg";
+import { IoSearchOutline } from "react-icons/io5";
 
 function AdminSalesPage(props) {
   const [sales, setSales] = useState([]);
@@ -127,20 +128,31 @@ function AdminSalesPage(props) {
                 </button>
               </div>
             </div>
-            <div css={s.calender}>
-              <DatePicker
-                selected={startDate}
-                onChange={(date) => setStartDate(date)}
-              />
-              <DatePicker
-                selected={endDate}
-                onChange={(date) => setEndDate(date)}
-              />
+            <div css={s.calenderLayout}>
+              <div css={s.calender}>
+                <DatePicker
+                  selected={startDate}
+                  onChange={(date) => setStartDate(date)}
+                  dateFormat="yyyy MM dd"
+                  maxDate={new Date()}
+                  css={s.customButton}
+                />
+              </div>
+              <div css={s.calender}>
+                <DatePicker
+                  selected={endDate}
+                  onChange={(date) => setEndDate(date)}
+                  dateFormat="yyyy MM dd"
+                  maxDate={new Date()}
+                  css={s.customButton}
+                />
+              </div>
               <button
                 disabled={startDate > endDate}
                 onClick={handleSearchClick}
+                css={s.sercher}
               >
-                검색
+                <IoSearchOutline />
               </button>
             </div>
           </div>
@@ -167,7 +179,9 @@ function AdminSalesPage(props) {
               <SalesList salesData={filteredSalesData} />
             ) : (
               <div css={s.noDateBox}>
-                <h1><CgDanger /> 매출정보가 없습니다</h1>
+                <h1>
+                  <CgDanger /> 매출정보가 없습니다
+                </h1>
               </div>
             )}
           </div>
