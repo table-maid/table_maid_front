@@ -11,11 +11,12 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import useSalesData from "../../../hooks/useSalesData";
 import SalesList from "../../../components/Sales/SalesList/SalesList";
+import { CgDanger } from "react-icons/cg";
 
 function AdminSalesPage(props) {
   const [sales, setSales] = useState([]);
   const [selectSalesData, setSelectSalesData] = useState([]);
-  const [viewType, setViewType] = useState(""); 
+  const [viewType, setViewType] = useState("");
   const [startDate, setStartDate] = useState(new Date());
   const [endDate, setEndDate] = useState(new Date());
   const [totalSales, setTotalSales] = useState(0);
@@ -46,11 +47,10 @@ function AdminSalesPage(props) {
     retry: 0,
     refetchOnWindowFocus: false,
     onSuccess: (response) => {
-      console.log("Select Sales API Response:", response.data);
       setSelectSalesData(response.data);
     },
     onError: (error) => {
-      console.log("Error fetching selected sales data", error);
+      console.log("에러 :", error);
     },
   });
 
@@ -145,13 +145,16 @@ function AdminSalesPage(props) {
             </div>
           </div>
           <div css={s.totalLayout}>
-            <div>
-              <h1>매출</h1>
-            </div>
-            <div css={s.totalContainer}>
-              <div>
-                <h1>매출합계 : {totalSales} 원</h1>
-                <h1>주문수합계 : {totalCount}건</h1>
+            <div css={s.totalBox}>
+              <div css={s.box}>
+                <div css={s.total}>
+                  <h1>매출 합계</h1>
+                  <h1>주문 수 합계 </h1>
+                </div>
+                <div css={s.count}>
+                  <h1>{totalSales} 원</h1>
+                  <h1>{totalCount} 건</h1>
+                </div>
               </div>
             </div>
           </div>
@@ -163,7 +166,9 @@ function AdminSalesPage(props) {
             ) : viewType === "custom" && filteredSalesData.length > 0 ? (
               <SalesList salesData={filteredSalesData} />
             ) : (
-              <div>아무 데이터도 존재하지 않습니다</div>
+              <div css={s.noDateBox}>
+                <h1><CgDanger /> 매출정보가 없습니다</h1>
+              </div>
             )}
           </div>
         </div>

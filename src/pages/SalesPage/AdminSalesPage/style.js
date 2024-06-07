@@ -45,17 +45,17 @@ export const chartContainer = css`
 export const salesLayout = css`
   box-sizing: border-box;
   width: 90%;
-  height: 70%;
-  margin-top: 32px;
+  height: 80%;
+  margin-top: 40px;
 `;
 
 export const selectBox = css`
   box-sizing: border-box;
-  background-color: #f7f7f7;
+  background-color: #fefefe;
   box-shadow: rgba(0, 0, 0, 0.25) 0px 15px 20px -12px;
   border-radius: 30px;
   width: 100%;
-  height: 170px;
+  height: 180px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -106,25 +106,74 @@ export const calender = css`
   display: flex;
   align-items: center;
 `;
+
 export const totalLayout = css`
+  box-sizing: border-box;
   width: 100%;
   height: 30%;
   display: flex;
   flex-direction: column;
-  background-color: aqua;
+  border-radius: 25px;
   margin-top: 40px;
-  & h1 {
-    margin: 0;
-    font-size: 30px;
-  }
 `;
-export const totalContainer = css`
+
+export const totalBox = css`
+  box-sizing: border-box;
+  width: 100%;
+  height: 80px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  border-radius: 20px;
+  justify-content: space-around;
+`;
+
+export const box = css`
+  box-sizing: border-box;
+  width: 100%;
+  height: 80px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+`;
+
+export const total = css`
+  box-sizing: border-box;
   width: 100%;
   height: 100%;
   display: flex;
-  flex-direction: column;
-  justify-content: center;
-  background-color: orange;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-around;
+  background-color: #bbbbbbea;
+  border-top-right-radius: 20px;
+  border-top-left-radius: 20px;
+
+  & h1 {
+    font-size: 20px;
+    font-weight: 500;
+    color: white;
+  }
+`;
+export const count = css`
+  box-sizing: border-box;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-around;
+  background-color: #fefefe;
+  border-bottom-left-radius: 20px;
+  border-bottom-right-radius: 20px;
+  box-shadow: rgba(0, 0, 0, 0.336) 0px 15px 25px -12px;
+
+  & h1 {
+    font-size: 20px;
+    font-weight: 500;
+    margin-right: 30px;
+    color: #575757;
+  }
 `;
 
 export const button = css`
@@ -148,20 +197,26 @@ export const button = css`
 `;
 
 export const list = css`
-  margin-top: 30px;
+  margin-top: 20px;
   box-shadow: rgba(0, 0, 0, 0.336) 0px 25px 30px -12px;
   border-radius: 30px;
 `;
 
-export const customButton = css`
-    width: 130px;
-    height: 35px;
-    padding: 5px;
-    font-size: 16px;
-    letter-spacing: 2px;
-    background-color: transparent;
-    border: 1px solid hsl(0, 0%, 80%);
-    cursor: pointer;
-    transition: transform 0.3s, box-shadow 0.3s;
-    z-index: 5;
+export const noDateBox = css`
+  box-sizing: border-box;
+  width: 100%;
+  height: 100px;
+  background-color: #f7f7f7;
+  border-radius: 30px;
+  box-shadow: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 15px;
+  color: #6b6b6bcc;
+
+  & svg {
+    font-size: 30px;
+    color: #eb4040ff;
+  }
 `;
