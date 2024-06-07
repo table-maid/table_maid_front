@@ -1,9 +1,17 @@
-export const dateFormatter = (dateString) => {
-    const date = new Date(dateString);
-    const year = date.getFullYear();
-    const month = ("0" + (date.getMonth() + 1)).slice(-2);
-    const day = ("0" + date.getDate()).slice(-2);
-    const formattedDate = year + "-" + month + "-" + day;
+export const startOfDay = (date) => {
+  const newDate = new Date(date);
+  newDate.setHours(0, 0, 0, 0);
+  return newDate;
+};
 
-    return formattedDate;
+export const endOfDay = (date) => {
+  const newDate = new Date(date);
+  newDate.setHours(23, 59, 59, 999);
+  return newDate;
+};
+
+export const getDaysAgo = (date, days) => {
+  const newDate = new Date(date);
+  newDate.setDate(newDate.getDate() - days);
+  return newDate;
 };

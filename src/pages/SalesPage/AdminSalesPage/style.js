@@ -152,3 +152,16 @@ export const list = css`
   box-shadow: rgba(0, 0, 0, 0.336) 0px 25px 30px -12px;
   border-radius: 30px;
 `;
+
+export const customButton = css`
+    width: 130px;
+    height: 35px;
+    padding: 5px;
+    font-size: 16px;
+    letter-spacing: 2px;
+    background-color: transparent;
+    border: 1px solid hsl(0, 0%, 80%);
+    cursor: pointer;
+    transition: transform 0.3s, box-shadow 0.3s;
+    z-index: 5;
+`;

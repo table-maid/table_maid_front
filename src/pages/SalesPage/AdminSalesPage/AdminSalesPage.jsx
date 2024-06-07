@@ -14,107 +14,81 @@ import SalesList from "../../../components/Sales/SalesList/SalesList";
 
 function AdminSalesPage(props) {
   const [sales, setSales] = useState([]);
-  const [salesData, setSalesData] = useState([]);
   const [selectSalesData, setSelectSalesData] = useState([]);
-  const [showWeekData, setShowWeekData] = useState(false);
-  const [showMonthData, setShowMonthData] = useState(false);
+  const [viewType, setViewType] = useState(""); 
   const [startDate, setStartDate] = useState(new Date());
   const [endDate, setEndDate] = useState(new Date());
   const [totalSales, setTotalSales] = useState(0);
   const [totalCount, setTotalCount] = useState(0);
-  const [searchClicked, setSearchClicked] = useState(false);
   const [filteredSalesData, setFilteredSalesData] = useState([]);
-
-  useEffect(() => {
-    // 달별 총 매출
-    setSalesData(() =>
-      sales.map((data) => ({
-        totalSales: data.totalSales,
-        month: data.month,
-      }))
-    );
-  }, [sales]);
+  const [searchClicked, setSearchClicked] = useState(false);
 
   const {
     oneWeekData,
     lastMonthData,
-    customDateRangeData,
     calculateTotalsForCustomRange,
     oneWeekTotals,
     lastMonthTotals,
   } = useSalesData(selectSalesData);
 
-  const salesQuery = useQuery(["salesQuery"], getSalesRequest, {
+  const salesQuery = useQuery("salesQuery", getSalesRequest, {
     retry: 0,
     refetchOnWindowFocus: false,
     onSuccess: (response) => {
-      console.log("Sales API Response:", response.data);
       setSales(response.data);
     },
     onError: (error) => {
-      console.log("에러", error);
+      console.log("에러 :", error);
     },
   });
 
-  const selectSalesQuery = useQuery(
-    ["selectSalesQuery"],
-    getSelectSalesRequest,
-    {
-      retry: 0,
-      refetchOnWindowFocus: false,
-      onSuccess: (response) => {
-        console.log("Select Sales API Response:", response.data);
-        setSelectSalesData(response.data);
-      },
-      onError: (error) => {
-        console.log("salesQuery Error:", error);
-      },
-    }
-  );
-
-  const handleSearchClick = () => {
-    calculateTotalsForCustomRange(startDate, endDate);
-    setSearchClicked(true);
-
-    const filteredData = selectSalesData.filter((item) => {
-      const saleDate = new Date(item.year, item.month - 1, item.day);
-      return saleDate >= startOfDay(startDate) && saleDate <= endOfDay(endDate);
-    });
-
-    setFilteredSalesData(filteredData);
-  };
+  const selectSalesQuery = useQuery("selectSalesQuery", getSelectSalesRequest, {
+    retry: 0,
+    refetchOnWindowFocus: false,
+    onSuccess: (response) => {
+      console.log("Select Sales API Response:", response.data);
+      setSelectSalesData(response.data);
+    },
+    onError: (error) => {
+      console.log("Error fetching selected sales data", error);
+    },
+  });
 
   useEffect(() => {
-    setTotalSales(customDateRangeData.totalSales);
-    setTotalCount(customDateRangeData.totalCount);
-  }, [customDateRangeData]);
+    if (viewType === "week") {
+      setTotalSales(oneWeekTotals.totalSales);
+      setTotalCount(oneWeekTotals.totalCount);
+    } else if (viewType === "month") {
+      setTotalSales(lastMonthTotals.totalSales);
+      setTotalCount(lastMonthTotals.totalCount);
+    } else if (viewType === "custom" && searchClicked) {
+      const { totalSales, totalCount, filteredData } =
+        calculateTotalsForCustomRange(startDate, endDate);
+      setFilteredSalesData(filteredData);
+      setTotalSales(totalSales);
+      setTotalCount(totalCount);
+      setSearchClicked(false);
+    }
+  }, [
+    viewType,
+    searchClicked,
+    startDate,
+    endDate,
+    oneWeekTotals,
+    lastMonthTotals,
+    calculateTotalsForCustomRange,
+  ]);
 
-  const handleWeekButtonClick = () => {
-    setShowWeekData(true);
-    setShowMonthData(false);
-    setSearchClicked(false); // 검색 상태 초기화
-    setTotalSales(oneWeekTotals.totalSales);
-    setTotalCount(oneWeekTotals.totalCount);
+  const handleViewTypeChange = (type) => {
+    setViewType(type);
+    if (type !== "custom") {
+      setSearchClicked(false);
+    }
   };
 
-  const handleMonthButtonClick = () => {
-    setShowWeekData(false);
-    setShowMonthData(true);
-    setSearchClicked(false); // 검색 상태 초기화
-    setTotalSales(lastMonthTotals.totalSales);
-    setTotalCount(lastMonthTotals.totalCount);
-  };
-
-  const startOfDay = (date) => {
-    const newDate = new Date(date);
-    newDate.setHours(0, 0, 0, 0);
-    return newDate;
-  };
-
-  const endOfDay = (date) => {
-    const newDate = new Date(date);
-    newDate.setHours(23, 59, 59, 999);
-    return newDate;
+  const handleSearchClick = () => {
+    setSearchClicked(true);
+    setViewType("custom");
   };
 
   return (
@@ -125,7 +99,10 @@ function AdminSalesPage(props) {
       <div css={s.main}>
         <div css={s.chartContainer}>
           <AdminSalesChart
-            sales={salesData}
+            sales={sales.map((data) => ({
+              totalSales: data.totalSales,
+              month: data.month,
+            }))}
             monthKey={"month"}
             keyName={"총 매출"}
             dataKey={"totalSales"}
@@ -136,10 +113,16 @@ function AdminSalesPage(props) {
           <div css={s.selectBox}>
             <div css={s.selectButton}>
               <div css={s.buttonBox}>
-                <button onClick={handleWeekButtonClick} css={s.button}>
+                <button
+                  onClick={() => handleViewTypeChange("week")}
+                  css={s.button}
+                >
                   지난 7일
                 </button>
-                <button onClick={handleMonthButtonClick} css={s.button}>
+                <button
+                  onClick={() => handleViewTypeChange("month")}
+                  css={s.button}
+                >
                   저번달
                 </button>
               </div>
@@ -173,10 +156,14 @@ function AdminSalesPage(props) {
             </div>
           </div>
           <div css={s.list}>
-            {showWeekData && <SalesList salesData={oneWeekData} />}
-            {showMonthData && <SalesList salesData={lastMonthData} />}
-            {searchClicked && !showWeekData && !showMonthData && (
+            {viewType === "week" ? (
+              <SalesList salesData={oneWeekData} />
+            ) : viewType === "month" ? (
+              <SalesList salesData={lastMonthData} />
+            ) : viewType === "custom" && filteredSalesData.length > 0 ? (
               <SalesList salesData={filteredSalesData} />
+            ) : (
+              <div>아무 데이터도 존재하지 않습니다</div>
             )}
           </div>
         </div>

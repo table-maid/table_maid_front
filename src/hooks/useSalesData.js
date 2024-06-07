@@ -1,4 +1,10 @@
 import { useEffect, useState } from "react";
+import { getDaysAgo } from "../utils/dateFortmatter";
+import { calculateTotals } from "../utils/calculateUtils";
+import {
+  filterDataByDateRange,
+  filterDataByYearAndMonth,
+} from "../utils/filters/salesFilters";
 
 const useSalesData = (selectSalesData) => {
   const [data, setData] = useState({
@@ -7,6 +13,7 @@ const useSalesData = (selectSalesData) => {
     customDateRangeData: {
       totalSales: 0,
       totalCount: 0,
+      filteredData: [],
     },
     oneWeekTotals: { totalSales: 0, totalCount: 0 },
     lastMonthTotals: { totalSales: 0, totalCount: 0 },
@@ -15,23 +22,21 @@ const useSalesData = (selectSalesData) => {
   useEffect(() => {
     try {
       const now = new Date();
-      const sevenDaysAgo = new Date();
-      sevenDaysAgo.setDate(now.getDate() - 7);
-
+      const sevenDaysAgo = getDaysAgo(now, 7);
       const lastYear =
         now.getMonth() === 0 ? now.getFullYear() - 1 : now.getFullYear();
+      const lastMonth = now.getMonth() === 0 ? 12 : now.getMonth();
 
-      const oneWeekData = selectSalesData.filter((item) => {
-        const saleDate = new Date(item.year, item.month - 1, item.day);
-        return saleDate >= sevenDaysAgo && saleDate <= now;
-      });
-
-      const lastMonthData = selectSalesData.filter((item) => {
-        return (
-          item.year === lastYear &&
-          item.month === (now.getMonth() === 0 ? 12 : now.getMonth())
-        );
-      });
+      const oneWeekData = filterDataByDateRange(
+        selectSalesData,
+        sevenDaysAgo,
+        now
+      );
+      const lastMonthData = filterDataByYearAndMonth(
+        selectSalesData,
+        lastYear,
+        lastMonth
+      );
 
       const oneWeekTotals = calculateTotals(oneWeekData);
       const lastMonthTotals = calculateTotals(lastMonthData);
@@ -49,40 +54,13 @@ const useSalesData = (selectSalesData) => {
   }, [selectSalesData]);
 
   const calculateTotalsForCustomRange = (startDate, endDate) => {
-    const filteredData = selectSalesData.filter((item) => {
-      const saleDate = new Date(item.year, item.month - 1, item.day);
-      return saleDate >= startOfDay(startDate) && saleDate <= endOfDay(endDate);
-    });
-
-    const totals = calculateTotals(filteredData);
-
-    setData((prev) => ({
-      ...prev,
-      customDateRangeData: totals,
-    }));
-  };
-
-  const calculateTotals = (data) => {
-    return data.reduce(
-      (acc, item) => {
-        acc.totalSales += item.dayTotalSales ? item.dayTotalSales : 0;
-        acc.totalCount += item.count ? item.count : 0;
-        return acc;
-      },
-      { totalSales: 0, totalCount: 0 }
+    const filteredData = filterDataByDateRange(
+      selectSalesData,
+      startDate,
+      endDate
     );
-  };
-
-  const startOfDay = (date) => {
-    const newDate = new Date(date);
-    newDate.setHours(0, 0, 0, 0);
-    return newDate;
-  };
-
-  const endOfDay = (date) => {
-    const newDate = new Date(date);
-    newDate.setHours(23, 59, 59, 999);
-    return newDate;
+    const totals = calculateTotals(filteredData);
+    return { ...totals, filteredData };
   };
 
   return {
