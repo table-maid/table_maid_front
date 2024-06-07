@@ -1,4 +1,3 @@
-import instance from "../utils/instance";
 import instansce from "../utils/instance";
 
 export const searchCategoryRequest = async (params) => {
@@ -32,4 +31,3 @@ export const registerOptionTitle = async(data) => {
 export const registerOption = async(data) => {
     return await instance.post("/menu/option", data)
 }
-
