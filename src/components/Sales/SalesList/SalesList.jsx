@@ -5,21 +5,15 @@ function SalesList({ salesData }) {
   return (
     <div css={s.listContainer}>
       <div css={s.askTitle}>
-        <li>메뉴 이름</li>
-        <li>가격</li>
-        <li>판매량</li>
-        <li>Year</li>
-        <li>Month</li>
-        <li>Day</li>
+        <li>거래 일자</li>
+        <li>주문 수</li>
+        <li>매출 금액</li>
       </div>
       {salesData.map((item) => (
         <ul key={item.salesId} css={s.list}>
-          <li>{item.menuName}</li>
-          <li>{item.menuTotalPrice} 원</li>
-          <li>{item.count} 개</li>
-          <li>{item.year} 년</li>
-          <li>{item.month} 월</li>
-          <li>{item.day} 일</li>
+          <li>{item.year} 년 {item.month} 월 {item.day} 일 </li>
+          <li>{item.count} 건</li>
+          <li>{item.dayTotalSales} 원</li>
         </ul>
       ))}
     </div>

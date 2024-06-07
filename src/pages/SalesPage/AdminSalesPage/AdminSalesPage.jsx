@@ -7,7 +7,8 @@ import {
   getSelectSalesRequest,
 } from "../../../apis/api/salesApi";
 import AdminSalesChart from "../../../components/Sales/AdminSalesChart/AdminSalesChart";
-import Calendar from "../../../components/Calendar/Calendar";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 import useSalesData from "../../../hooks/useSalesData";
 import SalesList from "../../../components/Sales/SalesList/SalesList";
 
@@ -19,8 +20,13 @@ function AdminSalesPage(props) {
   const [showMonthData, setShowMonthData] = useState(false);
   const [startDate, setStartDate] = useState(new Date());
   const [endDate, setEndDate] = useState(new Date());
+  const [totalSales, setTotalSales] = useState(0);
+  const [totalCount, setTotalCount] = useState(0);
+  const [searchClicked, setSearchClicked] = useState(false);
+  const [filteredSalesData, setFilteredSalesData] = useState([]);
 
-  useEffect(() => { // 달별 총 매출
+  useEffect(() => {
+    // 달별 총 매출
     setSalesData(() =>
       sales.map((data) => ({
         totalSales: data.totalSales,
@@ -29,13 +35,20 @@ function AdminSalesPage(props) {
     );
   }, [sales]);
 
-  const { oneWeekData, lastMonthData } = useSalesData(selectSalesData);
+  const {
+    oneWeekData,
+    lastMonthData,
+    customDateRangeData,
+    calculateTotalsForCustomRange,
+    oneWeekTotals,
+    lastMonthTotals,
+  } = useSalesData(selectSalesData);
 
-  const salesQuery = useQuery(["salesQuery"], getSalesRequest, { // 총 매출
+  const salesQuery = useQuery(["salesQuery"], getSalesRequest, {
     retry: 0,
     refetchOnWindowFocus: false,
     onSuccess: (response) => {
-      // console.log("Sales API Response:", response.data);
+      console.log("Sales API Response:", response.data);
       setSales(response.data);
     },
     onError: (error) => {
@@ -43,14 +56,14 @@ function AdminSalesPage(props) {
     },
   });
 
-  const selectSalesQuery = useQuery( // 판매 전체 조회
+  const selectSalesQuery = useQuery(
     ["selectSalesQuery"],
     getSelectSalesRequest,
     {
       retry: 0,
       refetchOnWindowFocus: false,
       onSuccess: (response) => {
-        console.log("Sales API Response:", response.data);
+        console.log("Select Sales API Response:", response.data);
         setSelectSalesData(response.data);
       },
       onError: (error) => {
@@ -58,16 +71,50 @@ function AdminSalesPage(props) {
       },
     }
   );
-  // console.log(selectSales.map((data) => data.totalSales));
+
+  const handleSearchClick = () => {
+    calculateTotalsForCustomRange(startDate, endDate);
+    setSearchClicked(true);
+
+    const filteredData = selectSalesData.filter((item) => {
+      const saleDate = new Date(item.year, item.month - 1, item.day);
+      return saleDate >= startOfDay(startDate) && saleDate <= endOfDay(endDate);
+    });
+
+    setFilteredSalesData(filteredData);
+  };
+
+  useEffect(() => {
+    setTotalSales(customDateRangeData.totalSales);
+    setTotalCount(customDateRangeData.totalCount);
+  }, [customDateRangeData]);
 
   const handleWeekButtonClick = () => {
     setShowWeekData(true);
-    setShowMonthData(false); // 월 정보는 숨김
+    setShowMonthData(false);
+    setSearchClicked(false); // 검색 상태 초기화
+    setTotalSales(oneWeekTotals.totalSales);
+    setTotalCount(oneWeekTotals.totalCount);
   };
 
   const handleMonthButtonClick = () => {
-    setShowWeekData(false); // 일주일치 정보는 숨김
+    setShowWeekData(false);
     setShowMonthData(true);
+    setSearchClicked(false); // 검색 상태 초기화
+    setTotalSales(lastMonthTotals.totalSales);
+    setTotalCount(lastMonthTotals.totalCount);
+  };
+
+  const startOfDay = (date) => {
+    const newDate = new Date(date);
+    newDate.setHours(0, 0, 0, 0);
+    return newDate;
+  };
+
+  const endOfDay = (date) => {
+    const newDate = new Date(date);
+    newDate.setHours(23, 59, 59, 999);
+    return newDate;
   };
 
   return (
@@ -98,19 +145,39 @@ function AdminSalesPage(props) {
               </div>
             </div>
             <div css={s.calender}>
-              <Calendar
-                selectedDate={startDate}
-                setSelectedDate={setStartDate}
+              <DatePicker
+                selected={startDate}
+                onChange={(date) => setStartDate(date)}
               />
-              <Calendar 
-              selectedDate={endDate} 
-              setSelectedDate={setEndDate} />
-              <button disabled={startDate > endDate}>검색</button>
+              <DatePicker
+                selected={endDate}
+                onChange={(date) => setEndDate(date)}
+              />
+              <button
+                disabled={startDate > endDate}
+                onClick={handleSearchClick}
+              >
+                검색
+              </button>
+            </div>
+          </div>
+          <div css={s.totalLayout}>
+            <div>
+              <h1>매출</h1>
+            </div>
+            <div css={s.totalContainer}>
+              <div>
+                <h1>매출합계 : {totalSales} 원</h1>
+                <h1>주문수합계 : {totalCount}건</h1>
+              </div>
             </div>
           </div>
           <div css={s.list}>
             {showWeekData && <SalesList salesData={oneWeekData} />}
             {showMonthData && <SalesList salesData={lastMonthData} />}
+            {searchClicked && !showWeekData && !showMonthData && (
+              <SalesList salesData={filteredSalesData} />
+            )}
           </div>
         </div>
       </div>

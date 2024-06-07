@@ -35,15 +35,6 @@ export const askTitle = css`
   & > li:nth-of-type(3) {
     width: 20%;
   }
-  & > li:nth-of-type(4) {
-    width: 20%;
-  }
-  & > li:nth-of-type(5) {
-    width: 25%;
-  }
-  & > li:nth-of-type(6) {
-    width: 25%;
-  }
 `;
 
 export const list = css`
@@ -72,13 +63,5 @@ export const list = css`
   & > li:nth-of-type(3) {
     width: 20%;
   }
-  & > li:nth-of-type(4) {
-    width: 20%;
-  }
-  & > li:nth-of-type(5) {
-    width: 25%;
-  }
-  & > li:nth-of-type(6) {
-    width: 25%;
-  }
+
 `;

@@ -45,7 +45,7 @@ export const chartContainer = css`
 export const salesLayout = css`
   box-sizing: border-box;
   width: 90%;
-  height: 100%;
+  height: 70%;
   margin-top: 32px;
 `;
 
@@ -106,6 +106,26 @@ export const calender = css`
   display: flex;
   align-items: center;
 `;
+export const totalLayout = css`
+  width: 100%;
+  height: 30%;
+  display: flex;
+  flex-direction: column;
+  background-color: aqua;
+  margin-top: 40px;
+  & h1 {
+    margin: 0;
+    font-size: 30px;
+  }
+`;
+export const totalContainer = css`
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  background-color: orange;
+`;
 
 export const button = css`
   box-sizing: border-box;
@@ -126,8 +146,9 @@ export const button = css`
     background-color: #eee;
   }
 `;
+
 export const list = css`
-  margin-top: 40px;
+  margin-top: 30px;
   box-shadow: rgba(0, 0, 0, 0.336) 0px 25px 30px -12px;
   border-radius: 30px;
 `;
