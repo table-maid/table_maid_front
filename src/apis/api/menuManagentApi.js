@@ -32,3 +32,7 @@ export const registerOptionTitle = async(data) => {
 export const registerOption = async(data) => {
     return await instance.post("/menu/option", data)
 }
+
+export const searchMenuListRequest = async(adminId) => {
+    return await instance.get(`/menu/list?adminId=${adminId}`)
+}
