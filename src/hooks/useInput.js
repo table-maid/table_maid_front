@@ -36,7 +36,6 @@ export const useInput = (property) => {
 
     const handleOnChange = (e) => {
         setValue(() => e.target.value);
-        console.log(typeof(e.target.value));
     }
 
     return [ value, handleOnChange, message, setValue, setMessage ];
