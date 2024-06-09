@@ -53,6 +53,6 @@ export const list = css`
     flex-direction: row;
     flex-wrap: wrap;
     gap: 20px;
-    /* margin-left: 80px; */
+    margin-left: 10px;
     
 `;

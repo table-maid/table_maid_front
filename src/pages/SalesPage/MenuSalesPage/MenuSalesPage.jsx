@@ -50,6 +50,8 @@ function MenuSalesPage(props) {
     navigate(`/admin/sale/menu?menuId=${id}`);
   };
 
+  
+
   return (
     <div css={s.layout}>
       <div css={s.header}>

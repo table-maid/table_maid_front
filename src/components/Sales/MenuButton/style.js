@@ -7,7 +7,6 @@ export const Layout = css`
   display: flex;
   align-items: center;
   justify-content: space-around;
-  border: none;
 `;
 
 export const menu = css`
