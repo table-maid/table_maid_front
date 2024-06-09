@@ -53,7 +53,7 @@ const useSalesData = (selectSalesData) => {
     }
   }, [selectSalesData]);
 
-  const calculateTotalsForCustomRange = (startDate, endDate) => {
+  const customTotalDay = (startDate, endDate) => {
     const filteredData = filterDataByDateRange(
       selectSalesData,
       startDate,
@@ -65,7 +65,7 @@ const useSalesData = (selectSalesData) => {
 
   return {
     ...data,
-    calculateTotalsForCustomRange,
+    customTotalDay,
   };
 };
 

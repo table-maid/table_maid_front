@@ -29,7 +29,7 @@ function AdminSalesPage(props) {
   const {
     oneWeekData,
     lastMonthData,
-    calculateTotalsForCustomRange,
+    customTotalDay,
     oneWeekTotals,
     lastMonthTotals,
   } = useSalesData(selectSalesData);
@@ -65,7 +65,7 @@ function AdminSalesPage(props) {
       setTotalCount(lastMonthTotals.totalCount);
     } else if (viewType === "custom" && searchClicked) {
       const { totalSales, totalCount, filteredData } =
-        calculateTotalsForCustomRange(startDate, endDate);
+      customTotalDay(startDate, endDate);
       setFilteredSalesData(filteredData);
       setTotalSales(totalSales);
       setTotalCount(totalCount);
@@ -78,7 +78,7 @@ function AdminSalesPage(props) {
     endDate,
     oneWeekTotals,
     lastMonthTotals,
-    calculateTotalsForCustomRange,
+    customTotalDay,
   ]);
 
   const handleViewTypeChange = (type) => {
@@ -178,16 +178,16 @@ function AdminSalesPage(props) {
             </div>
           </div>
           <div css={s.list}>
-            {viewType === "week" ? (
+            {viewType === "week" && oneWeekData.length > 0 ? (
               <SalesList salesData={oneWeekData} />
-            ) : viewType === "month" ? (
+            ) : viewType === "month" && lastMonthData.length > 0 ? (
               <SalesList salesData={lastMonthData} />
             ) : viewType === "custom" && filteredSalesData.length > 0 ? (
               <SalesList salesData={filteredSalesData} />
             ) : (
               <div css={s.noDateBox}>
                 <h1>
-                  <CgDanger /> 매출정보가 없습니다
+                  <CgDanger /> 매출정보가 존재하지 않습니다
                 </h1>
               </div>
             )}

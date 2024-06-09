@@ -7,3 +7,7 @@ export const getSalesRequest = async () => {
 export const getSelectSalesRequest = async () => {
     return await instansce.get("/sales/total/select");
 };
+
+export const getMenuTotalSalesRequest = async (data) => {
+    return await instansce.get("/sales/menu/total", data);
+};
