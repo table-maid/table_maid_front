@@ -16,6 +16,7 @@ import { IoSearchOutline, IoClose } from "react-icons/io5";
 
 
 function AdminSalesPage(props) {
+  const [adminId, setAdminId] = useState(1);
   const [sales, setSales] = useState([]);
   const [selectSalesData, setSelectSalesData] = useState([]);
   const [viewType, setViewType] = useState("");
@@ -34,7 +35,9 @@ function AdminSalesPage(props) {
     lastMonthTotals,
   } = useSalesData(selectSalesData);
 
-  const salesQuery = useQuery("salesQuery", getSalesRequest, {
+  const salesQuery = useQuery(["salesQuery"], 
+    () => getSalesRequest(adminId), 
+    {
     retry: 0,
     refetchOnWindowFocus: false,
     onSuccess: (response) => {
@@ -45,7 +48,9 @@ function AdminSalesPage(props) {
     },
   });
 
-  const selectSalesQuery = useQuery("selectSalesQuery", getSelectSalesRequest, {
+  const selectSalesQuery = useQuery(["selectSalesQuery"], 
+    () => getSelectSalesRequest(adminId), 
+    {
     retry: 0,
     refetchOnWindowFocus: false,
     onSuccess: (response) => {

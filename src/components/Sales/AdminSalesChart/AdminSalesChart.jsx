@@ -4,21 +4,32 @@ import ReactApexChart from "react-apexcharts";
 const AdminSalesChart = ({ 
   sales, 
   monthKey, 
+  dayKey, 
   keyName, 
   dataKey, 
-  lineColor 
+  lineColor,
+  viewType
 }) => {
-  // 월의 숫자를 영어로 변환하는 함수
-  const getMonthName = (monthNumber) => {
+  // 날짜를 지정된 형식으로 변환하는 함수
+  const getDateLabel = (monthNumber, dayNumber) => {
     const date = new Date();
     date.setMonth(monthNumber - 1);
-    return date.toLocaleString("en-US", { month: "long" });
+    if (dayNumber !== null && dayNumber !== undefined) {
+      date.setDate(dayNumber);
+    }
+    return viewType === 'month' 
+      ? date.toLocaleString("en-US", { month: "long" }) 
+      : date.toLocaleString("en-US", { month: "short", day: "numeric" });
   };
+
+  const categories = sales.map((data) => 
+    viewType === 'month' ? getDateLabel(data[monthKey], null) : getDateLabel(data[monthKey], data[dayKey])
+  );
 
   const series = [
     {
       name: keyName,
-      type: "line", // 그래프 선으로 설정
+      type: "line",
       data: sales.map((data) => data[dataKey]),
     },
   ];
@@ -30,34 +41,32 @@ const AdminSalesChart = ({
       zoom: {
         enabled: false,
       },
-      
     },
     stroke: {
-      width: [4], // 선의 두께 설정
-      curve: "smooth", // 부드러운 곡선으로 연결
+      width: [4], 
+      curve: "smooth", 
     },
     title: {
       text: keyName,
       align: "center",
       style: {
-        fontSize: "20px", // 제목 글씨체 크기
-        
+        fontSize: "20px",
       },
     },
     markers: {
-      size: 6, // 점의 크기 설정
-      colors: [lineColor], // 점의 색상 설정
-      strokeColors: "#fff", // 점의 테두리 색상 설정
-      strokeWidth: 1, // 점의 테두리 두께 설정
+      size: 6, 
+      colors: [lineColor],
+      strokeColors: "#fff",
+      strokeWidth: 1,
       hover: {
-        size: 7, // 마우스 오버 시 점의 크기 설정
+        size: 7, 
       },
     },
     xaxis: {
-      categories: sales.map((data) => getMonthName(data[monthKey])),
+      categories: categories,
       labels: {
         style: {
-          fontSize: "17px", // x축 레이블 글씨체 크기
+          fontSize: "14px",
         },
       },
     },
@@ -65,12 +74,11 @@ const AdminSalesChart = ({
       {
         labels: {
           style: {
-            fontSize: "18px", // y축 레이블 글씨체 크기
+            fontSize: "18px",
           },
         },
       },
     ],
-    
     tooltip: {
       shared: true,
       intersect: false,

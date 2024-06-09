@@ -53,7 +53,6 @@ export const list = css`
   flex-direction: row;
   flex-wrap: wrap;
   gap: 20px;
-  margin-left: 10px;
 `;
 
 export const categorieButton = css`
@@ -75,4 +74,5 @@ export const menulist = css`
   flex-wrap: wrap;
   gap: 20px;
   width: 100%;
+  margin-left: 10px;
 `;
