@@ -30,7 +30,7 @@ export const title = css`
   font-weight: 700;
 `;
 export const main = css`
-width: 100%;
+  width: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -38,7 +38,7 @@ width: 100%;
   /* background-color: aqua; */
 `;
 export const ListLayout = css`
-width: 90%;
+  width: 90%;
   display: flex;
   flex-direction: column;
   justify-content: space-around;
@@ -47,12 +47,32 @@ width: 90%;
 
 export const list = css`
   box-sizing: border-box;
-    display: flex;
-    align-items: flex-start;
-    justify-content: flex-start;
-    flex-direction: row;
-    flex-wrap: wrap;
-    gap: 20px;
-    margin-left: 10px;
-    
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 20px;
+  margin-left: 10px;
+`;
+
+export const categorieButton = css`
+width: 100px;
+background-color: transparent;
+border: none;
+font-size: 20px;
+&:active {
+    background-color: #a7a7a7; 
+  }
+`;
+
+export const menulist = css`
+  box-sizing: border-box;
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 20px;
+  width: 100%;
 `;

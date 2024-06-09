@@ -6,7 +6,7 @@ export const Layout = css`
   /* background-color: white; */
   display: flex;
   align-items: center;
-  justify-content: space-around;
+  justify-content: space-between;
 `;
 
 export const menu = css`

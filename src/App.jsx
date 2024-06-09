@@ -13,10 +13,10 @@ function App() {
     <>
       <BackgroundLayout>
         <AdminRootLayout>
-          <AdminRootContainer>
+          {/* <AdminRootContainer> */}
             <AdminRoute /> 
             <MenuRoute />
-          </AdminRootContainer>
+          {/* </AdminRootContainer> */}
         </AdminRootLayout>
 
         {/* <UserRootLayout> */}

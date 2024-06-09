@@ -7,12 +7,27 @@ import { useState } from "react";
 import MenuButton from "../../../components/Sales/MenuButton/MenuButton";
 import { useNavigate } from "react-router-dom";
 import { searchMenuListRequest } from "../../../apis/api/menuManagentApi";
+import useGetMenus from "../../../hooks/useGetMenu";
+import useCategory from "../../../hooks/useCategory";
 
 function MenuSalesPage(props) {
   const [adminId, setAdminId] = useState(1);
   const [menuSales, setMenuSales] = useState([]);
   const [menuList, setMenuList] = useState([]);
   const navigate = useNavigate();
+  const [categoryId, setCategoryId] = useState(0);
+  const { categories, error: categoriesError } = useCategory(adminId);
+
+  const {
+    menus,
+    error: menusError,
+    uniqueMenuCategoryNames,
+  } = useGetMenus(adminId, categoryId);
+
+  const menu = {
+    categoryName: uniqueMenuCategoryNames,
+    menuName: menus,
+  };
 
   const selectMenuSalesQuery = useQuery(
     "selectSalesQuery",
@@ -50,7 +65,9 @@ function MenuSalesPage(props) {
     navigate(`/admin/sale/menu?menuId=${id}`);
   };
 
-  
+  const handleCategoryId = (category) => {
+    setCategoryId(category);
+  };
 
   return (
     <div css={s.layout}>
@@ -60,13 +77,33 @@ function MenuSalesPage(props) {
       <div css={s.main}>
         <div css={s.ListLayout}>
           <div css={s.list}>
-            {menuList.map((menu) => (
-              <MenuButton
-                key={menu.menuId}
-                onClick={() => handleMenuClick(menu.menuId)}
-                menuName={menu.menuName}
-                img={menu.menuIngUrl}
-              />
+            {categories.map((cat) => (
+              <button
+                css={s.categorieButton}
+                onClick={() => handleCategoryId(cat.menuCategoryId)}
+                key={cat.menuCategoryId}
+              >
+                {cat.menuCategoryName}
+              </button>
+            ))}
+            {menu.categoryName?.map((category) => (
+              <div key={category}>
+                <h3>{category}</h3>
+                <div css={s.menulist}>
+                  {menu.menuName
+                    .filter(
+                      (menuItem) => menuItem.menuCategoryName === category
+                    )
+                    .map((menuItem) => (
+                      <MenuButton
+                        key={menuItem.menuId}
+                        onClick={() => handleMenuClick(menuItem.menuId)}
+                        menuName={menuItem.menuName}
+                        img={menuItem.menuIngUrl}
+                      />
+                    ))}
+                </div>
+              </div>
             ))}
           </div>
         </div>
