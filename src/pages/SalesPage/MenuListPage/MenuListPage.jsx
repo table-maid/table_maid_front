@@ -14,6 +14,7 @@ function MenuSalesPage(props) {
   const [adminId, setAdminId] = useState(1);
   const [menuSales, setMenuSales] = useState([]);
   const [menuList, setMenuList] = useState([]);
+  const [menuSalesList, setMenuSalesList] = useState(menuList)
   const navigate = useNavigate();
   const [categoryId, setCategoryId] = useState(0);
   const { categories, error: categoriesError } = useCategory(adminId);
@@ -29,7 +30,7 @@ function MenuSalesPage(props) {
     menuName: menus,
   };
 
-  const selectMenuSalesQuery = useQuery(
+  const selectSalesQuery = useQuery(
     "selectSalesQuery",
     getMenuTotalSalesRequest,
     {
@@ -79,7 +80,7 @@ function MenuSalesPage(props) {
           <div css={s.list}>
             {categories.map((cat) => (
               <button
-                css={s.categorieButton}
+              css={s.categorieButton}
                 onClick={() => handleCategoryId(cat.menuCategoryId)}
                 key={cat.menuCategoryId}
               >
@@ -108,6 +109,7 @@ function MenuSalesPage(props) {
           </div>
         </div>
       </div>
+            
     </div>
   );
 }

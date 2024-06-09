@@ -1,13 +1,13 @@
 import React from "react";
 import { Route, Routes } from "react-router-dom";
 import AdminSalesPage from "../pages/SalesPage/AdminSalesPage/AdminSalesPage";
-import MenuSalesPage from "../pages/SalesPage/MenuSalesPage/MenuSalesPage";
+import MenuListPage from "../pages/SalesPage/MenuListPage/MenuListPage";
 
 function SalesRoute(props) {
     return (
         <Routes>
             <Route path="/sale" element={<AdminSalesPage />} />
-            <Route path="/menu" element={<MenuSalesPage />} />
+            <Route path="/menu" element={<MenuListPage />} />
         </Routes>
     );
 }
