@@ -14,7 +14,7 @@ function App() {
       <BackgroundLayout>
         <AdminRootLayout>
           {/* <AdminRootContainer> */}
-            <AdminRoute /> 
+            <AdminRoute />
             <MenuRoute />
           {/* </AdminRootContainer> */}
         </AdminRootLayout>

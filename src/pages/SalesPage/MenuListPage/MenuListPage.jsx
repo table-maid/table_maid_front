@@ -5,20 +5,20 @@ import { useQuery } from "react-query";
 import { getMenuTotalSalesRequest } from "../../../apis/api/salesApi";
 import { useState } from "react";
 import MenuButton from "../../../components/Sales/MenuButton/MenuButton";
-import { useNavigate } from "react-router-dom";
+import { Route, Routes, useNavigate } from "react-router-dom";
 import { searchMenuListRequest } from "../../../apis/api/menuManagentApi";
 import useGetMenus from "../../../hooks/useGetMenu";
 import useCategory from "../../../hooks/useCategory";
+import MenuSalesPage from "../MenuSalesPage/MenuSalesPage";
 
-function MenuSalesPage(props) {
+function MenuListPage(props) {
   const [adminId, setAdminId] = useState(1);
-  const [menuSales, setMenuSales] = useState([]);
   const [menuList, setMenuList] = useState([]);
-  const [menuSalesList, setMenuSalesList] = useState(menuList)
+  const [menuSalesList, setMenuSalesList] = useState(menuList);
   const navigate = useNavigate();
   const [categoryId, setCategoryId] = useState(0);
   const { categories, error: categoriesError } = useCategory(adminId);
-
+  
   const {
     menus,
     error: menusError,
@@ -29,22 +29,6 @@ function MenuSalesPage(props) {
     categoryName: uniqueMenuCategoryNames,
     menuName: menus,
   };
-
-  const selectSalesQuery = useQuery(
-    "selectSalesQuery",
-    getMenuTotalSalesRequest,
-    {
-      retry: 0,
-      refetchOnWindowFocus: false,
-      onSuccess: (response) => {
-        console.log(response.data);
-        setMenuSales(response.data);
-      },
-      onError: (error) => {
-        console.log("에러 :", error);
-      },
-    }
-  );
 
   const selectMenuListQuery = useQuery(
     ["selectMenuListQuery"],
@@ -62,8 +46,9 @@ function MenuSalesPage(props) {
     }
   );
 
-  const handleMenuClick = (id) => {
-    navigate(`/admin/sale/menu?menuId=${id}`);
+  const handleMenuClick = (menuId) => {
+    // console.log(menuId)
+    navigate(`/sales/menu/detail/${menuId}`);
   };
 
   const handleCategoryId = (category) => {
@@ -80,7 +65,7 @@ function MenuSalesPage(props) {
           <div css={s.list}>
             {categories.map((cat) => (
               <button
-              css={s.categorieButton}
+                css={s.categorieButton}
                 onClick={() => handleCategoryId(cat.menuCategoryId)}
                 key={cat.menuCategoryId}
               >
@@ -109,9 +94,8 @@ function MenuSalesPage(props) {
           </div>
         </div>
       </div>
-            
     </div>
   );
 }
 
-export default MenuSalesPage;
+export default MenuListPage;
