@@ -1,43 +1,36 @@
 /** @jsxImportSource @emotion/react */
-import * as s from "./style";
-
 import { useQuery } from "react-query";
+import * as s from "./style";
 import { getMenuTotalSalesRequest } from "../../../apis/api/salesApi";
-import { useState } from "react";
-import MenuButton from "../../../components/Sales/MenuButton/MenuButton";
-import { useNavigate } from "react-router-dom";
-import { searchMenuListRequest } from "../../../apis/api/menuManagentApi";
-import useGetMenus from "../../../hooks/useGetMenu";
-import useCategory from "../../../hooks/useCategory";
+import { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
+import AdminSalesChart from "../../../components/Sales/AdminSalesChart/AdminSalesChart";
+import SalesModal from "../../../components/Sales/SalesModal/SalesModal";
 
 function MenuSalesPage(props) {
   const [adminId, setAdminId] = useState(1);
-  const [menuSales, setMenuSales] = useState([]);
-  const [menuList, setMenuList] = useState([]);
-  const navigate = useNavigate();
-  const [categoryId, setCategoryId] = useState(0);
-  const { categories, error: categoriesError } = useCategory(adminId);
+  const [sales, setSales] = useState([]);
+  const [viewType, setViewType] = useState("");
+  const [dataKey, setDataKey] = useState("menuTotalSales"); 
+  const { menuId } = useParams();
 
-  const {
-    menus,
-    error: menusError,
-    uniqueMenuCategoryNames,
-  } = useGetMenus(adminId, categoryId);
+  useEffect(() => {
+    console.log(menuId);
+  }, [menuId]);
 
-  const menu = {
-    categoryName: uniqueMenuCategoryNames,
-    menuName: menus,
-  };
-
-  const selectMenuSalesQuery = useQuery(
+  const selectSalesQuery = useQuery(
     "selectSalesQuery",
-    getMenuTotalSalesRequest,
+    () =>
+      getMenuTotalSalesRequest({
+        adminId: adminId,
+        menuId: menuId,
+      }),
     {
       retry: 0,
       refetchOnWindowFocus: false,
       onSuccess: (response) => {
         console.log(response.data);
-        setMenuSales(response.data);
+        setSales(response.data);
       },
       onError: (error) => {
         console.log("에러 :", error);
@@ -45,70 +38,68 @@ function MenuSalesPage(props) {
     }
   );
 
-  const selectMenuListQuery = useQuery(
-    ["selectMenuListQuery"],
-    () => searchMenuListRequest(adminId),
-    {
-      retry: 0,
-      refetchOnWindowFocus: false,
-      onSuccess: (response) => {
-        console.log(response.data);
-        setMenuList(response.data);
-      },
-      onError: (error) => {
-        console.log("에러 :", error);
-      },
-    }
-  );
-
-  const handleMenuClick = (id) => {
-    navigate(`/admin/sale/menu?menuId=${id}`);
+  const handleViewChange = (show) => {
+    setViewType(show);
   };
 
-  const handleCategoryId = (category) => {
-    setCategoryId(category);
+  const handleDataKeyChange = (key) => {
+    setDataKey(key);
   };
+
+  // 월별 데이터 합치기
+  const addMonthData = (data) => {
+    const addData = data.reduce((acc, curr) => {
+      const month = curr.month;
+      if (!acc[month]) {
+        acc[month] = {
+          month: month,
+          menuTotalSales: 0,
+          count: 0,
+        };
+      }
+      acc[month].menuTotalSales += curr.menuTotalSales;
+      acc[month].count += curr.count;
+      return acc;
+    }, {});
+
+    return Object.values(addData);
+  };
+
+  const searchSales = viewType === "monthly" ? addMonthData(sales) : sales;
 
   return (
-    <div css={s.layout}>
-      <div css={s.header}>
-        <div css={s.title}>메뉴 매출 조회</div>
-      </div>
-      <div css={s.main}>
-        <div css={s.ListLayout}>
-          <div css={s.list}>
-            {categories.map((cat) => (
-              <button
-                css={s.categorieButton}
-                onClick={() => handleCategoryId(cat.menuCategoryId)}
-                key={cat.menuCategoryId}
-              >
-                {cat.menuCategoryName}
-              </button>
-            ))}
-            {menu.categoryName?.map((category) => (
-              <div key={category}>
-                <h3>{category}</h3>
-                <div css={s.menulist}>
-                  {menu.menuName
-                    .filter(
-                      (menuItem) => menuItem.menuCategoryName === category
-                    )
-                    .map((menuItem) => (
-                      <MenuButton
-                        key={menuItem.menuId}
-                        onClick={() => handleMenuClick(menuItem.menuId)}
-                        menuName={menuItem.menuName}
-                        img={menuItem.menuIngUrl}
-                      />
-                    ))}
-                </div>
-              </div>
-            ))}
-          </div>
+    <SalesModal>
+      <div>
+        <div css={s.buttonContainer}>
+          <button css={s.button} onClick={() => handleViewChange("monthly")}>
+            월별
+          </button>
+          <button css={s.button} onClick={() => handleViewChange("daily")}>
+            일별
+          </button>
+          <button css={s.button} onClick={() => handleDataKeyChange("menuTotalSales")}>
+            총 매출
+          </button>
+          <button css={s.button} onClick={() => handleDataKeyChange("count")}>
+            갯수
+          </button>
         </div>
+        <AdminSalesChart
+          sales={searchSales.map((data) => ({
+            menuTotalSales: data.menuTotalSales,
+            count: data.count,
+            month: data.month,
+            day: data.day,
+          }))}
+          monthKey={"month"}
+          dayKey={"day"}
+          keyName={viewType === "monthly" ? "월별" : "일별"}
+          dataKey={dataKey}
+          lineColor={"#ff7300"}
+          viewType={viewType}
+        />
       </div>
-    </div>
+    </SalesModal>
   );
 }
 
