@@ -1,14 +1,16 @@
 import React from "react";
 import ReactApexChart from "react-apexcharts";
 
-const AdminSalesChart = ({ 
-  sales, 
-  monthKey, 
-  dayKey, 
-  keyName, 
-  dataKey, 
+const AdminSalesChart = ({
+  sales,
+  monthKey,
+  dayKey,
+  keyName,
+  dataKey,
   lineColor,
-  viewType
+  viewType,
+  yAxisMin, 
+  yAxisMax,
 }) => {
   // 날짜를 지정된 형식으로 변환하는 함수
   const getDateLabel = (monthNumber, dayNumber) => {
@@ -17,13 +19,15 @@ const AdminSalesChart = ({
     if (dayNumber !== null && dayNumber !== undefined) {
       date.setDate(dayNumber);
     }
-    return viewType === 'month' 
-      ? date.toLocaleString("en-US", { month: "long" }) 
+    return viewType === "month"
+      ? date.toLocaleString("en-US", { month: "long" })
       : date.toLocaleString("en-US", { month: "short", day: "numeric" });
   };
 
-  const categories = sales.map((data) => 
-    viewType === 'month' ? getDateLabel(data[monthKey], null) : getDateLabel(data[monthKey], data[dayKey])
+  const categories = sales.map((data) =>
+    viewType === "month"
+      ? getDateLabel(data[monthKey], null)
+      : getDateLabel(data[monthKey], data[dayKey])
   );
 
   const series = [
@@ -41,9 +45,10 @@ const AdminSalesChart = ({
       zoom: {
         enabled: false,
       },
+      toolbar: { show: false },
     },
     stroke: {
-      width: [4], 
+      width: [4], // 선 굵기
       curve: "smooth", 
     },
     title: {
@@ -59,7 +64,7 @@ const AdminSalesChart = ({
       strokeColors: "#fff",
       strokeWidth: 1,
       hover: {
-        size: 7, 
+        size: 7,
       },
     },
     xaxis: {
@@ -72,7 +77,12 @@ const AdminSalesChart = ({
     },
     yaxis: [
       {
+        min: yAxisMin, 
+        max: yAxisMax,
         labels: {
+          formatter: (val) => {
+            return val.toFixed(0); // 소수점자리 없애기
+          },
           style: {
             fontSize: "18px",
           },

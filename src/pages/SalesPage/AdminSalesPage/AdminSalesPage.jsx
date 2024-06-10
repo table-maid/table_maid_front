@@ -26,6 +26,8 @@ function AdminSalesPage(props) {
   const [totalCount, setTotalCount] = useState(0);
   const [filteredSalesData, setFilteredSalesData] = useState([]);
   const [searchClicked, setSearchClicked] = useState(false);
+  const [dataKey, setDataKey] = useState("totalSales");
+  const [chartData, setChartData] = useState([]);
 
   const {
     oneWeekData,
@@ -61,11 +63,13 @@ function AdminSalesPage(props) {
     },
   });
 
-  useEffect(() => {
+  useEffect(() => { 
     if (viewType === "week") {
+      setChartData(oneWeekData);
       setTotalSales(oneWeekTotals.totalSales);
       setTotalCount(oneWeekTotals.totalCount);
     } else if (viewType === "month") {
+      setChartData(lastMonthData);
       setTotalSales(lastMonthTotals.totalSales);
       setTotalCount(lastMonthTotals.totalCount);
     } else if (viewType === "custom" && searchClicked) {
@@ -74,6 +78,7 @@ function AdminSalesPage(props) {
       setFilteredSalesData(filteredData);
       setTotalSales(totalSales);
       setTotalCount(totalCount);
+      setChartData(filteredData);
       setSearchClicked(false);
     }
   }, [
@@ -83,11 +88,13 @@ function AdminSalesPage(props) {
     endDate,
     oneWeekTotals,
     lastMonthTotals,
+    chartData,
     customTotalDay,
   ]);
 
-  const handleViewTypeChange = (type) => {
+  const handleViewTypeChange = (type, key) => {
     setViewType(type);
+    setDataKey(key);
     if (type !== "custom") {
       setSearchClicked(false);
     }
@@ -114,8 +121,9 @@ function AdminSalesPage(props) {
             }))}
             monthKey={"month"}
             keyName={"총 매출"}
-            dataKey={"totalSales"}
+            dataKey={dataKey}
             lineColor={"#ff7300"}
+            viewType={viewType}
           />
         </div>
         <div css={s.salesLayout}>
@@ -123,13 +131,13 @@ function AdminSalesPage(props) {
             <div css={s.selectButton}>
               <div css={s.buttonBox}>
                 <button
-                  onClick={() => handleViewTypeChange("week")}
+                  onClick={() => handleViewTypeChange("week", "totalSales")}
                   css={s.button}
                 >
                   지난 7일
                 </button>
                 <button
-                  onClick={() => handleViewTypeChange("month")}
+                  onClick={() => handleViewTypeChange("month", "totalSales")}
                   css={s.button}
                 >
                   저번달
@@ -203,4 +211,4 @@ function AdminSalesPage(props) {
   );
 }
 
-export default AdminSalesPage;
+export default AdminSalesPage; 
