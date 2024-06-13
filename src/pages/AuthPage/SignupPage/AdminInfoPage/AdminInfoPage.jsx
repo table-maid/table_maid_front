@@ -1,13 +1,18 @@
 /** @jsxImportSource @emotion/react */
 import * as s from "./style";
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import AuthPageInput from '../../../../components/AuthPage/AuthPageInput/AuthPageInput'
 import { useInput } from '../../../../hooks/useInput';
 import { signupRequest } from "../../../../apis/api/signup";
 import { useMutation } from "react-query";
-import { sendAuthMailRequest } from "../../../../apis/api/sendAuthMail";
+import { sendAuthMailRequest, verifyCodeRequest } from "../../../../apis/api/sendAuthMail";
 
-
+const formatTime = (time) => {
+    const minutes = Math.floor(time / 60);
+    const seconds = time % 60;
+    return `${minutes}:${seconds < 10 ? "0" : ""}${seconds}`;
+};
+    
 function AdminInfoPage() {
     const [adminName, adminNameChange, adminNameMessage] = useInput("adminName");
     const [username, userNameChange, usernameMessage, setUsernameValue, setUsernameMessage] = useInput("username");
@@ -19,10 +24,30 @@ function AdminInfoPage() {
     const [companyName, companyNameChange, companyNameMessage] = useInput("companyName");
     const [ownerName, ownerNameChange, ownerNameMessage] = useInput("ownerName");
     const [companyAddress, companyAddressChange, companyAddressMessage, setCompanyAddressValue, setCompanyAddressMessage] = useInput("companyAddress");
+    const [authCode, authCodeChange, authCodeMessage] = useInput("authCode");
     
     const [emailButton, setEmailButton] = useState(false);
     const [isStoreInfo, setIsStoreInfo] = useState(false);
     const [isEmailAuthCode, setIsEmailAuthCode] = useState(false);
+    
+    const [second, setSecond] = useState(180);
+
+    // 인증코드 타이머
+    const time = useMemo(() => {
+        let timer;
+        if (isEmailAuthCode) {
+            timer = setInterval(() => {
+                setSecond((prevSecond) => {
+                    if (prevSecond === 0) {
+                        clearInterval(timer);
+                        return 0;
+                    }
+                    return prevSecond - 1;
+                });
+            }, 1000);
+        }
+        return () => clearInterval(timer);
+    }, [second]);
 
     // 비밀번호 체크
     useEffect(() => {
@@ -50,7 +75,6 @@ function AdminInfoPage() {
 
     // 메일 버튼 활성화 
     useEffect(() => {
-        console.log(emailMessage?.type)
         if(emailMessage?.type === "error" || emailMessage?.type === null || emailMessage?.type === undefined)
         {
             setEmailButton(false);
@@ -60,12 +84,12 @@ function AdminInfoPage() {
     }, [emailMessage])
 
 
+    // 인증 메일 전송
     const mailAuthentication = useMutation({
         mutationKey: "mailAuthentication",
         mutationFn: sendAuthMailRequest,
         onSuccess: (response) => {
-            console.log(response);
-            alert("메일이 전송되었습니다.")
+            setSecond(() => 180);
             setIsEmailAuthCode(() => true);
         },
         onError: (error) => {
@@ -73,12 +97,31 @@ function AdminInfoPage() {
         }
     })
 
-    const handleMailsend = (email) => {
+    const handleMailSend = (email) => {
         if(window.confirm("이 메일로 인증번호를 발송할까요?")) {
             mailAuthentication.mutate(email)
         }
     }
 
+    // 인증 코드 전송
+    const verifyCode = useMutation({
+        mutationKey: "verifyCode",
+        mutationFn: verifyCodeRequest,
+        onSuccess: (response) => {
+            alert(response.data)
+            
+        },
+        onError: (error) => {
+            alert(error.response.data)
+        }
+    })
+    
+    const handleCodeSend = () => {
+        verifyCode.mutate({
+            email: email,
+            authCode: authCode,
+        })
+    }
 
     // 다음
     const isOpenStroeInfo = () => {
@@ -88,6 +131,7 @@ function AdminInfoPage() {
             checkPasswordMessage?.type,
             adminNameMessage?.type,
             emailMessage?.type,
+            authCodeMessage?.type
         ];
 
         if (checkFlags.includes("error") || checkFlags.includes(undefined) || checkFlags.includes(null)) {
@@ -222,13 +266,29 @@ function AdminInfoPage() {
                                 onChange={emailChange}
                                 message={emailMessage}
                             />
-                            <button css={s.authentiCation(emailButton)} disabled={!emailButton} onClick={() => handleMailsend(email)}>
+                            <button css={s.authentiCation(emailButton)} disabled={!emailButton} onClick={() => handleMailSend(email)}>
+                                {/* {isEmailAuthCode ? "인증 코드 재전송": "인증 코드 보내기"} */}
                                 인증 코드 보내기
                             </button>
-                            <div>
-                                <input type="text" placeholder="인증코드" disabled={!isEmailAuthCode} />
-                                <button disabled={!isEmailAuthCode}>인증하기</button>
-                            </div>
+
+                            
+                            <AuthPageInput
+                                type={"text"}
+                                name={"authCode"}
+                                placeholder={"인증코드"}
+                                value={authCode}
+                                onChange={authCodeChange}
+                                message={authCodeMessage}
+                                disabled={!isEmailAuthCode}
+                            />
+                            <h4>남은 인증 시간 {formatTime(second)}</h4>
+                            <button 
+                                css={s.authentiCation(isEmailAuthCode)}
+                                disabled={!isEmailAuthCode} 
+                                onClick={() => handleCodeSend()} 
+                            >
+                                인증하기
+                            </button>
                         </div>
 
                         <button css={s.signinButton} onClick={isOpenStroeInfo}>
