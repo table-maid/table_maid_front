@@ -6,12 +6,14 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import AdminSalesChart from "../../../components/Sales/AdminSalesChart/AdminSalesChart";
 import SalesModal from "../../../components/Sales/SalesModal/SalesModal";
+import { adminIdState } from "../../../atoms/AdminIdStateAtom";
+import { useRecoilState } from "recoil";
 
 function MenuSalesPage(props) {
-  const [adminId, setAdminId] = useState(1);
+  const [adminId] = useRecoilState(adminIdState);
   const [sales, setSales] = useState([]);
   const [viewType, setViewType] = useState("");
-  const [dataKey, setDataKey] = useState("menuTotalSales"); 
+  const [dataKey, setDataKey] = useState("menuTotalSales");
   const { menuId } = useParams();
 
   useEffect(() => {
@@ -71,33 +73,42 @@ function MenuSalesPage(props) {
     <SalesModal>
       <div>
         <div css={s.buttonContainer}>
-          <button css={s.button} onClick={() => handleViewChange("monthly")}>
-            월별
-          </button>
-          <button css={s.button} onClick={() => handleViewChange("daily")}>
-            일별
-          </button>
-          <button css={s.button} onClick={() => handleDataKeyChange("menuTotalSales")}>
-            총 매출
-          </button>
-          <button css={s.button} onClick={() => handleDataKeyChange("count")}>
-            갯수
-          </button>
+          <div css={s.ChoiceContainer}>
+            <button css={s.button} onClick={() => handleViewChange("monthly")}>
+              월별
+            </button>
+            <button css={s.button} onClick={() => handleViewChange("daily")}>
+              일별
+            </button>
+          </div>
+          <div css={s.ChoiceContainer}>
+            <button
+              css={s.button}
+              onClick={() => handleDataKeyChange("menuTotalSales")}
+            >
+              총 매출
+            </button>
+            <button css={s.button} onClick={() => handleDataKeyChange("count")}>
+              갯수
+            </button>
+          </div>
         </div>
-        <AdminSalesChart
-          sales={searchSales.map((data) => ({
-            menuTotalSales: data.menuTotalSales,
-            count: data.count,
-            month: data.month,
-            day: data.day,
-          }))}
-          monthKey={"month"}
-          dayKey={"day"}
-          keyName={viewType === "monthly" ? "월별" : "일별"}
-          dataKey={dataKey}
-          lineColor={"#ff7300"}
-          viewType={viewType}
-        />
+        <div css={s.chartContainer}>
+          <AdminSalesChart
+            sales={searchSales.map((data) => ({
+              menuTotalSales: data.menuTotalSales,
+              count: data.count,
+              month: data.month,
+              day: data.day,
+            }))}
+            monthKey={"month"}
+            dayKey={"day"}
+            keyName={viewType === "monthly" ? "월별" : "일별"}
+            dataKey={dataKey}
+            lineColor={"#ff7300"}
+            viewType={viewType}
+          />
+        </div>
       </div>
     </SalesModal>
   );
