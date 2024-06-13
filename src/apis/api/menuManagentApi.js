@@ -69,3 +69,7 @@ export const searchMenuListRequest = async(adminId) => {
     return await instance.get(`/menu/list?adminId=${adminId}`)
 }
 
+export const updateImgUrlRequest = async(data) => {
+    return await instance.put(`/menu/img`, data)
+}
+

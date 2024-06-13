@@ -7,6 +7,7 @@ import useCategory from "../../../hooks/useCategory";
 import OptionRegisterModal from "../../../components/Menu/OptionRegisterModal/OptionRegisterModal";
 import useGetOption from '../../../hooks/useGetOption';
 import useOptionTitle from '../../../hooks/useOptionTitle';
+import MenuImg from '../../../components/MenuImg/MenuImg';
 
 function MenuManagementDetailPage() {
 
@@ -23,6 +24,7 @@ function MenuManagementDetailPage() {
             menuName: '',
             recommendMenu: 1,
             menuCategoryId: '',
+            menuImgUrl: '',
             optionList:[]
         });
     const [updateOptionData, setUpdateOptionData] = useState({
@@ -56,7 +58,7 @@ function MenuManagementDetailPage() {
             const param = { adminId, menuId };
             const response = await searchMenuDetail(param);
             setMenuDetail(response.data[0]);
-        
+            console.log(response.data[0])
         } catch (error) {
             console.error(error);
         }
@@ -169,48 +171,52 @@ function MenuManagementDetailPage() {
         <div css={s.layout}>
             <div>
                 <h2>매장단품메뉴관리 등록/수정</h2>
-                <button onClick={handleUpdateMenuDetail}>저장</button>
+                <button onClick={handleUpdateMenuDetail}>메뉴 저장</button>
             </div>
             <div>
-                <div>
-                    <label>매장명</label>
-                    <input type="text" name="storeName" value={storeName} disabled />
-                </div>
-                <div>
-                    <label>매뉴코드</label>
-                    <input type="text" name="menuCode" value={menuDetail?.menuCode} disabled />
-                </div>
-                <div>
-                    <label>판매상태</label>
-                    <select name="menuState" value={menuDetail?.menuState} onChange={handleMenuStateChange}>
-                        <option value={1}>판매</option>
-                        <option value={2}>매진</option>
-                    </select>
-                </div>
-                <div>
-                    <label>판매가</label>
-                    <input type="text" name="menuPrice" value={menuDetail?.menuPrice} onChange={handleInputChange} />
-                </div>
-                <div>
-                    <label>메뉴명</label>
-                    <input type="text" name="menuName" value={menuDetail?.menuName} onChange={handleInputChange} />
-                </div>
-                <div>
-                    <input type="checkbox" name="recommendMenu" checked={menuDetail?.recommendMenu === 2} onChange={handleInputChange} />
-                </div>
-                <div>
-                    <label>카테고리 선택</label>
-                    <select name="categoryId" value={menuDetail?.menuCategoryId} onChange={handleCategoryChange}>
-                        <option value="선택">선택</option>
-                        {categories?.map(cat => (
-                            <option key={cat.menuCategoryId} value={cat.menuCategoryId}>
-                                {cat.menuCategoryName}
-                            </option>
-                        ))}
-                    </select>
-                </div>
-                <div> 
-                    img
+                <div style={{display:"flex"}}>
+                    <div>
+                        <div>
+                            <label>매장명</label>
+                            <input type="text" name="storeName" value={storeName} disabled />
+                        </div>
+                        <div>
+                            <label>매뉴코드</label>
+                            <input type="text" name="menuCode" value={menuDetail?.menuCode} disabled />
+                        </div>
+                        <div>
+                            <label>판매상태</label>
+                            <select name="menuState" value={menuDetail?.menuState} onChange={handleMenuStateChange}>
+                                <option value={1}>판매</option>
+                                <option value={2}>매진</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label>판매가</label>
+                            <input type="text" name="menuPrice" value={menuDetail?.menuPrice} onChange={handleInputChange} />
+                        </div>
+                        <div>
+                            <label>메뉴명</label>
+                            <input type="text" name="menuName" value={menuDetail?.menuName} onChange={handleInputChange} />
+                        </div>
+                        <div>
+                            <input type="checkbox" name="recommendMenu" checked={menuDetail?.recommendMenu === 2} onChange={handleInputChange} />
+                        </div>
+                        <div>
+                            <label>카테고리 선택</label>
+                            <select name="categoryId" value={menuDetail?.menuCategoryId} onChange={handleCategoryChange}>
+                                <option value="선택">선택</option>
+                                {categories?.map(cat => (
+                                    <option key={cat.menuCategoryId} value={cat.menuCategoryId}>
+                                        {cat.menuCategoryName}
+                                    </option>
+                                ))}
+                            </select>
+                        </div>
+                    </div>
+                    <div> 
+                        <MenuImg adminId={adminId} menuImgUrl={menuDetail.menuImgUrl} menuId={menuId} />
+                    </div>
                 </div>
                 {optionModal && (
                     <OptionRegisterModal
@@ -222,10 +228,8 @@ function MenuManagementDetailPage() {
                 <h2>메뉴 옵션</h2>
                 <div css={s.optionLayout}>
                     <div>
-                        <button>옵션 수정</button>
                         <button onClick={() => setOptionModal(true)}>옵션 추가</button>
-                        <button>삭제</button>
-                        <div>* 옵션 제목 삭제 시 옵션 내용이 모두 삭제되니 주의해주세요.</div>
+                        <div>* 옵션 제목 삭제 시 해당하는 옵션 내용이 모두 삭제되니 주의해주세요.</div>
                     </div>
                     <div css={s.optionManagementLayout}>
                         <div css={s.optionManagementTitleLayout}>
