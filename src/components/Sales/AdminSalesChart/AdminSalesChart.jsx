@@ -9,9 +9,11 @@ const AdminSalesChart = ({
   dataKey,
   lineColor,
   viewType,
-  yAxisMin, 
+  yAxisMin,
   yAxisMax,
 }) => {
+  console.log("Sales data:", sales); // Debugging: Check sales data
+
   // 날짜를 지정된 형식으로 변환하는 함수
   const getDateLabel = (monthNumber, dayNumber) => {
     const date = new Date();
@@ -49,7 +51,7 @@ const AdminSalesChart = ({
     },
     stroke: {
       width: [4], // 선 굵기
-      curve: "smooth", 
+      curve: "smooth",
     },
     title: {
       text: keyName,
@@ -59,7 +61,7 @@ const AdminSalesChart = ({
       },
     },
     markers: {
-      size: 6, 
+      size: 6,
       colors: [lineColor],
       strokeColors: "#fff",
       strokeWidth: 1,
@@ -77,12 +79,10 @@ const AdminSalesChart = ({
     },
     yaxis: [
       {
-        min: yAxisMin, 
+        min: yAxisMin,
         max: yAxisMax,
         labels: {
-          formatter: (val) => {
-            return val.toFixed(0); // 소수점자리 없애기
-          },
+          formatter: (val) => val.toFixed(0), // 소수점자리 없애기
           style: {
             fontSize: "18px",
           },
@@ -106,12 +106,16 @@ const AdminSalesChart = ({
 
   return (
     <div id="chart">
-      <ReactApexChart
-        options={options}
-        series={series}
-        type="line"
-        height={"380px"}
-      />
+      {sales.length === 0 ? (
+        <div>데이터 X</div> // 데이터가 없을 때 표시
+      ) : (
+        <ReactApexChart
+          options={options}
+          series={series}
+          type="line"
+          height={"380px"}
+        />
+      )}
     </div>
   );
 };

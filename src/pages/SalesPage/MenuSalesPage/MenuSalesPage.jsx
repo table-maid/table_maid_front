@@ -6,9 +6,11 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import AdminSalesChart from "../../../components/Sales/AdminSalesChart/AdminSalesChart";
 import SalesModal from "../../../components/Sales/SalesModal/SalesModal";
+import { adminIdState } from "../../../atoms/AdminIdStateAtom";
+import { useRecoilState } from "recoil";
 
 function MenuSalesPage(props) {
-  const [adminId, setAdminId] = useState(1);
+  const [adminId] = useRecoilState(adminIdState);
   const [sales, setSales] = useState([]);
   const [viewType, setViewType] = useState("");
   const [dataKey, setDataKey] = useState("menuTotalSales");
@@ -78,20 +80,17 @@ function MenuSalesPage(props) {
             <button css={s.button} onClick={() => handleViewChange("daily")}>
               일별
             </button>
-              </div>
-            <div css={s.ChoiceContainer}>
-              <button
-                css={s.button}
-                onClick={() => handleDataKeyChange("menuTotalSales")}
-              >
-                총 매출
-              </button>
-              <button
-                css={s.button}
-                onClick={() => handleDataKeyChange("count")}
-              >
-                갯수
-              </button>
+          </div>
+          <div css={s.ChoiceContainer}>
+            <button
+              css={s.button}
+              onClick={() => handleDataKeyChange("menuTotalSales")}
+            >
+              총 매출
+            </button>
+            <button css={s.button} onClick={() => handleDataKeyChange("count")}>
+              갯수
+            </button>
           </div>
         </div>
         <div css={s.chartContainer}>

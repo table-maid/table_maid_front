@@ -13,20 +13,22 @@ import useSalesData from "../../../hooks/useSalesData";
 import SalesList from "../../../components/Sales/SalesList/SalesList";
 import { CgDanger } from "react-icons/cg";
 import { IoSearchOutline, IoClose } from "react-icons/io5";
-
+import { useRecoilState } from "recoil";
+import { adminIdState } from "../../../atoms/AdminIdStateAtom";
+import { viewTypeState } from "../../../atoms/ViewTypeStateAtom";
 
 function AdminSalesPage(props) {
-  const [adminId, setAdminId] = useState(1);
+  const [adminId] = useRecoilState(adminIdState);
   const [sales, setSales] = useState([]);
   const [selectSalesData, setSelectSalesData] = useState([]);
-  const [viewType, setViewType] = useState("");
+  const [viewType, setViewType] = useRecoilState(viewTypeState);
   const [startDate, setStartDate] = useState(new Date());
   const [endDate, setEndDate] = useState(new Date());
   const [totalSales, setTotalSales] = useState(0);
   const [totalCount, setTotalCount] = useState(0);
   const [filteredSalesData, setFilteredSalesData] = useState([]);
   const [searchClicked, setSearchClicked] = useState(false);
-  const [dataKey, setDataKey] = useState("totalSales");
+  const [dataKey, setDataKey] = useState("");
   const [chartData, setChartData] = useState([]);
 
   const {
@@ -37,50 +39,69 @@ function AdminSalesPage(props) {
     lastMonthTotals,
   } = useSalesData(selectSalesData);
 
-  const salesQuery = useQuery(["salesQuery"], 
-    () => getSalesRequest(adminId), 
+  const salesQuery = useQuery(
+    ["salesQuery"], // 연간 총 매출
+    () => getSalesRequest(adminId),
     {
-    retry: 0,
-    refetchOnWindowFocus: false,
-    onSuccess: (response) => {
-      setSales(response.data);
-    },
-    onError: (error) => {
-      console.log("에러 :", error);
-    },
-  });
+      retry: 0,
+      refetchOnWindowFocus: false,
+      onSuccess: (response) => {
+        console.log("Sales response:", response.data);
+        setSales(response.data);
+      },
+      onError: (error) => {
+        console.log("Sales query error:", error);
+      },
+    }
+  );
 
-  const selectSalesQuery = useQuery(["selectSalesQuery"], 
-    () => getSelectSalesRequest(adminId), 
+  const selectSalesQuery = useQuery(
+    ["selectSalesQuery"], // 하루 매출
+    () => getSelectSalesRequest(adminId),
     {
-    retry: 0,
-    refetchOnWindowFocus: false,
-    onSuccess: (response) => {
-      setSelectSalesData(response.data);
-    },
-    onError: (error) => {
-      console.log("에러 :", error);
-    },
-  });
+      retry: 0,
+      refetchOnWindowFocus: false,
+      onSuccess: (response) => {
+        console.log("Select sales response:", response.data);
+        setSelectSalesData(response.data);
+      },
+      onError: (error) => {
+        console.log("Select sales query error:", error);
+      },
+    }
+  );
 
-  useEffect(() => { 
-    if (viewType === "week") {
-      setChartData(oneWeekData);
-      setTotalSales(oneWeekTotals.totalSales);
-      setTotalCount(oneWeekTotals.totalCount);
-    } else if (viewType === "month") {
-      setChartData(lastMonthData);
-      setTotalSales(lastMonthTotals.totalSales);
-      setTotalCount(lastMonthTotals.totalCount);
-    } else if (viewType === "custom" && searchClicked) {
-      const { totalSales, totalCount, filteredData } =
-      customTotalDay(startDate, endDate);
+  useEffect(() => {
+    let data = [];
+    let key = "";
+
+    if (viewType === "custom" && searchClicked) {
+      const { totalSales, totalCount, filteredData } = customTotalDay(startDate, endDate);
+      console.log("Custom data:", filteredData);
       setFilteredSalesData(filteredData);
       setTotalSales(totalSales);
       setTotalCount(totalCount);
-      setChartData(filteredData);
+      data = filteredData;
+      key = "dayTotalSales";
       setSearchClicked(false);
+    } else if (viewType === "week") {
+      data = oneWeekData;
+      setTotalSales(oneWeekTotals.totalSales);
+      setTotalCount(oneWeekTotals.totalCount);
+      key = "dayTotalSales";
+    } else if (viewType === "month") {
+      data = lastMonthData;
+      setTotalSales(lastMonthTotals.totalSales);
+      setTotalCount(lastMonthTotals.totalCount);
+      key = "dayTotalSales";
+    } else {
+      data = sales;
+      key = "totalSales";
     }
+
+    console.log("Chart data:", data);
+    setChartData(data);
+    setDataKey(key);
   }, [
     viewType,
     searchClicked,
@@ -88,13 +109,14 @@ function AdminSalesPage(props) {
     endDate,
     oneWeekTotals,
     lastMonthTotals,
-    chartData,
     customTotalDay,
+    oneWeekData,
+    lastMonthData,
+    sales,
   ]);
 
-  const handleViewTypeChange = (type, key) => {
+  const handleViewTypeChange = (type) => {
     setViewType(type);
-    setDataKey(key);
     if (type !== "custom") {
       setSearchClicked(false);
     }
@@ -115,14 +137,17 @@ function AdminSalesPage(props) {
       <div css={s.main}>
         <div css={s.chartContainer}>
           <AdminSalesChart
-            sales={sales.map((data) => ({
-              totalSales: data.totalSales,
-              month: data.month,
+            sales={chartData.map((data) => ({
+              dayTotalSales: data?.dayTotalSales,
+              totalSales: data?.totalSales,
+              month: data?.month,
+              day: data?.day,
             }))}
             monthKey={"month"}
-            keyName={"총 매출"}
+            dayKey={"day"}
+            keyName={viewType === "custom" ? "일별" : "총 매출"}
             dataKey={dataKey}
-            lineColor={"#ff7300"}
+            lineColor={"#e78a42"}
             viewType={viewType}
           />
         </div>
@@ -130,16 +155,10 @@ function AdminSalesPage(props) {
           <div css={s.selectBox}>
             <div css={s.selectButton}>
               <div css={s.buttonBox}>
-                <button
-                  onClick={() => handleViewTypeChange("week", "totalSales")}
-                  css={s.button}
-                >
+                <button onClick={() => handleViewTypeChange("week")} css={s.button}>
                   지난 7일
                 </button>
-                <button
-                  onClick={() => handleViewTypeChange("month", "totalSales")}
-                  css={s.button}
-                >
+                <button onClick={() => handleViewTypeChange("month")} css={s.button}>
                   저번달
                 </button>
               </div>
@@ -163,11 +182,7 @@ function AdminSalesPage(props) {
                   css={s.customButton}
                 />
               </div>
-              <button
-                disabled={isDisabled}
-                onClick={handleSearchClick}
-                css={s.sercher(isDisabled)}
-              >
+              <button disabled={isDisabled} onClick={handleSearchClick} css={s.sercher(isDisabled)}>
                 {isDisabled ? (
                   <IoClose css={s.searchIcon(isDisabled)} />
                 ) : (
@@ -211,4 +226,4 @@ function AdminSalesPage(props) {
   );
 }
 
-export default AdminSalesPage; 
+export default AdminSalesPage;
