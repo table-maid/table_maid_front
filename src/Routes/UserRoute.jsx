@@ -1,14 +1,14 @@
 import React from "react";
-import MenuSelect from "../components/User/MenuSelect/MenuSelect";
 import { Route, Routes } from "react-router-dom";
-import MenuDetails from "../components/User/MenuDetails/MenuDetails";
+import MenuDetails from "../pages/UserPage/MenuDetailsPage/MenuDetails";
+import UserMainPage from "../pages/UserPage/UserMainPage/UserMainPage";
 
 function UserRoute() {
     return (
         <>
             <Routes>
-                <Route path="/user/menu" element={<MenuSelect />} />
-                <Route path="/user/details" element={<MenuDetails />} />
+                <Route path="/*" element={<UserMainPage />} />
+                <Route path="/user/details/:menuId" element={<MenuDetails />} />
             </Routes>
         </>
     );

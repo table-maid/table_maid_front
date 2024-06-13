@@ -65,3 +65,7 @@ export const deleteOption = async (data) => {
     return await instance.delete("menu/option/name", { data: data });
 };
 
+export const searchMenuListRequest = async(adminId) => {
+    return await instance.get(`/menu/list?adminId=${adminId}`)
+}
+
