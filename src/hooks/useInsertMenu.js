@@ -3,10 +3,8 @@ import { useState } from 'react';
 import { registerMenu } from '../apis/api/menuManagentApi';
 
 function useInsertMenu(categories, adminId, recommend) {
-    const [menuName, setMenuName] = useState('');
-    const [menuPrice, setMenuPrice] = useState('');
-
-    const insertMenu = async (categoryId, categoryName) => {
+    
+    const insertMenu = async (menuName, menuPrice, categoryId, categoryName) => {
         try {
             if (categoryId === 0) {
                 alert("카테고리를 선택해주세요");
@@ -18,7 +16,7 @@ function useInsertMenu(categories, adminId, recommend) {
                 menuCategoryName: categoryName,
                 menuName: menuName,
                 menuPrice: menuPrice,
-                recommendMenu: recommend === true ? 1 : 0,
+                recommendMenu: recommend === true ? 2 : 1,
                 menuState: 1
             };
             await registerMenu(params);
@@ -29,7 +27,7 @@ function useInsertMenu(categories, adminId, recommend) {
         }
     };
 
-    return { menuName, menuPrice, setMenuName, setMenuPrice, insertMenu };
+    return { insertMenu };
 }
 
 export default useInsertMenu;

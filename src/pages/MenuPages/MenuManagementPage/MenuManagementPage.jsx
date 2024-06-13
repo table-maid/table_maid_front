@@ -7,8 +7,6 @@ import useGetMenus from "../../../hooks/useGetMenu";
 import useGetOption from "../../../hooks/useGetOption";
 import * as s from "./style";
 import { registerOption, registerOptionTitle, searchOptionTitleRequest } from '../../../apis/api/menuManagentApi';
-import useOptionTitle from '../../../hooks/useOptionTitle';
-import useInsertOptionTitle from '../../../hooks/useInsertOptionTitle';
 import MenuRegisterModal from '../../../components/Menu/MenuRegisterModal/MenuRegisterModal';
 import OptionRegisterModal from '../../../components/Menu/OptionRegisterModal/OptionRegisterModal';
 
@@ -17,19 +15,13 @@ function MenuManagementPage(props) {
     const { categories, error: categoriesError } = useCategory(adminId);
     const [categoryId, setCategoryId] = useState(0);
     const [ menuId, setMenuId ] = useState(0);
-    const { optionTitleId, optionTitleName, error } = useOptionTitle(adminId, menuId);
     const { menus, error: menusError, uniqueMenuCategoryNames } = useGetMenus(adminId, categoryId);
     const { options, error: optionsError } = useGetOption(adminId, menuId);
     const [ recommend, setRecommend ] = useState(false);
     const { menuName, menuPrice, setMenuName, setMenuPrice, insertMenu } = useInsertMenu(categories, adminId, recommend);
     const { categoryName, handleCategoryName, categoryInsert } = useCategoryInsert(adminId);
-    const { insertOptionTitle, Optionerror } = useInsertOptionTitle();
     const [menuModal, setMenuModal] = useState(0);
     const [optionModal, setOptionModal] = useState(0);
-    const [optionTitle, setOptionTitle] = useState("");
-    const [optionName, setOptionName] = useState();
-    const [optionPrice, setOptionPrice] = useState();
-    const [optionSelectTitleId, setOptionSlectTitleId] = useState();
 
     const menu = {
         categoryName: uniqueMenuCategoryNames,
@@ -52,40 +44,9 @@ function MenuManagementPage(props) {
         setRecommend(e.target.checked);
     };
 
-    const handleOptionTitleName = (e) => {
-        setOptionTitle(e.target.value);
-    };
-    const optionsData = optionTitleId.map((id, index) => ({
-        optionTitleId: id,
-        titleNames: optionTitleName[index]
-    }));
-
-    const handleOptionName = (e) => {
-        setOptionName(e.target.value)
-    }
-
-    const handleOptionPrice = (e) => {
-        setOptionPrice(e.target.value)
-    }
-
-    const insertOption = async () => {
-        try {
-            const params = {
-                adminId: adminId,
-                menuId: menuId,
-                titleId: optionSelectTitleId,
-                optionName: optionName,
-                optionPrice: optionPrice
-            };
-            console.log(params)
-            await registerOption(params);
-        } catch (error) {
-            console.error(error);
-        }
-    };
-
     return (
         <div>
+
             {menuModal !== 0 && (
                 <MenuRegisterModal
                     categories={categories}
@@ -141,14 +102,9 @@ function MenuManagementPage(props) {
                         optionModal !== 0 &&
                         <OptionRegisterModal
                             optionModal={optionModal}
-                            handleOptionTitleName={handleOptionTitleName}
-                            insertOptionTitle={insertOptionTitle}
-                            optionsData={optionsData}
-                            setOptionSlectTitleId={setOptionSlectTitleId}
-                            handleOptionName={handleOptionName}
-                            handleOptionPrice={handleOptionPrice}
-                            insertOption={insertOption}
                             closeModal={() => setOptionModal(0)}
+                            options={options}
+                            menuId={menuId}
                         />
                     }
                     <div>

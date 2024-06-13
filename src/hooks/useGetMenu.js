@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { searchMenuRequest } from '../apis/api/menuManagentApi';
+import { searchMenuRequest, serachMenuList } from '../apis/api/menuManagentApi';
 
 const useGetMenus = (adminId, menuCategoryId) => {
     const [menus, setMenus] = useState([]);
@@ -10,10 +10,13 @@ const useGetMenus = (adminId, menuCategoryId) => {
         const getMenus = async () => {
             try {
                 const params = { adminId, menuCategoryId };
-                const response = await searchMenuRequest(params);
+                console.log(params)
+                const response = await serachMenuList(params);
                 setUniqueMenuCategoryNames([...new Set(response.data.map(menu => menu.menuCategoryName))]);
                 setMenus(response.data);
                 console.log(response.data);
+                console.log(uniqueMenuCategoryNames);
+                
             } catch (error) {
                 console.log("에러", error);
                 setError(error);
