@@ -1,10 +1,11 @@
 import { useState, useEffect } from 'react';
 import { searchOptionTitleRequest } from '../apis/api/menuManagentApi';
 
-const useOptionTitle = (adminId, menuId) => {
+const useOptionTitle = (adminId, menuId, refresh) => {
     const [optionTitleId, setOptionTitleId] = useState([]);
     const [optionTitleName, setOptionTitleName] = useState([]);
     const [error, setError] = useState(null);
+
 
     useEffect(() => {
         const fetchOptionTitle = async () => {
@@ -22,10 +23,8 @@ const useOptionTitle = (adminId, menuId) => {
             fetchOptionTitle();
         }
 
-        return () => {
-            // Cleanup logic if needed
-        };
-    }, [adminId, menuId]);
+        
+    }, [adminId, menuId, refresh]);
 
     return { optionTitleId, optionTitleName, error };
 };
