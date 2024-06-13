@@ -1,7 +1,7 @@
 /** @jsxImportSource @emotion/react */
-import * as s from "./style";
+import * as s from './style';
 
-function SalesList({ salesData }) {
+function SalesList({ salesData, viewType }) {
   return (
     <div css={s.listContainer}>
       <div css={s.askTitle}>
@@ -11,9 +11,17 @@ function SalesList({ salesData }) {
       </div>
       {salesData.map((item) => (
         <ul key={item.salesId} css={s.list}>
-          <li>{item.year} 년 {item.month} 월 {item.day} 일 </li>
+          {viewType === 'all' ? (
+            <li>
+              {item.year} 년 {item.month} 월
+            </li>
+          ) : (
+            <li>
+              {item.year} 년 {item.month} 월 {item.day} 일
+            </li>
+          )}
           <li>{item.count} 건</li>
-          <li>{item.dayTotalSales} 원</li>
+          <li>{viewType === 'all' ? item.totalSales : item.dayTotalSales} 원</li>
         </ul>
       ))}
     </div>

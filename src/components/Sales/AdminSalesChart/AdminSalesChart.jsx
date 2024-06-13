@@ -12,7 +12,6 @@ const AdminSalesChart = ({
   yAxisMin,
   yAxisMax,
 }) => {
-  console.log("Sales data:", sales); // Debugging: Check sales data
 
   // 날짜를 지정된 형식으로 변환하는 함수
   const getDateLabel = (monthNumber, dayNumber) => {
@@ -21,15 +20,11 @@ const AdminSalesChart = ({
     if (dayNumber !== null && dayNumber !== undefined) {
       date.setDate(dayNumber);
     }
-    return viewType === "month"
-      ? date.toLocaleString("en-US", { month: "long" })
-      : date.toLocaleString("en-US", { month: "short", day: "numeric" });
+    return date.toLocaleString("en-US", { month: "short", day: "numeric" });
   };
 
   const categories = sales.map((data) =>
-    viewType === "month"
-      ? getDateLabel(data[monthKey], null)
-      : getDateLabel(data[monthKey], data[dayKey])
+    getDateLabel(data[monthKey], data[dayKey])
   );
 
   const series = [

@@ -28,7 +28,7 @@ function AdminSalesPage(props) {
   const [totalCount, setTotalCount] = useState(0);
   const [filteredSalesData, setFilteredSalesData] = useState([]);
   const [searchClicked, setSearchClicked] = useState(false);
-  const [dataKey, setDataKey] = useState("");
+  const [dataKey, setDataKey] = useState("totalSales");
   const [chartData, setChartData] = useState([]);
 
   const {
@@ -39,6 +39,10 @@ function AdminSalesPage(props) {
     lastMonthTotals,
   } = useSalesData(selectSalesData);
 
+  useEffect(() => { // 렌더링 처음 될 때 그래프 => 총 매출
+    setViewType("all");
+  }, []);
+
   const salesQuery = useQuery(
     ["salesQuery"], // 연간 총 매출
     () => getSalesRequest(adminId),
@@ -46,11 +50,15 @@ function AdminSalesPage(props) {
       retry: 0,
       refetchOnWindowFocus: false,
       onSuccess: (response) => {
-        console.log("Sales response:", response.data);
         setSales(response.data);
+        if (viewType === "all") {
+          setChartData(response.data);
+          setTotalSales(response.data.reduce((acc, sale) => acc + sale.totalSales, 0));
+          setTotalCount(response.data.reduce((acc, sale) => acc + sale.count, 0));
+        }
       },
       onError: (error) => {
-        console.log("Sales query error:", error);
+        console.log("에러 : ", error);
       },
     }
   );
@@ -62,63 +70,71 @@ function AdminSalesPage(props) {
       retry: 0,
       refetchOnWindowFocus: false,
       onSuccess: (response) => {
-        console.log("Select sales response:", response.data);
         setSelectSalesData(response.data);
       },
       onError: (error) => {
-        console.log("Select sales query error:", error);
+        console.log("에러 : ", error);
       },
     }
   );
 
   useEffect(() => {
     let data = [];
-    let key = "";
+    let totals = { totalSales: 0, totalCount: 0 }; // key값
 
-    if (viewType === "custom" && searchClicked) {
-      const { totalSales, totalCount, filteredData } = customTotalDay(startDate, endDate);
-      console.log("Custom data:", filteredData);
-      setFilteredSalesData(filteredData);
-      setTotalSales(totalSales);
-      setTotalCount(totalCount);
-      data = filteredData;
-      key = "dayTotalSales";
-      setSearchClicked(false);
-    } else if (viewType === "week") {
+    if (viewType === "week") {
       data = oneWeekData;
-      setTotalSales(oneWeekTotals.totalSales);
-      setTotalCount(oneWeekTotals.totalCount);
-      key = "dayTotalSales";
+      totals = oneWeekTotals;
     } else if (viewType === "month") {
       data = lastMonthData;
-      setTotalSales(lastMonthTotals.totalSales);
-      setTotalCount(lastMonthTotals.totalCount);
-      key = "dayTotalSales";
-    } else {
+      totals = lastMonthTotals;
+    } else if (viewType === "custom") {
+      data = filteredSalesData;
+      totals = {
+        totalSales: filteredSalesData.reduce((acc, sale) => acc + sale.dayTotalSales, 0),
+        totalCount: filteredSalesData.reduce((acc, sale) => acc + sale.count, 0),
+      };
+    } else if (viewType === "all") {
       data = sales;
-      key = "totalSales";
+      totals = {
+        totalSales: sales.reduce((acc, sale) => acc + sale.totalSales, 0),
+        totalCount: sales.reduce((acc, sale) => acc + sale.count, 0),
+      };
     }
 
-    console.log("Chart data:", data);
+    setTotalSales(totals.totalSales);
+    setTotalCount(totals.totalCount);
     setChartData(data);
-    setDataKey(key);
+    setDataKey(viewType === "all" ? "totalSales" : "dayTotalSales");
   }, [
     viewType,
-    searchClicked,
-    startDate,
-    endDate,
     oneWeekTotals,
     lastMonthTotals,
-    customTotalDay,
     oneWeekData,
     lastMonthData,
+    filteredSalesData,
     sales,
   ]);
 
+  useEffect(() => {
+    if (searchClicked) {
+      const { totalSales, totalCount, filteredData } = customTotalDay(startDate, endDate);
+      setFilteredSalesData(filteredData);
+      setTotalSales(totalSales);
+      setTotalCount(totalCount);
+      setChartData(filteredData);
+      setDataKey("dayTotalSales");
+      setSearchClicked(false);
+    }
+  }, [searchClicked, startDate, endDate, customTotalDay]);
+
   const handleViewTypeChange = (type) => {
     setViewType(type);
-    if (type !== "custom") {
-      setSearchClicked(false);
+    if (type === "all") {
+      setChartData(sales);
+      setTotalSales(sales.reduce((acc, sale) => acc + sale.totalSales, 0));
+      setTotalCount(sales.reduce((acc, sale) => acc + sale.count, 0));
+      setDataKey("totalSales");
     }
   };
 
@@ -129,6 +145,16 @@ function AdminSalesPage(props) {
 
   const isDisabled = startDate > endDate;
 
+  const keyName = viewType === "all"
+    ? "총 매출"
+    : viewType === "week"
+    ? "지난 7일"
+    : viewType === "month"
+    ? "저번달"
+    : viewType === "custom"
+    ? "조회"
+    : "";
+
   return (
     <div css={s.layout}>
       <div css={s.header}>
@@ -138,14 +164,14 @@ function AdminSalesPage(props) {
         <div css={s.chartContainer}>
           <AdminSalesChart
             sales={chartData.map((data) => ({
-              dayTotalSales: data?.dayTotalSales,
-              totalSales: data?.totalSales,
-              month: data?.month,
-              day: data?.day,
+              dayTotalSales: data.dayTotalSales,
+              totalSales: data.totalSales,
+              month: data.month,
+              day: data.day,
             }))}
             monthKey={"month"}
             dayKey={"day"}
-            keyName={viewType === "custom" ? "일별" : "총 매출"}
+            keyName={keyName}
             dataKey={dataKey}
             lineColor={"#e78a42"}
             viewType={viewType}
@@ -160,6 +186,9 @@ function AdminSalesPage(props) {
                 </button>
                 <button onClick={() => handleViewTypeChange("month")} css={s.button}>
                   저번달
+                </button>
+                <button onClick={() => handleViewTypeChange("all")} css={s.button}>
+                  전체
                 </button>
               </div>
             </div>
@@ -205,13 +234,15 @@ function AdminSalesPage(props) {
               </div>
             </div>
           </div>
-          <div css={s.list}>
+          <div css={s.list}> 
             {viewType === "week" && oneWeekData.length > 0 ? (
               <SalesList salesData={oneWeekData} />
             ) : viewType === "month" && lastMonthData.length > 0 ? (
               <SalesList salesData={lastMonthData} />
             ) : viewType === "custom" && filteredSalesData.length > 0 ? (
               <SalesList salesData={filteredSalesData} />
+            ) : viewType === "all" && sales.length > 0 ? (
+              <SalesList salesData={sales} />
             ) : (
               <div css={s.noDateBox}>
                 <h1>
