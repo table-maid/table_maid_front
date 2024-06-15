@@ -14,6 +14,7 @@ const useUserApis = (props) => {
     }
   }, [categoryList]);
 
+
   const getCompanyNameQuery = useQuery(
     ["getCompanyNameQuery"],
     () =>

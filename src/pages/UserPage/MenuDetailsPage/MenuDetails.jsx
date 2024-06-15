@@ -4,17 +4,43 @@ import useUserApis from "../../../hooks/useUserApis";
 import * as s from "./style";
 import { searchOptionRequest } from "../../../apis/api/menuManagentApi";
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
+import { getSoloMenuRequest } from "../../../apis/api/user";
+import { useRecoilState } from "recoil";
+import { ShoppingCartState } from "../../../atoms/ShoppingCartAtom";
 
-function MenuDetails({}) {
-  const { adminInfo, menuList } = useUserApis();
+function MenuDetails() {
+  const { adminInfo } = useUserApis();
   const [optionList, setOptionList] = useState([]);
-  const { menuId } = useParams();
-  const [selectedOptionNames, setSelectedOptionNames] = useState([]);
+  const [selectedOptions, setSelectedOptions] = useState([]);
+  const [searchParams] = useSearchParams();
+  const menuId = searchParams.get("menuId");
+  const categoryId = searchParams.get("categoryId");
+  const navigate = useNavigate();
+  const [selectedMenu, setSelectedMenu] = useState(null);
+  const [cart, setCart] = useRecoilState(ShoppingCartState);
 
-  useEffect(() => {
-    console.log(menuId);
-  }, [menuId]);
+  const soloMenuQuery = useQuery(
+    ["soloMenuQuery", adminInfo.adminId, categoryId],
+    () =>
+      getSoloMenuRequest({
+        adminId: adminInfo.adminId,
+        menuCategoryId: categoryId,
+        menuId: menuId
+      }),
+    {
+      enabled: !!adminInfo.adminId && !!categoryId && !!menuId,
+      retry: 0,
+      refetchOnWindowFocus: false,
+      onSuccess: (response) => {
+        setSelectedMenu(response.data);
+        console.log(response.data)
+      },
+      onError: (error) => {
+        console.log(error);
+      },
+    }
+  );
 
   const searchOptionQuery = useQuery(
     ["searchOptionQuery"],
@@ -36,37 +62,78 @@ function MenuDetails({}) {
     }
   );
 
-  const handleTitleClick = (optionNames) => {
-    setSelectedOptionNames(optionNames);
-  };
-
-
-
   useEffect(() => {
     if (!searchOptionQuery.isLoading && !searchOptionQuery.isFetching) {
       setOptionList(searchOptionQuery.data?.data);
     }
   }, [searchOptionQuery]);
 
+    const handleCheckboxChange = (optionId, optionName, optionPrice) => {
+      setSelectedOptions((prevSelectedOptions) => {
+        const isOptionSelected = prevSelectedOptions.some(
+          (opt) => opt.optionId === optionId && opt.optionName === optionName
+        );
+
+        if (isOptionSelected) {
+          return prevSelectedOptions.filter(
+            (opt) =>
+              !(opt.optionId === optionId && opt.optionName === optionName)
+          );
+        } else {
+          return [
+            ...prevSelectedOptions,
+            { optionId, optionName, optionPrice },
+          ];
+        }
+      });
+    };
+
+  const handleShoppingClick = () => {
+    setCart((prevCart) => [
+      ...prevCart,
+      { menu: selectedMenu, options: selectedOptions },
+    ]);
+    navigate(`/user/shopping`);
+  };
+
   return (
     <div css={s.layout}>
       <div>{adminInfo?.companyName}</div>
       <div>
-        {menuList ? (
-          <div key={menuList.menuId}>이미지: {menuList.menuImgUrl}</div>
+        {selectedMenu !== null ? (
+          <img src={selectedMenu.menuImgUrl} alt="메뉴 이미지" />
         ) : (
-          <div>메뉴를 선택해주세요</div>
+          <div>이미지가 없습니다</div>
         )}
       </div>
       <div>
-        {optionList ? (
+        {optionList.length > 0 ? (
           <div>
             {optionList.map((option) => (
-              <div
-                key={option.optionTitleId}
-                onClick={() => handleTitleClick(option.optionNames)}
-              >
+              <div key={option.optionTitleId}>
                 옵션제목: {option.titleName}
+                {option.optionNames.map((name) => (
+                  <div key={name}>
+                    <label>
+                      <input
+                        type="checkbox"
+                        checked={selectedOptions.some(
+                          (opt) =>
+                            opt.optionId === option.optionTitleId &&
+                            opt.optionName === name
+                        )}
+                        onChange={() =>
+                          handleCheckboxChange(
+                            option.optionTitleId,
+                            name,
+                            option.optionPrices
+                          )
+                        }
+                      />
+                      {name} ( + {option.optionPrices} )
+                    </label>
+                  </div>
+                ))}
               </div>
             ))}
           </div>
@@ -74,16 +141,7 @@ function MenuDetails({}) {
           <div>옵션이 없습니다</div>
         )}
       </div>
-      <div>
-        {selectedOptionNames.length > 0 && (
-          <div>
-            <h3>선택된 옵션</h3>
-            {selectedOptionNames.map((name, index) => (
-              <div key={index}>{name}</div>
-            ))}
-          </div>
-        )}
-      </div>
+      <button onClick={() => handleShoppingClick()}>장바구니 담기</button>
     </div>
   );
 }
