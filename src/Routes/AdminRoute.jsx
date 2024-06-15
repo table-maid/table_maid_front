@@ -5,7 +5,6 @@ import { useQuery } from 'react-query';
 import { getPrincipalRequest } from '../apis/api/principal';
 import SalesRoute from './SalesRoute';
 
-
 function AdminRoute(props) {
 
     return (

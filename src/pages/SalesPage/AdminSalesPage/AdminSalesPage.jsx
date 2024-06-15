@@ -7,66 +7,153 @@ import {
   getSelectSalesRequest,
 } from "../../../apis/api/salesApi";
 import AdminSalesChart from "../../../components/Sales/AdminSalesChart/AdminSalesChart";
-import Calendar from "../../../components/Calendar/Calendar";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 import useSalesData from "../../../hooks/useSalesData";
 import SalesList from "../../../components/Sales/SalesList/SalesList";
+import { CgDanger } from "react-icons/cg";
+import { IoSearchOutline, IoClose } from "react-icons/io5";
+import { useRecoilState } from "recoil";
+import { adminIdState } from "../../../atoms/AdminIdStateAtom";
+import { viewTypeState } from "../../../atoms/ViewTypeStateAtom";
 
 function AdminSalesPage(props) {
+  const [adminId] = useRecoilState(adminIdState);
   const [sales, setSales] = useState([]);
-  const [salesData, setSalesData] = useState([]);
   const [selectSalesData, setSelectSalesData] = useState([]);
-  const [showWeekData, setShowWeekData] = useState(false);
-  const [showMonthData, setShowMonthData] = useState(false);
+  const [viewType, setViewType] = useRecoilState(viewTypeState);
+  const [startDate, setStartDate] = useState(new Date());
+  const [endDate, setEndDate] = useState(new Date());
+  const [totalSales, setTotalSales] = useState(0);
+  const [totalCount, setTotalCount] = useState(0);
+  const [filteredSalesData, setFilteredSalesData] = useState([]);
+  const [searchClicked, setSearchClicked] = useState(false);
+  const [dataKey, setDataKey] = useState("totalSales");
+  const [chartData, setChartData] = useState([]);
 
-  useEffect(() => {
-    setSalesData(() =>
-      sales.map((data) => ({
-        totalSales: data.totalSales,
-        month: data.month,
-      }))
-    );
-  }, [sales]);
+  const {
+    oneWeekData,
+    lastMonthData,
+    customTotalDay,
+    oneWeekTotals,
+    lastMonthTotals,
+  } = useSalesData(selectSalesData);
 
-  const oneweek = useSalesData(selectSalesData);
+  useEffect(() => { // 렌더링 처음 될 때 그래프 => 총 매출
+    setViewType("all");
+  }, []);
 
-  const salesQuery = useQuery(["salesQuery"], getSalesRequest, {
-    retry: 0,
-    refetchOnWindowFocus: false,
-    onSuccess: (response) => {
-      // console.log("Sales API Response:", response.data);
-      setSales(response.data);
-    },
-    onError: (error) => {
-      console.log("에러", error);
-    },
-  });
-
-  const selectSalesQuery = useQuery(
-    ["selectSalesQuery"],
-    getSelectSalesRequest,
+  const salesQuery = useQuery(
+    ["salesQuery"], // 연간 총 매출
+    () => getSalesRequest(adminId),
     {
       retry: 0,
       refetchOnWindowFocus: false,
       onSuccess: (response) => {
-        console.log("Sales API Response:", response.data);
-        setSelectSalesData(response.data);
+        setSales(response.data);
+        if (viewType === "all") {
+          setChartData(response.data);
+          setTotalSales(response.data.reduce((acc, sale) => acc + sale.totalSales, 0));
+          setTotalCount(response.data.reduce((acc, sale) => acc + sale.count, 0));
+        }
       },
       onError: (error) => {
-        console.log("salesQuery Error:", error);
+        console.log("에러 : ", error);
       },
     }
   );
-  // console.log(selectSales.map((data) => data.totalSales));
 
-  const handleWeekButtonClick = () => {
-    setShowWeekData(true);
-    setShowMonthData(false); // 월 정보는 숨김
+  const selectSalesQuery = useQuery(
+    ["selectSalesQuery"], // 하루 매출
+    () => getSelectSalesRequest(adminId),
+    {
+      retry: 0,
+      refetchOnWindowFocus: false,
+      onSuccess: (response) => {
+        setSelectSalesData(response.data);
+      },
+      onError: (error) => {
+        console.log("에러 : ", error);
+      },
+    }
+  );
+
+  useEffect(() => {
+    let data = [];
+    let totals = { totalSales: 0, totalCount: 0 }; // key값
+
+    if (viewType === "week") {
+      data = oneWeekData;
+      totals = oneWeekTotals;
+    } else if (viewType === "month") {
+      data = lastMonthData;
+      totals = lastMonthTotals;
+    } else if (viewType === "custom") {
+      data = filteredSalesData;
+      totals = {
+        totalSales: filteredSalesData.reduce((acc, sale) => acc + sale.dayTotalSales, 0),
+        totalCount: filteredSalesData.reduce((acc, sale) => acc + sale.count, 0),
+      };
+    } else if (viewType === "all") {
+      data = sales;
+      totals = {
+        totalSales: sales.reduce((acc, sale) => acc + sale.totalSales, 0),
+        totalCount: sales.reduce((acc, sale) => acc + sale.count, 0),
+      };
+    }
+
+    setTotalSales(totals.totalSales);
+    setTotalCount(totals.totalCount);
+    setChartData(data);
+    setDataKey(viewType === "all" ? "totalSales" : "dayTotalSales");
+  }, [
+    viewType,
+    oneWeekTotals,
+    lastMonthTotals,
+    oneWeekData,
+    lastMonthData,
+    filteredSalesData,
+    sales,
+  ]);
+
+  useEffect(() => {
+    if (searchClicked) {
+      const { totalSales, totalCount, filteredData } = customTotalDay(startDate, endDate);
+      setFilteredSalesData(filteredData);
+      setTotalSales(totalSales);
+      setTotalCount(totalCount);
+      setChartData(filteredData);
+      setDataKey("dayTotalSales");
+      setSearchClicked(false);
+    }
+  }, [searchClicked, startDate, endDate, customTotalDay]);
+
+  const handleViewTypeChange = (type) => {
+    setViewType(type);
+    if (type === "all") {
+      setChartData(sales);
+      setTotalSales(sales.reduce((acc, sale) => acc + sale.totalSales, 0));
+      setTotalCount(sales.reduce((acc, sale) => acc + sale.count, 0));
+      setDataKey("totalSales");
+    }
   };
 
-  const handleMonthButtonClick = () => {
-    setShowWeekData(false); // 일주일치 정보는 숨김
-    setShowMonthData(true);
+  const handleSearchClick = () => {
+    setSearchClicked(true);
+    setViewType("custom");
   };
+
+  const isDisabled = startDate > endDate;
+
+  const keyName = viewType === "all"
+    ? "총 매출"
+    : viewType === "week"
+    ? "지난 7일"
+    : viewType === "month"
+    ? "저번달"
+    : viewType === "custom"
+    ? "조회"
+    : "";
 
   return (
     <div css={s.layout}>
@@ -76,32 +163,93 @@ function AdminSalesPage(props) {
       <div css={s.main}>
         <div css={s.chartContainer}>
           <AdminSalesChart
-            sales={salesData}
+            sales={chartData.map((data) => ({
+              dayTotalSales: data.dayTotalSales,
+              totalSales: data.totalSales,
+              month: data.month,
+              day: data.day,
+            }))}
             monthKey={"month"}
-            keyName={"총 매출"}
-            dataKey={"totalSales"}
-            lineColor={"#ff7300"}
+            dayKey={"day"}
+            keyName={keyName}
+            dataKey={dataKey}
+            lineColor={"#e78a42"}
+            viewType={viewType}
           />
         </div>
         <div css={s.salesLayout}>
           <div css={s.selectBox}>
             <div css={s.selectButton}>
               <div css={s.buttonBox}>
-                <button onClick={handleWeekButtonClick} css={s.button}>
+                <button onClick={() => handleViewTypeChange("week")} css={s.button}>
                   지난 7일
                 </button>
-                <button onClick={handleMonthButtonClick} css={s.button}>
+                <button onClick={() => handleViewTypeChange("month")} css={s.button}>
                   저번달
+                </button>
+                <button onClick={() => handleViewTypeChange("all")} css={s.button}>
+                  전체
                 </button>
               </div>
             </div>
-            <div css={s.calender}>
-              <Calendar />
+            <div css={s.calenderLayout}>
+              <div css={s.calender}>
+                <DatePicker
+                  selected={startDate}
+                  onChange={(date) => setStartDate(date)}
+                  dateFormat="yyyy MM dd"
+                  maxDate={new Date()}
+                  css={s.customButton}
+                />
+              </div>
+              <div css={s.calender}>
+                <DatePicker
+                  selected={endDate}
+                  onChange={(date) => setEndDate(date)}
+                  dateFormat="yyyy MM dd"
+                  maxDate={new Date()}
+                  css={s.customButton}
+                />
+              </div>
+              <button disabled={isDisabled} onClick={handleSearchClick} css={s.sercher(isDisabled)}>
+                {isDisabled ? (
+                  <IoClose css={s.searchIcon(isDisabled)} />
+                ) : (
+                  <IoSearchOutline css={s.searchIcon(isDisabled)} />
+                )}
+              </button>
             </div>
           </div>
-          <div css={s.list}>
-            {showWeekData && <SalesList salesData={oneweek} />}
-            {showMonthData && <SalesList salesData={selectSalesData} />}
+          <div css={s.totalLayout}>
+            <div css={s.totalBox}>
+              <div css={s.box}>
+                <div css={s.total}>
+                  <h1>매출 합계</h1>
+                  <h1>주문 수 합계 </h1>
+                </div>
+                <div css={s.count}>
+                  <h1>{totalSales} 원</h1>
+                  <h1>{totalCount} 건</h1>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div css={s.list}> 
+            {viewType === "week" && oneWeekData.length > 0 ? (
+              <SalesList salesData={oneWeekData} />
+            ) : viewType === "month" && lastMonthData.length > 0 ? (
+              <SalesList salesData={lastMonthData} />
+            ) : viewType === "custom" && filteredSalesData.length > 0 ? (
+              <SalesList salesData={filteredSalesData} />
+            ) : viewType === "all" && sales.length > 0 ? (
+              <SalesList salesData={sales} />
+            ) : (
+              <div css={s.noDateBox}>
+                <h1>
+                  <CgDanger /> 매출정보가 존재하지 않습니다
+                </h1>
+              </div>
+            )}
           </div>
         </div>
       </div>

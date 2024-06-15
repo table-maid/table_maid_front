@@ -2,7 +2,7 @@ import { css } from "@emotion/react";
 
 export const listContainer = css`
   box-sizing: border-box;
-  background-color: #f7f7f7;
+  background-color: #fefefe;
   display: flex;
   flex-direction: column;
   width: 100%;
@@ -17,9 +17,9 @@ export const askTitle = css`
   border-top-left-radius: 20px;
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: space-around;
   width: 100%;
-  height: 50px;
+  height: 60px;
   color: white;
 
   & > li {
@@ -33,16 +33,7 @@ export const askTitle = css`
     width: 15%;
   }
   & > li:nth-of-type(3) {
-    width: 20%;
-  }
-  & > li:nth-of-type(4) {
-    width: 20%;
-  }
-  & > li:nth-of-type(5) {
-    width: 25%;
-  }
-  & > li:nth-of-type(6) {
-    width: 25%;
+    width: 30%;
   }
 `;
 
@@ -70,15 +61,7 @@ export const list = css`
     width: 15%;
   }
   & > li:nth-of-type(3) {
-    width: 20%;
+    width: 30%;
   }
-  & > li:nth-of-type(4) {
-    width: 20%;
-  }
-  & > li:nth-of-type(5) {
-    width: 25%;
-  }
-  & > li:nth-of-type(6) {
-    width: 25%;
-  }
+
 `;

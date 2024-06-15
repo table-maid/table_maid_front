@@ -1,7 +1,12 @@
 /** @jsxImportSource @emotion/react */
+import { useState } from "react";
 import * as s from "./style";
 
-function MenuRegisterModal({ categories, categoryId, setCategoryId, setMenuName, setMenuPrice, insertMenu, categoryName, recommend, handleRecommendChange, setMenuModal }) {
+function MenuRegisterModal({ categories, categoryId, setCategoryId, insertMenu, categoryName, recommend, handleRecommendChange, setMenuModal }) {
+
+    const [menuName, setMenuName] = useState();
+    const [menuPrice, setMenuPrice] = useState();
+
     return (
         <div css={s.menuModal}>
             <div>
@@ -15,7 +20,7 @@ function MenuRegisterModal({ categories, categoryId, setCategoryId, setMenuName,
                 >
                     <option value={0}>카테고리 선택</option>
                     {categories.map((cat) => (
-                        <option 
+                        <option
                             key={cat.menuCategoryId} 
                             value={cat.menuCategoryId}
                             data-name={cat.menuCategoryName}
@@ -28,7 +33,7 @@ function MenuRegisterModal({ categories, categoryId, setCategoryId, setMenuName,
                 <input onChange={(e) => setMenuName(e.target.value)} style={{border:"1px solid black"}}  type="text"/>
                 <div>메뉴 가격</div>
                 <input onChange={(e) => setMenuPrice(e.target.value)} style={{border:"1px solid black"}}  type="text"/>
-                <button onClick={() => insertMenu(categoryId, categoryName)}>추가</button>
+                <button onClick={() => insertMenu(menuName, menuPrice, categoryId, categoryName)}>추가</button>
                 <div>메뉴 추천</div>
                 <div>
                 <input type="checkbox" name="recommend" checked={recommend} onChange={handleRecommendChange}/>

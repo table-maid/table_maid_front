@@ -40,5 +40,4 @@ export const REGEX = {
         regexr: /.{1,}/,
         text: "주소를 입력해 주세요."
     },
-  
   };

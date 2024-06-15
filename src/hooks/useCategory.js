@@ -11,7 +11,6 @@ const useCategory = (adminId) => {
                 const params = { adminId };
                 const response = await searchCategoryRequest(params);
                 setCategories(response.data);
-                console.log(response.data);
             } catch (error) {
                 console.log("에러", error);
                 setError(error);

@@ -62,8 +62,21 @@ export const signinButton = css`
     a:visited{
         color: #333333;
     }
-    a:hover{
-        color: #c2dbff;
+`;
+
+export const authentiCation = (state) => css`
+    border: none;
+    height: 40px;
+    width: 300px;
+    margin-bottom: 5px;
+    background-color: #b8d6fd;
+    color: ${state ? "red" : "black"};
+    cursor: pointer;
+    &:hover {
+        background-color: ${state ? "#4494fc": "#b8d6fd"};  
+    }
+    &:active{
+        background-color: ${state ? "#1071fa" : "#b8d6fd"};
     }
 
-`;
+`
