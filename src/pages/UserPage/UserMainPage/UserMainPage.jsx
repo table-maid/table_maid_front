@@ -1,20 +1,19 @@
 /** @jsxImportSource @emotion/react */
 import * as s from "./style";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import useUserApis from "../../../hooks/useUserApis";
 
 function UserMainPage() {
-  const { adminInfo, menuList, categoryList, setCategoryId, categoryId } = useUserApis();
+  const { adminInfo, menuList, categoryList, setCategoryId } = useUserApis();
   const navigate = useNavigate();
 
   const handleCategoryClick = (categoryId) => {
     setCategoryId(categoryId);
   };
 
-  const handleMenuClick = (menuId) => {
-    console.log(menuId)
-    navigate(`/user/details/${menuId}`);
+  const handleMenuClick = (menuId, categoryId) => {
+    navigate(`/user/details?menuId=${menuId}&categoryId=${categoryId}`);
   };
 
   return (
@@ -39,7 +38,7 @@ function UserMainPage() {
             {menuList.map((menu) => (
               <div
                 key={menu.menuId}
-                onClick={() => handleMenuClick(menu.menuId)}
+                onClick={() => handleMenuClick(menu.menuId, menu.menuCategoryId)}
               >
                 <div>메뉴명: {menu.menuName}</div>
               </div>
