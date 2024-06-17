@@ -1,25 +1,24 @@
 /** @jsxImportSource @emotion/react */
 import * as s from "./style";
 import { useQuery } from "react-query";
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState } from "react";
 import {
   getSalesRequest,
   getSelectSalesRequest,
 } from "../../../apis/api/salesApi";
 import AdminSalesChart from "../../../components/Sales/AdminSalesChart/AdminSalesChart";
-import DatePicker from "react-datepicker";
-import "react-datepicker/dist/react-datepicker.css";
 import useSalesData from "../../../hooks/useSalesData";
-import SalesList from "../../../components/Sales/SalesList/SalesList";
-import { CgDanger } from "react-icons/cg";
-import { IoSearchOutline, IoClose } from "react-icons/io5";
 import { useRecoilState } from "recoil";
 import { adminIdState } from "../../../atoms/AdminIdStateAtom";
 import { viewTypeState } from "../../../atoms/ViewTypeStateAtom";
 import AdminPageLayout from "../../../components/AdminPageLayout/AdminPageLayout";
-import useAnimateView from "../../../hooks/useAnimateAtom"; // 커스텀 훅 가져오기
+import useAnimateView from "../../../hooks/useAnimateAtom";
+import SalesButtons from "../../../components/Sales/SalesButtons/SalesButtons";
+import DateRangePicker from "../../../components/Sales/DatePicker/DateRangePicker";
+import SalesListContainer from "../../../components/Sales/SalesListContainer/SalesListContainer";
+import { calculateTotals } from "../../../utils/calculateTotalsUtils";
 
-function AdminSalesPage(props) {
+function AdminSalesPage() {
   const [adminId] = useRecoilState(adminIdState);
   const [sales, setSales] = useState([]);
   const [selectSalesData, setSelectSalesData] = useState([]);
@@ -33,7 +32,6 @@ function AdminSalesPage(props) {
   const [dataKey, setDataKey] = useState("totalSales");
   const [chartData, setChartData] = useState([]);
   const [activeButton, setActiveButton] = useState("all");
-  const buttonRef = useRef(null);
 
   const [headerRef, headerInView] = useAnimateView();
   const [chartRef, chartInView] = useAnimateView();
@@ -50,17 +48,6 @@ function AdminSalesPage(props) {
 
   useEffect(() => {
     setViewType("all");
-
-    const handleClickOutside = (event) => {
-      if (buttonRef.current && !buttonRef.current.contains(event.target)) {
-        setActiveButton(""); 
-      }
-    };
-
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
   }, []);
 
   const salesQuery = useQuery(
@@ -72,17 +59,12 @@ function AdminSalesPage(props) {
         setSales(response.data);
         if (viewType === "all") {
           setChartData(response.data);
-          setTotalSales(
-            response.data.reduce((acc, sale) => acc + sale.totalSales, 0)
-          );
-          setTotalCount(
-            response.data.reduce((acc, sale) => acc + sale.count, 0)
-          );
+          updateTotals(response.data);
           setDataKey("totalSales");
         }
       },
       onError: (error) => {
-        console.log("에러 : ", error);
+        console.error("에러 : ", error);
       },
     }
   );
@@ -96,7 +78,7 @@ function AdminSalesPage(props) {
         setSelectSalesData(response.data);
       },
       onError: (error) => {
-        console.log("에러 : ", error);
+        console.error("에러 : ", error);
       },
     }
   );
@@ -115,29 +97,15 @@ function AdminSalesPage(props) {
       setDataKey("dayTotalSales");
     } else if (viewType === "custom") {
       data = filteredSalesData;
-      totals = {
-        totalSales: filteredSalesData.reduce(
-          (acc, sale) => acc + sale.dayTotalSales,
-          0
-        ),
-        totalCount: filteredSalesData.reduce(
-          (acc, sale) => acc + sale.count,
-          0
-        ),
-      };
+      totals = calculateTotals(filteredSalesData);
       setDataKey("dayTotalSales");
     } else if (viewType === "all") {
       data = sales;
-      totals = {
-        totalSales: sales.reduce((acc, sale) => acc + sale.totalSales, 0),
-        totalCount: sales.reduce((acc, sale) => acc + sale.count, 0),
-      };
+      totals = calculateTotals(sales);
       setDataKey("totalSales");
     }
 
-    setTotalSales(totals.totalSales);
-    setTotalCount(totals.totalCount);
-    setChartData(data);
+    setTotalsAndChartData(totals, data);
   }, [
     viewType,
     oneWeekTotals,
@@ -155,9 +123,7 @@ function AdminSalesPage(props) {
         endDate
       );
       setFilteredSalesData(filteredData);
-      setTotalSales(totalSales);
-      setTotalCount(totalCount);
-      setChartData(filteredData);
+      setTotalsAndChartData({ totalSales, totalCount }, filteredData);
       setDataKey("dayTotalSales");
       setSearchClicked(false);
     }
@@ -165,19 +131,30 @@ function AdminSalesPage(props) {
 
   const handleViewTypeChange = (type) => {
     setViewType(type);
-    setActiveButton(type); 
+    setActiveButton(type);
     if (type === "all") {
       setChartData(sales);
-      setTotalSales(sales.reduce((acc, sale) => acc + sale.totalSales, 0));
-      setTotalCount(sales.reduce((acc, sale) => acc + sale.count, 0));
+      updateTotals(sales);
       setDataKey("totalSales");
     }
   };
 
   const handleSearchClick = () => {
     setSearchClicked(true);
-    setActiveButton("search"); 
+    setActiveButton("search");
     setViewType("custom");
+  };
+
+  const setTotalsAndChartData = (totals, data) => {
+    setTotalSales(totals.totalSales);
+    setTotalCount(totals.totalCount);
+    setChartData(data);
+  };
+
+  const updateTotals = (data) => {
+    const totals = calculateTotals(data);
+    setTotalSales(totals.totalSales);
+    setTotalCount(totals.totalCount);
   };
 
   const isDisabled = startDate > endDate;
@@ -230,67 +207,25 @@ function AdminSalesPage(props) {
             className={salesLayoutInView ? "animate" : "hide"}
           >
             <div css={s.selectBox}>
-              <div css={s.selectButton}>
-                <div css={s.buttonBox}>
-                  <button
-                    onClick={() => handleViewTypeChange("week")}
-                    css={s.button(activeButton === "week")}
-                    ref={buttonRef}
-                  >
-                    지난 7일
-                  </button>
-                  <button
-                    onClick={() => handleViewTypeChange("month")}
-                    css={s.button(activeButton === "month")}
-                    ref={buttonRef}
-                  >
-                    저번달
-                  </button>
-                  <button
-                    onClick={() => handleViewTypeChange("all")}
-                    css={s.button(activeButton === "all")}
-                    ref={buttonRef}
-                  >
-                    전체
-                  </button>
-                </div>
-              </div>
-              <div css={s.calenderLayout}>
-                <div css={s.calender}>
-                  <DatePicker
-                    selected={startDate}
-                    onChange={(date) => setStartDate(date)}
-                    dateFormat="yyyy MM dd"
-                    maxDate={new Date()}
-                    css={s.customButton}
-                  />
-                </div>
-                <div css={s.calender}>
-                  <DatePicker
-                    selected={endDate}
-                    onChange={(date) => setEndDate(date)}
-                    dateFormat="yyyy MM dd"
-                    maxDate={new Date()}
-                    css={s.customButton}
-                  />
-                </div>
-                <button
-                  disabled={isDisabled}
-                  onClick={handleSearchClick}
-                  css={s.sercher(isDisabled, activeButton === "search")}
-                  ref={buttonRef}
-                >
-                  {isDisabled ? (
-                    <IoClose css={s.searchIcon(isDisabled)} />
-                  ) : (
-                    <IoSearchOutline css={s.searchIcon(isDisabled)} />
-                  )}
-                </button>
-              </div>
+              <SalesButtons
+                handleViewTypeChange={handleViewTypeChange}
+                activeButton={activeButton}
+              />
+              <DateRangePicker
+                startDate={startDate}
+                setStartDate={setStartDate}
+                endDate={endDate}
+                setEndDate={setEndDate}
+                handleSearchClick={handleSearchClick}
+                isDisabled={isDisabled}
+                activeButton={activeButton}
+              />
             </div>
-            <div css={s.totalLayout} 
-            ref={totalLayoutRef}
-              className={totalLayoutInView ? "animate" : "hide"}>
+            <div
+              css={s.totalLayout}
+              ref={totalLayoutRef}
+              className={totalLayoutInView ? "animate" : "hide"}
+            >
               <div css={s.totalBox}>
                 <div css={s.box}>
                   <div css={s.total}>
@@ -309,21 +244,13 @@ function AdminSalesPage(props) {
               ref={totalLayoutRef}
               className={totalLayoutInView ? "animate" : "hide"}
             >
-              {viewType === "week" && oneWeekData.length > 0 ? (
-                <SalesList salesData={oneWeekData} viewType={viewType} />
-              ) : viewType === "month" && lastMonthData.length > 0 ? (
-                <SalesList salesData={lastMonthData} viewType={viewType} />
-              ) : viewType === "custom" && filteredSalesData.length > 0 ? (
-                <SalesList salesData={filteredSalesData} />
-              ) : viewType === "all" && sales.length > 0 ? (
-                <SalesList salesData={sales} viewType={viewType} />
-              ) : (
-                <div css={s.noDateBox}>
-                  <h1>
-                    <CgDanger /> 매출정보가 존재하지 않습니다
-                  </h1>
-                </div>
-              )}
+              <SalesListContainer
+                viewType={viewType}
+                oneWeekData={oneWeekData}
+                lastMonthData={lastMonthData}
+                filteredSalesData={filteredSalesData}
+                sales={sales}
+              />
             </div>
           </div>
         </div>

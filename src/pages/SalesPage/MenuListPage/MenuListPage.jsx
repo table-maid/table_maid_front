@@ -30,7 +30,6 @@ function MenuListPage(props) {
   const menu = {
     categoryName: uniqueMenuCategoryNames,
     menuName: menus,
-    menuImgUrl: "",
   };
 
   const selectMenuListQuery = useQuery(
@@ -50,7 +49,6 @@ function MenuListPage(props) {
   );
 
   const handleMenuClick = (menuId) => {
-    // console.log(menuId)
     navigate(`/sales/menu/detail/${menuId}`);
   };
 

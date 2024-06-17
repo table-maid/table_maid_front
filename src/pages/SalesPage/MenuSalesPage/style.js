@@ -30,7 +30,7 @@ export const chartContainer = css`
   justify-content: center;
   flex-direction: column;
   padding: 0 10px;
-  margin-left: 15px;
+  margin-left: 20px;
 `;
 
 export const button = css`
