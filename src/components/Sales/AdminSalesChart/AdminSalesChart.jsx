@@ -1,6 +1,7 @@
 /** @jsxImportSource @emotion/react */
 import * as s from "./style";
 import ReactApexChart from "react-apexcharts";
+import { useState } from "react";
 
 const AdminSalesChart = ({
   sales,
@@ -11,6 +12,8 @@ const AdminSalesChart = ({
   lineColor,
   yAxisMax,
 }) => {
+  const [showMarkers, setShowMarkers] = useState(false);
+
   // 날짜를 지정된 형식으로 변환하는 함수
   const getDateLabel = (monthNumber, dayNumber) => {
     const date = new Date();
@@ -41,6 +44,10 @@ const AdminSalesChart = ({
         enabled: false,
       },
       toolbar: { show: false },
+      events: {
+        mouseMove: () => setShowMarkers(true),
+        mouseLeave: () => setShowMarkers(false),
+      },
     },
     stroke: {
       width: [4], // 선 굵기
@@ -51,15 +58,6 @@ const AdminSalesChart = ({
       align: "center",
       style: {
         fontSize: "20px",
-      },
-    },
-    markers: {
-      size: 6,
-      colors: [lineColor],
-      strokeColors: "#fff",
-      strokeWidth: 1,
-      hover: {
-        size: 7,
       },
     },
     xaxis: {
@@ -92,9 +90,10 @@ const AdminSalesChart = ({
       floating: true,
     },
     fill: {
-      opacity: [0.85, 1],
+      type: "gradient",
+      gradient: { gradientToColors: ["blue"], stops: [0, 100] },
     },
-    colors: [lineColor],
+    colors: ["red"],
   };
 
   return (

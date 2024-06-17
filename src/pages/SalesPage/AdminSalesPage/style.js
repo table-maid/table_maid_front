@@ -22,12 +22,13 @@ export const header = css`
 
 export const title = css`
   box-sizing: border-box;
-  border-bottom: 2px solid #222;
-  color: #222;
+  /* border-bottom: 2px solid #222; */
+  color: #1D1D1F;
   width: 90%;
   height: 50%;
   font-size: 40px;
   font-weight: 700;
+  margin-top: 50px;
 `;
 export const main = css`
   display: flex;
@@ -41,7 +42,7 @@ export const chartContainer = css`
   box-sizing: border-box;
   width: 90%;
   height: 380px;
-  border-radius: 30px;
+  border-radius: 20px;
   box-shadow: 0px 3px 10px 2px hsla(0, 0%, 0%, 0.2);
   background-color: #fefefe;
 `;
@@ -56,7 +57,7 @@ export const selectBox = css`
   box-sizing: border-box;
   background-color: #fefefe;
   box-shadow: rgba(0, 0, 0, 0.25) 0px 15px 20px -12px;
-  border-radius: 30px;
+  border-radius: 20px;
   width: 100%;
   height: 180px;
   display: flex;
@@ -74,8 +75,8 @@ export const selectContainer = css`
 export const selectButton = css`
   box-sizing: border-box;
   background-color: #bbbbbbea;
-  border-top-right-radius: 30px;
-  border-top-left-radius: 30px;
+  border-top-right-radius: 20px;
+  border-top-left-radius: 20px;
   width: 100%;
   height: 100%;
   display: flex;
@@ -246,7 +247,7 @@ export const button = css`
   border: 1px solid #dbdbdb;
   padding: 12px 130px;
   margin-right: 30px;
-  border-radius: 15px;
+  border-radius: 10px;
   background-color: #fefefe;
   box-shadow: 0px 3px 10px 2px hsla(0, 0%, 0%, 0.2);
   font-size: 15px;

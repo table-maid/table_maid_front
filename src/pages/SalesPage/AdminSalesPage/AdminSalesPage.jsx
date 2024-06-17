@@ -16,6 +16,7 @@ import { IoSearchOutline, IoClose } from "react-icons/io5";
 import { useRecoilState } from "recoil";
 import { adminIdState } from "../../../atoms/AdminIdStateAtom";
 import { viewTypeState } from "../../../atoms/ViewTypeStateAtom";
+import AdminPageLayout from "../../../components/AdminPageLayout/AdminPageLayout";
 
 function AdminSalesPage(props) {
   const [adminId] = useRecoilState(adminIdState);
@@ -39,7 +40,8 @@ function AdminSalesPage(props) {
     lastMonthTotals,
   } = useSalesData(selectSalesData);
 
-  useEffect(() => { // 렌더링 처음 될 때 그래프 => 총 매출
+  useEffect(() => {
+    // 렌더링 처음 될 때 그래프 => 총 매출
     setViewType("all");
   }, []);
 
@@ -53,8 +55,12 @@ function AdminSalesPage(props) {
         setSales(response.data);
         if (viewType === "all") {
           setChartData(response.data);
-          setTotalSales(response.data.reduce((acc, sale) => acc + sale.totalSales, 0));
-          setTotalCount(response.data.reduce((acc, sale) => acc + sale.count, 0));
+          setTotalSales(
+            response.data.reduce((acc, sale) => acc + sale.totalSales, 0)
+          );
+          setTotalCount(
+            response.data.reduce((acc, sale) => acc + sale.count, 0)
+          );
           setDataKey("totalSales");
         }
       },
@@ -94,8 +100,14 @@ function AdminSalesPage(props) {
     } else if (viewType === "custom") {
       data = filteredSalesData;
       totals = {
-        totalSales: filteredSalesData.reduce((acc, sale) => acc + sale.dayTotalSales, 0),
-        totalCount: filteredSalesData.reduce((acc, sale) => acc + sale.count, 0),
+        totalSales: filteredSalesData.reduce(
+          (acc, sale) => acc + sale.dayTotalSales,
+          0
+        ),
+        totalCount: filteredSalesData.reduce(
+          (acc, sale) => acc + sale.count,
+          0
+        ),
       };
       setDataKey("dayTotalSales");
     } else if (viewType === "all") {
@@ -110,7 +122,6 @@ function AdminSalesPage(props) {
     setTotalSales(totals.totalSales);
     setTotalCount(totals.totalCount);
     setChartData(data);
-    // setDataKey(viewType === "all" ? "totalSales" : "dayTotalSales");
   }, [
     viewType,
     oneWeekTotals,
@@ -123,7 +134,10 @@ function AdminSalesPage(props) {
 
   useEffect(() => {
     if (searchClicked) {
-      const { totalSales, totalCount, filteredData } = customTotalDay(startDate, endDate);
+      const { totalSales, totalCount, filteredData } = customTotalDay(
+        startDate,
+        endDate
+      );
       setFilteredSalesData(filteredData);
       setTotalSales(totalSales);
       setTotalCount(totalCount);
@@ -150,115 +164,131 @@ function AdminSalesPage(props) {
 
   const isDisabled = startDate > endDate;
 
-  const keyName = viewType === "all"
-    ? "총 매출"
-    : viewType === "week"
-    ? "지난 7일"
-    : viewType === "month"
-    ? "저번달"
-    : viewType === "custom"
-    ? "조회"
-    : "";
+  const keyName =
+    viewType === "all"
+      ? "총 매출"
+      : viewType === "week"
+      ? "지난 7일"
+      : viewType === "month"
+      ? "저번달"
+      : viewType === "custom"
+      ? "조회"
+      : "";
 
   return (
-    <div css={s.layout}>
-      <div css={s.header}>
-        <div css={s.title}>매출 조회</div>
-      </div>
-      <div css={s.main}>
-        <div css={s.chartContainer}>
-          <AdminSalesChart
-            sales={chartData.map((data) => ({
-              dayTotalSales: data.dayTotalSales,
-              totalSales: data.totalSales,
-              month: data.month,
-              day: data.day,
-            }))}
-            monthKey={"month"}
-            dayKey={"day"}
-            keyName={keyName}
-            dataKey={dataKey}
-            lineColor={"#e78a42"}
-            viewType={viewType}
-          />
+    <AdminPageLayout>
+      <div css={s.layout}>
+        <div css={s.header}>
+          <div css={s.title}>매출 조회</div>
         </div>
-        <div css={s.salesLayout}>
-          <div css={s.selectBox}>
-            <div css={s.selectButton}>
-              <div css={s.buttonBox}>
-                <button onClick={() => handleViewTypeChange("week")} css={s.button}>
-                  지난 7일
-                </button>
-                <button onClick={() => handleViewTypeChange("month")} css={s.button}>
-                  저번달
-                </button>
-                <button onClick={() => handleViewTypeChange("all")} css={s.button}>
-                  전체
-                </button>
-              </div>
-            </div>
-            <div css={s.calenderLayout}>
-              <div css={s.calender}>
-                <DatePicker
-                  selected={startDate}
-                  onChange={(date) => setStartDate(date)}
-                  dateFormat="yyyy MM dd"
-                  maxDate={new Date()}
-                  css={s.customButton}
-                />
-              </div>
-              <div css={s.calender}>
-                <DatePicker
-                  selected={endDate}
-                  onChange={(date) => setEndDate(date)}
-                  dateFormat="yyyy MM dd"
-                  maxDate={new Date()}
-                  css={s.customButton}
-                />
-              </div>
-              <button disabled={isDisabled} onClick={handleSearchClick} css={s.sercher(isDisabled)}>
-                {isDisabled ? (
-                  <IoClose css={s.searchIcon(isDisabled)} />
-                ) : (
-                  <IoSearchOutline css={s.searchIcon(isDisabled)} />
-                )}
-              </button>
-            </div>
+        <div css={s.main}>
+          <div css={s.chartContainer}>
+            <AdminSalesChart
+              sales={chartData.map((data) => ({
+                dayTotalSales: data.dayTotalSales,
+                totalSales: data.totalSales,
+                month: data.month,
+                day: data.day,
+              }))}
+              monthKey={"month"}
+              dayKey={"day"}
+              keyName={keyName}
+              dataKey={dataKey}
+              lineColor={"#e78a42"}
+              viewType={viewType}
+            />
           </div>
-          <div css={s.totalLayout}>
-            <div css={s.totalBox}>
-              <div css={s.box}>
-                <div css={s.total}>
-                  <h1>매출 합계</h1>
-                  <h1>주문 수 합계 </h1>
-                </div>
-                <div css={s.count}>
-                  <h1>{totalSales} 원</h1>
-                  <h1>{totalCount} 건</h1>
+          <div css={s.salesLayout}>
+            <div css={s.selectBox}>
+              <div css={s.selectButton}>
+                <div css={s.buttonBox}>
+                  <button
+                    onClick={() => handleViewTypeChange("week")}
+                    css={s.button}
+                  >
+                    지난 7일
+                  </button>
+                  <button
+                    onClick={() => handleViewTypeChange("month")}
+                    css={s.button}
+                  >
+                    저번달
+                  </button>
+                  <button
+                    onClick={() => handleViewTypeChange("all")}
+                    css={s.button}
+                  >
+                    전체
+                  </button>
                 </div>
               </div>
-            </div>
-          </div>
-          <div css={s.list}> 
-            {viewType === "week" && oneWeekData.length > 0 ? (
-              <SalesList salesData={oneWeekData}  viewType={viewType}/>
-            ) : viewType === "month" && lastMonthData.length > 0 ? (
-              <SalesList salesData={lastMonthData}  viewType={viewType}/>
-            ) : viewType === "custom" && filteredSalesData.length > 0 ? (
-              <SalesList salesData={filteredSalesData} />
-            ) : viewType === "all" && sales.length > 0 ? (
-              <SalesList salesData={sales}  viewType={viewType}/>
-            ) : (
-              <div css={s.noDateBox}>
-                <h1>
-                  <CgDanger /> 매출정보가 존재하지 않습니다
-                </h1>
+              <div css={s.calenderLayout}>
+                <div css={s.calender}>
+                  <DatePicker
+                    selected={startDate}
+                    onChange={(date) => setStartDate(date)}
+                    dateFormat="yyyy MM dd"
+                    maxDate={new Date()}
+                    css={s.customButton}
+                  />
+                </div>
+                <div css={s.calender}>
+                  <DatePicker
+                    selected={endDate}
+                    onChange={(date) => setEndDate(date)}
+                    dateFormat="yyyy MM dd"
+                    maxDate={new Date()}
+                    css={s.customButton}
+                  />
+                </div>
+                <button
+                  disabled={isDisabled}
+                  onClick={handleSearchClick}
+                  css={s.sercher(isDisabled)}
+                >
+                  {isDisabled ? (
+                    <IoClose css={s.searchIcon(isDisabled)} />
+                  ) : (
+                    <IoSearchOutline css={s.searchIcon(isDisabled)} />
+                  )}
+                </button>
               </div>
-            )}
+            </div>
+            <div css={s.totalLayout}>
+              <div css={s.totalBox}>
+                <div css={s.box}>
+                  <div css={s.total}>
+                    <h1>매출 합계</h1>
+                    <h1>주문 수 합계 </h1>
+                  </div>
+                  <div css={s.count}>
+                    <h1>{totalSales} 원</h1>
+                    <h1>{totalCount} 건</h1>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div css={s.list}>
+              {viewType === "week" && oneWeekData.length > 0 ? (
+                <SalesList salesData={oneWeekData} viewType={viewType} />
+              ) : viewType === "month" && lastMonthData.length > 0 ? (
+                <SalesList salesData={lastMonthData} viewType={viewType} />
+              ) : viewType === "custom" && filteredSalesData.length > 0 ? (
+                <SalesList salesData={filteredSalesData} />
+              ) : viewType === "all" && sales.length > 0 ? (
+                <SalesList salesData={sales} viewType={viewType} />
+              ) : (
+                <div css={s.noDateBox}>
+                  <h1>
+                    <CgDanger /> 매출정보가 존재하지 않습니다
+                  </h1>
+                </div>
+              )}
+            </div>
           </div>
         </div>
       </div>
-    </div>
+    </AdminPageLayout>
   );
 }
 

@@ -12,20 +12,25 @@ import useCategory from "../../../hooks/useCategory";
 import MenuSalesPage from "../MenuSalesPage/MenuSalesPage";
 import { adminIdState } from "../../../atoms/AdminIdStateAtom";
 import { useRecoilState } from "recoil";
+import AdminPageLayout from "../../../components/AdminPageLayout/AdminPageLayout";
 
 function MenuListPage(props) {
-  const [adminId, setAdminId] = useRecoilState(adminIdState)
+  const [adminId, setAdminId] = useRecoilState(adminIdState);
   const [menuList, setMenuList] = useState([]);
   const [menuSalesList, setMenuSalesList] = useState(menuList);
   const navigate = useNavigate();
   const [categoryId, setCategoryId] = useState(0);
   const { categories, error: categoriesError } = useCategory(adminId);
-  const { menus, error: menusError, uniqueMenuCategoryNames } = useGetMenus(adminId, categoryId);
+  const {
+    menus,
+    error: menusError,
+    uniqueMenuCategoryNames,
+  } = useGetMenus(adminId, categoryId);
 
   const menu = {
     categoryName: uniqueMenuCategoryNames,
     menuName: menus,
-    menuImgUrl: '',
+    menuImgUrl: "",
   };
 
   const selectMenuListQuery = useQuery(
@@ -54,44 +59,46 @@ function MenuListPage(props) {
   };
 
   return (
-    <div css={s.layout}>
-      <div css={s.header}>
-        <div css={s.title}>메뉴 매출 조회</div>
-      </div>
-      <div css={s.main}>
-        <div css={s.ListLayout}>
-          <div css={s.list}>
-            {categories.map((cat) => (
-              <button
-                css={s.categorieButton}
-                onClick={() => handleCategoryId(cat.menuCategoryId)}
-                key={cat.menuCategoryId}
-              >
-                {cat.menuCategoryName}
-              </button>
-            ))}
-            {menu.categoryName?.map((category) => (
-              <div key={category}>
-                <div css={s.menulist}>
-                  {menu.menuName
-                    .filter(
-                      (menuItem) => menuItem.menuCategoryName === category
-                    )
-                    .map((menuItem) => (
-                      <MenuButton
-                        key={menuItem.menuId}
-                        onClick={() => handleMenuClick(menuItem.menuId)}
-                        menuName={menuItem.menuName}
-                        img={menuItem.menuImgUrl}
-                      />
-                    ))}
+    <AdminPageLayout>
+      <div css={s.layout}>
+        <div css={s.header}>
+          <div css={s.title}>메뉴 매출 조회</div>
+        </div>
+        <div css={s.main}>
+          <div css={s.ListLayout}>
+            <div css={s.list}>
+              {categories.map((cat) => (
+                <button
+                  css={s.categorieButton}
+                  onClick={() => handleCategoryId(cat.menuCategoryId)}
+                  key={cat.menuCategoryId}
+                >
+                  {cat.menuCategoryName}
+                </button>
+              ))}
+              {menu.categoryName?.map((category) => (
+                <div key={category}>
+                  <div css={s.menulist}>
+                    {menu.menuName
+                      .filter(
+                        (menuItem) => menuItem.menuCategoryName === category
+                      )
+                      .map((menuItem) => (
+                        <MenuButton
+                          key={menuItem.menuId}
+                          onClick={() => handleMenuClick(menuItem.menuId)}
+                          menuName={menuItem.menuName}
+                          img={menuItem.menuImgUrl}
+                        />
+                      ))}
+                  </div>
                 </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
         </div>
       </div>
-    </div>
+    </AdminPageLayout>
   );
 }
 
