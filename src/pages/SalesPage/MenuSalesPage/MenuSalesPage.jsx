@@ -12,7 +12,7 @@ import { useRecoilState } from "recoil";
 function MenuSalesPage(props) {
   const [adminId] = useRecoilState(adminIdState);
   const [sales, setSales] = useState([]);
-  const [viewType, setViewType] = useState("");
+  const [viewType, setViewType] = useState("daily");
   const [dataKey, setDataKey] = useState("menuTotalSales");
   const { menuId } = useParams();
 
@@ -42,13 +42,13 @@ function MenuSalesPage(props) {
 
   const handleViewChange = (show) => {
     setViewType(show);
+    setDataKey(show === "monthly" ? "menuTotalSales" : "count");
   };
 
   const handleDataKeyChange = (key) => {
     setDataKey(key);
   };
 
-  // 월별 데이터 합치기
   const addMonthData = (data) => {
     const addData = data.reduce((acc, curr) => {
       const month = curr.month;

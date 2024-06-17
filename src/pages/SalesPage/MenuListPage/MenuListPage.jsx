@@ -10,24 +10,22 @@ import { searchMenuListRequest } from "../../../apis/api/menuManagentApi";
 import useGetMenus from "../../../hooks/useGetMenu";
 import useCategory from "../../../hooks/useCategory";
 import MenuSalesPage from "../MenuSalesPage/MenuSalesPage";
+import { adminIdState } from "../../../atoms/AdminIdStateAtom";
+import { useRecoilState } from "recoil";
 
 function MenuListPage(props) {
-  const [adminId, setAdminId] = useState(1);
+  const [adminId, setAdminId] = useRecoilState(adminIdState)
   const [menuList, setMenuList] = useState([]);
   const [menuSalesList, setMenuSalesList] = useState(menuList);
   const navigate = useNavigate();
   const [categoryId, setCategoryId] = useState(0);
   const { categories, error: categoriesError } = useCategory(adminId);
-  
-  const {
-    menus,
-    error: menusError,
-    uniqueMenuCategoryNames,
-  } = useGetMenus(adminId, categoryId);
+  const { menus, error: menusError, uniqueMenuCategoryNames } = useGetMenus(adminId, categoryId);
 
   const menu = {
     categoryName: uniqueMenuCategoryNames,
     menuName: menus,
+    menuImgUrl: '',
   };
 
   const selectMenuListQuery = useQuery(
@@ -74,7 +72,6 @@ function MenuListPage(props) {
             ))}
             {menu.categoryName?.map((category) => (
               <div key={category}>
-                <h3>{category}</h3>
                 <div css={s.menulist}>
                   {menu.menuName
                     .filter(
@@ -85,7 +82,7 @@ function MenuListPage(props) {
                         key={menuItem.menuId}
                         onClick={() => handleMenuClick(menuItem.menuId)}
                         menuName={menuItem.menuName}
-                        img={menuItem.menuIngUrl}
+                        img={menuItem.menuImgUrl}
                       />
                     ))}
                 </div>

@@ -1,4 +1,4 @@
-import instansce from "../utils/instance";
+import instance from "../utils/instance";
 
 export const searchCategoryRequest = async (params) => {
   return await instance.get("/menu/categories", { params });

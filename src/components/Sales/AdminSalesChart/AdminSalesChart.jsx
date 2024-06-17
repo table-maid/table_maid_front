@@ -1,4 +1,5 @@
-import React from "react";
+/** @jsxImportSource @emotion/react */
+import * as s from "./style";
 import ReactApexChart from "react-apexcharts";
 
 const AdminSalesChart = ({
@@ -8,11 +9,8 @@ const AdminSalesChart = ({
   keyName,
   dataKey,
   lineColor,
-  viewType,
-  yAxisMin,
   yAxisMax,
 }) => {
-
   // 날짜를 지정된 형식으로 변환하는 함수
   const getDateLabel = (monthNumber, dayNumber) => {
     const date = new Date();
@@ -74,7 +72,7 @@ const AdminSalesChart = ({
     },
     yaxis: [
       {
-        min: yAxisMin,
+        min: 0,
         max: yAxisMax,
         labels: {
           formatter: (val) => val.toFixed(0), // 소수점자리 없애기
@@ -102,7 +100,9 @@ const AdminSalesChart = ({
   return (
     <div id="chart">
       {sales.length === 0 ? (
-        <div>데이터 X</div> // 데이터가 없을 때 표시
+        <div css={s.dataLayout}>
+          <div css={s.dataBox}>데이터가 존재하지 않습니다.</div>
+        </div> // 데이터가 없을 때 표시
       ) : (
         <ReactApexChart
           options={options}
