@@ -27,6 +27,7 @@ function MenuManagementDetailPage() {
             menuImgUrl: '',
             optionList:[]
         });
+    
     const [updateOptionData, setUpdateOptionData] = useState({
         adminId: adminId,
         menuId: menuId,
@@ -35,6 +36,7 @@ function MenuManagementDetailPage() {
         optionPrice:0,
         titleId:'',
     });
+    
     const [updateState, setUpdateState] = useState(0);
     const [updateOptionTitleName, setUpdateOptionTitleName] = useState({
         adminId:adminId,
