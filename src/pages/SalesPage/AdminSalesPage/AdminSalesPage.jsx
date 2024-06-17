@@ -1,7 +1,7 @@
 /** @jsxImportSource @emotion/react */
 import * as s from "./style";
 import { useQuery } from "react-query";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import {
   getSalesRequest,
   getSelectSalesRequest,
@@ -17,6 +17,7 @@ import { useRecoilState } from "recoil";
 import { adminIdState } from "../../../atoms/AdminIdStateAtom";
 import { viewTypeState } from "../../../atoms/ViewTypeStateAtom";
 import AdminPageLayout from "../../../components/AdminPageLayout/AdminPageLayout";
+import useAnimateView from "../../../hooks/useAnimateAtom"; // 커스텀 훅 가져오기
 
 function AdminSalesPage(props) {
   const [adminId] = useRecoilState(adminIdState);
@@ -31,6 +32,13 @@ function AdminSalesPage(props) {
   const [searchClicked, setSearchClicked] = useState(false);
   const [dataKey, setDataKey] = useState("totalSales");
   const [chartData, setChartData] = useState([]);
+  const [activeButton, setActiveButton] = useState("all");
+  const buttonRef = useRef(null);
+
+  const [headerRef, headerInView] = useAnimateView();
+  const [chartRef, chartInView] = useAnimateView();
+  const [salesLayoutRef, salesLayoutInView] = useAnimateView();
+  const [totalLayoutRef, totalLayoutInView] = useAnimateView();
 
   const {
     oneWeekData,
@@ -41,16 +49,25 @@ function AdminSalesPage(props) {
   } = useSalesData(selectSalesData);
 
   useEffect(() => {
-    // 렌더링 처음 될 때 그래프 => 총 매출
     setViewType("all");
+
+    const handleClickOutside = (event) => {
+      if (buttonRef.current && !buttonRef.current.contains(event.target)) {
+        setActiveButton(""); 
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
   }, []);
 
   const salesQuery = useQuery(
-    ["salesQuery"], // 연간 총 매출
+    ["salesQuery"],
     () => getSalesRequest(adminId),
     {
       retry: 0,
-      refetchOnWindowFocus: false,
       onSuccess: (response) => {
         setSales(response.data);
         if (viewType === "all") {
@@ -71,11 +88,10 @@ function AdminSalesPage(props) {
   );
 
   const selectSalesQuery = useQuery(
-    ["selectSalesQuery"], // 하루 매출
+    ["selectSalesQuery"],
     () => getSelectSalesRequest(adminId),
     {
       retry: 0,
-      refetchOnWindowFocus: false,
       onSuccess: (response) => {
         setSelectSalesData(response.data);
       },
@@ -87,7 +103,7 @@ function AdminSalesPage(props) {
 
   useEffect(() => {
     let data = [];
-    let totals = { totalSales: 0, totalCount: 0 }; // key값
+    let totals = { totalSales: 0, totalCount: 0 };
 
     if (viewType === "week") {
       data = oneWeekData;
@@ -149,6 +165,7 @@ function AdminSalesPage(props) {
 
   const handleViewTypeChange = (type) => {
     setViewType(type);
+    setActiveButton(type); 
     if (type === "all") {
       setChartData(sales);
       setTotalSales(sales.reduce((acc, sale) => acc + sale.totalSales, 0));
@@ -159,6 +176,7 @@ function AdminSalesPage(props) {
 
   const handleSearchClick = () => {
     setSearchClicked(true);
+    setActiveButton("search"); 
     setViewType("custom");
   };
 
@@ -178,11 +196,19 @@ function AdminSalesPage(props) {
   return (
     <AdminPageLayout>
       <div css={s.layout}>
-        <div css={s.header}>
+        <div
+          css={s.header}
+          ref={headerRef}
+          className={headerInView ? "animate" : "hide"}
+        >
           <div css={s.title}>매출 조회</div>
         </div>
         <div css={s.main}>
-          <div css={s.chartContainer}>
+          <div
+            css={s.chartContainer}
+            ref={chartRef}
+            className={chartInView ? "animate" : "hide"}
+          >
             <AdminSalesChart
               sales={chartData.map((data) => ({
                 dayTotalSales: data.dayTotalSales,
@@ -198,25 +224,32 @@ function AdminSalesPage(props) {
               viewType={viewType}
             />
           </div>
-          <div css={s.salesLayout}>
+          <div
+            css={s.salesLayout}
+            ref={salesLayoutRef}
+            className={salesLayoutInView ? "animate" : "hide"}
+          >
             <div css={s.selectBox}>
               <div css={s.selectButton}>
                 <div css={s.buttonBox}>
                   <button
                     onClick={() => handleViewTypeChange("week")}
-                    css={s.button}
+                    css={s.button(activeButton === "week")}
+                    ref={buttonRef}
                   >
                     지난 7일
                   </button>
                   <button
                     onClick={() => handleViewTypeChange("month")}
-                    css={s.button}
+                    css={s.button(activeButton === "month")}
+                    ref={buttonRef}
                   >
                     저번달
                   </button>
                   <button
                     onClick={() => handleViewTypeChange("all")}
-                    css={s.button}
+                    css={s.button(activeButton === "all")}
+                    ref={buttonRef}
                   >
                     전체
                   </button>
@@ -244,7 +277,8 @@ function AdminSalesPage(props) {
                 <button
                   disabled={isDisabled}
                   onClick={handleSearchClick}
-                  css={s.sercher(isDisabled)}
+                  css={s.sercher(isDisabled, activeButton === "search")}
+                  ref={buttonRef}
                 >
                   {isDisabled ? (
                     <IoClose css={s.searchIcon(isDisabled)} />
@@ -254,7 +288,9 @@ function AdminSalesPage(props) {
                 </button>
               </div>
             </div>
-            <div css={s.totalLayout}>
+            <div css={s.totalLayout} 
+            ref={totalLayoutRef}
+              className={totalLayoutInView ? "animate" : "hide"}>
               <div css={s.totalBox}>
                 <div css={s.box}>
                   <div css={s.total}>
@@ -268,7 +304,11 @@ function AdminSalesPage(props) {
                 </div>
               </div>
             </div>
-            <div css={s.list}>
+            <div
+              css={s.list}
+              ref={totalLayoutRef}
+              className={totalLayoutInView ? "animate" : "hide"}
+            >
               {viewType === "week" && oneWeekData.length > 0 ? (
                 <SalesList salesData={oneWeekData} viewType={viewType} />
               ) : viewType === "month" && lastMonthData.length > 0 ? (

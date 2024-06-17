@@ -24,12 +24,13 @@ export const dataChoice = css`
 `;
 
 export const chartContainer = css`
-  width: 100%;
+  width: 95%;
   height: 100%;
   display: flex;
   justify-content: center;
   flex-direction: column;
   padding: 0 10px;
+  margin-left: 15px;
 `;
 
 export const button = css`
