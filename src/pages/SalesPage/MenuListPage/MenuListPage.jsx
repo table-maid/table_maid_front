@@ -2,20 +2,18 @@
 import * as s from "./style";
 
 import { useQuery } from "react-query";
-import { getMenuTotalSalesRequest } from "../../../apis/api/salesApi";
 import { useState } from "react";
 import MenuButton from "../../../components/Sales/MenuButton/MenuButton";
-import { Route, Routes, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { searchMenuListRequest } from "../../../apis/api/menuManagentApi";
 import useGetMenus from "../../../hooks/useGetMenu";
 import useCategory from "../../../hooks/useCategory";
-import MenuSalesPage from "../MenuSalesPage/MenuSalesPage";
 import { adminIdState } from "../../../atoms/AdminIdStateAtom";
 import { useRecoilState } from "recoil";
 import AdminPageLayout from "../../../components/AdminPageLayout/AdminPageLayout";
 
 function MenuListPage(props) {
-  const [adminId, setAdminId] = useRecoilState(adminIdState);
+  const [adminId] = useRecoilState(adminIdState);
   const [menuList, setMenuList] = useState([]);
   const [menuSalesList, setMenuSalesList] = useState(menuList);
   const navigate = useNavigate();

@@ -1,104 +1,134 @@
 /** @jsxImportSource @emotion/react */
 import * as s from "./style";
 import ReactApexChart from "react-apexcharts";
+import { useEffect, useState } from "react";
+
 const AdminSalesChart = ({
   sales,
   monthKey,
   dayKey,
   keyName,
   dataKey,
-  yAxisMax,
 }) => {
-  // 날짜를 지정된 형식으로 변환하는 함수
-  const getDateLabel = (monthNumber, dayNumber) => {
-    const date = new Date();
-    date.setMonth(monthNumber - 1);
-    if (dayNumber !== null && dayNumber !== undefined) {
-      date.setDate(dayNumber);
+  const [options, setOptions] = useState({});
+  const [series, setSeries] = useState([]);
+
+  useEffect(() => {
+    const getDateLabel = (monthNumber, dayNumber) => {
+      const date = new Date();
+      date.setMonth(monthNumber - 1);
+      if (dayNumber !== null && dayNumber !== undefined) {
+        date.setDate(dayNumber);
+      }
+      return date.toLocaleString("en-US", { month: "short", day: "numeric" });
+    };
+
+    const categories = sales.map((data) =>
+      getDateLabel(data[monthKey], data[dayKey])
+    );
+
+    const seriesData = sales.map((data) => data[dataKey]);
+
+    let yMax;
+    if (Math.max(...seriesData) === Math.min(...seriesData)) {
+      // 모든 값이 동일한 경우 막대그래프로 표시
+      setSeries([
+        {
+          name: keyName,
+          type: "bar", 
+          data: seriesData,
+        },
+      ]);
+      yMax = Math.max(...seriesData) * 1.3;
+    } else {
+      setSeries([
+        {
+          name: keyName,
+          type: "line",
+          data: seriesData,
+        },
+      ]);
+      yMax = Math.max(...seriesData) * 1.3;
     }
-    return date.toLocaleString("en-US", { month: "short", day: "numeric" });
-  };
 
-  const categories = sales.map((data) =>
-    getDateLabel(data[monthKey], data[dayKey])
-  );
-
-  const series = [
-    {
-      name: keyName,
-      type: "line",
-      data: sales.map((data) => data[dataKey]),
-    },
-  ];
-
-  const options = {
-    chart: {
-      height: "100%",
-      width:"100%",
-      type: "line",
-      zoom: {
-        enabled: false,
+    setOptions({
+      chart: {
+        height: "100%",
+        width: "100%",
+        type: seriesData.length === 1 && Math.max(...seriesData) === Math.min(...seriesData) ? "bar" : "line",
+        zoom: {
+          enabled: false,
+        },
+        toolbar: { show: false },
       },
-      toolbar: { show: false },
-    },
-    stroke: {
-      width: [4], // 선 굵기
-      curve: "smooth",
-    },
-    title: {
-      text: keyName,
-      align: "center",
-      style: {
-        fontSize: "20px",
+      stroke: {
+        width: [4],
+        curve: "smooth",
       },
-    },
-    xaxis: {
-      categories: categories,
-      labels: {
+      title: {
+        text: keyName,
+        align: "center",
         style: {
-          fontSize: "14px",
+          fontSize: "20px",
         },
       },
-    },
-    yaxis: [
-      {
-        min: 0,
-        max: yAxisMax,
+      xaxis: {
+        categories: categories,
         labels: {
-          formatter: (val) => val.toFixed(0), // 소수점자리 없애기
           style: {
-            fontSize: "18px",
+            fontSize: "14px",
           },
         },
+        tickAmount: sales.length > 1 ? undefined : 2,
       },
-    ],
-    tooltip: {
-      shared: true,
-      intersect: false,
-    },
-    legend: {
-      position: "top",
-      horizontalAlign: "right",
-      floating: true,
-    },
-    fill: {
-      type: "gradient",
-      gradient: { gradientToColors: ["blue"], stops: [0, 100] },
-    },
-    colors: ["red"],
-  };
+      yaxis: [
+        {
+          min: 0,
+          max: yMax,
+          labels: {
+            formatter: (val) => val.toFixed(0),
+            style: {
+              fontSize: "18px",
+            },
+          },
+        },
+      ],
+      tooltip: {
+        shared: true,
+        intersect: false,
+      },
+      legend: {
+        position: "top",
+        horizontalAlign: "right",
+        floating: true,
+      },
+      fill: {
+        type: "gradient",
+        gradient: { gradientToColors: ["#a4fff3"], stops: [0, 100] },
+      },
+      colors: ["#c8dbff"],
+      plotOptions: {
+        bar: {
+          columnWidth: "5%", 
+        },
+      },
+      dataLabels: {
+        enabled: false, 
+      },
+    });
+  }, [sales, monthKey, dayKey, keyName, dataKey]);
 
   return (
     <div id="chart">
       {sales.length === 0 ? (
         <div css={s.dataLayout}>
           <div css={s.dataBox}>데이터가 존재하지 않습니다.</div>
-        </div> // 데이터가 없을 때 표시
+        </div>
       ) : (
         <ReactApexChart
           options={options}
           series={series}
-          type="line"
+          type={series[0]?.type || "line"}
           height={"380px"}
         />
       )}
