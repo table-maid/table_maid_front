@@ -9,12 +9,13 @@ export const calenderLayout = css`
 `;
 
 export const calender = css`
-  width: 319px;
+  width: 320px;
   height: 100%;
   display: flex;
-  padding-right: 10px;
+  padding-right: 28px;
   align-items: center;
-  margin-left: 23px;
+  margin-left: 5px;
+  /* margin-right: 10px; */
 `;
 
 export const customButton = css`

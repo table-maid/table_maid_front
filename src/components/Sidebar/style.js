@@ -77,6 +77,6 @@ export const link = css`
     text-decoration: none;
     cursor: pointer;
     color: #eee;
-    font-size: 25px;
+    font-size: 20px;
 `;
 
