@@ -15,10 +15,8 @@ import AdminPageLayout from "../../../components/AdminPageLayout/AdminPageLayout
 function MenuListPage(props) {
   const [adminId] = useRecoilState(adminIdState);
   const [menuList, setMenuList] = useState([]);
-  const [menuSalesList, setMenuSalesList] = useState(menuList);
   const navigate = useNavigate();
   const [categoryId, setCategoryId] = useState(0);
-  const [selectedCategoryId, setSelectedCategoryId] = useState(null); // 선택된 카테고리 ID 상태 추가
   const { categories, error: categoriesError } = useCategory(adminId);
   const {
     menus,
@@ -53,7 +51,6 @@ function MenuListPage(props) {
 
   const handleCategoryId = (category) => {
     setCategoryId(category);
-    setSelectedCategoryId(category); // 선택된 카테고리 ID 업데이트
   };
 
   return (
@@ -67,7 +64,7 @@ function MenuListPage(props) {
             <div css={s.list}>
               {categories.map((cat) => (
                 <button
-                  css={s.categorieButton(cat.menuCategoryId === selectedCategoryId)}
+                  css={s.categorieButton}
                   onClick={() => handleCategoryId(cat.menuCategoryId)}
                   key={cat.menuCategoryId}
                 >

@@ -31,12 +31,13 @@ export const saleGraphContainer = css`
 export const menuLayout = css`
   width: 100%;
   height: 100%;
-  background-color: orange;
+  /* background-color: orange; */
   border-radius: 30px;
   display: flex;
   flex-direction: row;
   align-items: center;
   justify-content: space-around;
+
   `;
 export const graphBox = css`
   width: 30%;
@@ -47,6 +48,7 @@ export const graphBox = css`
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  box-shadow: rgba(0, 0, 0, 0.336) 0px 25px 30px -12px;;
   
   & h3 {
     font-size: 20px;

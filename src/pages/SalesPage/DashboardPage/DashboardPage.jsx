@@ -2,19 +2,21 @@
 import * as s from "./style";
 import AdminPageLayout from "../../../components/AdminPageLayout/AdminPageLayout";
 import { useState, useEffect } from "react";
-import { getSelectSalesRequest } from "../../../apis/api/salesApi";
+import { getMenuTotalSalesRequest, getSelectSalesRequest } from "../../../apis/api/salesApi";
 import AdminSalesChart from "../../../components/Sales/AdminSalesChart/AdminSalesChart";
 import useSalesData from "../../../hooks/useSalesData";
 import { useRecoilState } from "recoil";
 import { adminIdState } from "../../../atoms/AdminIdStateAtom";
 import { useQuery } from "react-query";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import Image from "../../../file.png";
 import { searchMenuListRequest } from "../../../apis/api/menuManagentApi";
 function DashboardPage(props) {
   const [adminId] = useRecoilState(adminIdState);
   const [selectSalesData, setSelectSalesData] = useState([]);
   const [menuList, setMenuList] = useState([]);
+  const { menuId } = useParams();
+  const [sales, setSales] = useState([]);
 
   const { oneWeekData, lastMonthData, dailySales } =
     useSalesData(selectSalesData);
@@ -25,11 +27,32 @@ function DashboardPage(props) {
     {
       retry: 0,
       onSuccess: (response) => {
-		  console.log(response.data);
+        // console.log(response.data);
         setSelectSalesData(response.data);
       },
       onError: (error) => {
         console.log("에러 : ", error);
+      },
+    }
+  );
+
+  
+  const selectMenuSalesQuery = useQuery(
+    "selectMenuSalesQuery",
+    () =>
+      getMenuTotalSalesRequest({
+        adminId: adminId,
+        menuId: menuId,
+      }),
+    {
+      retry: 0,
+      refetchOnWindowFocus: false,
+      onSuccess: (response) => {
+		console.log(response.data);
+        setSales(response.data);
+      },
+      onError: (error) => {
+        console.log("에러 :", error);
       },
     }
   );
@@ -41,14 +64,16 @@ function DashboardPage(props) {
       retry: 0,
       refetchOnWindowFocus: false,
       onSuccess: (response) => {
-		console.log(response.data);
+        console.log(response.data);
         setMenuList(response.data);
       },
       onError: (error) => {
-        console.log("에러 : ", error);
+        console.log("에러 :", error);
       },
     }
   );
+
+
 
   return (
     <AdminPageLayout>

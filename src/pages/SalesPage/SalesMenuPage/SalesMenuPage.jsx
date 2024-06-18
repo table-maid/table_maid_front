@@ -33,6 +33,7 @@ function MenuSalesPage(props) {
       retry: 0,
       refetchOnWindowFocus: false,
       onSuccess: (response) => {
+        // console.log(response.data);
         setSales(response.data);
       },
       onError: (error) => {

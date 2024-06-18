@@ -1,8 +1,8 @@
 import React from "react";
 import { Route, Routes } from "react-router-dom";
 import AdminSalesPage from "../pages/SalesPage/AdminSalesPage/AdminSalesPage";
-import MenuListPage from "../pages/SalesPage/MenuListPage/MenuListPage";
-import MenuSalesPage from "../pages/SalesPage/MenuSalesPage/MenuSalesPage";
+import SalesMenuListPage from "../pages/SalesPage/SalesMenuListPage/SalesMenuListPage";
+import SalesMenuPage from "../pages/SalesPage/SalesMenuPage/SalesMenuPage";
 import DashboardPage from "../pages/SalesPage/DashboardPage/DashboardPage";
 
 function SalesRoute(props) {
@@ -11,8 +11,8 @@ function SalesRoute(props) {
       <Routes>
         <Route path="/home" element={<DashboardPage />} />
         <Route path="/sale" element={<AdminSalesPage />} />
-        <Route path="/menu" element={<MenuListPage />} />
-        <Route path="/menu/detail/:menuId" element={<MenuSalesPage />} />
+        <Route path="/menu" element={<SalesMenuListPage />} />
+        <Route path="/menu/detail/:menuId" element={<SalesMenuPage />} />
       </Routes>
     </>
   );
