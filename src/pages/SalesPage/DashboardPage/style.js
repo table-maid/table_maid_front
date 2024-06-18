@@ -63,11 +63,13 @@ box-sizing: border-box;
   & h1 {
     margin: 10px 0;
     font-size: 25px;
+    
   }
   & h2 {
     font-size: 35px;
     margin: 0;
     margin-bottom: 8px;
+    font-weight: 700;
   }
 
   transition: transform 0.5s ease, box-shadow 0.5s ease;
@@ -116,6 +118,7 @@ justify-content: center;
 
 & h1 {
   margin-left: 30px;
+  color: #187CFF;
 }
 
 

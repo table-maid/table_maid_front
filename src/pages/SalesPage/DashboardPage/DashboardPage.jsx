@@ -136,7 +136,7 @@ function DashboardPage(props) {
             </div>
             <div css={s.graphBox}>
               <div css={s.link}>
-                <h3>One Month</h3>
+                <h3>Month</h3>
                 <button onClick={handleClick} css={s.button}>ALL</button>
               </div>
               <AdminSalesChart
