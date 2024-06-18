@@ -13,19 +13,19 @@ function App() {
   return (
     <>
       <BackgroundLayout>
-        {/* <AdminRootLayout> */}
-        {/* <AdminRootContainer> */}
-        {/* <AdminRoute /> */}
-        {/* <MenuRoute /> */}
-        {/* </AdminRootContainer> */}
-        {/* </AdminRootLayout> */}
+        <AdminRootLayout>
+        <AdminRootContainer>
+        <AdminRoute />
+        <MenuRoute />
+        </AdminRootContainer>
+        </AdminRootLayout>
 
-        <UserRootLayout>
-          <RootHeader />
+        {/* <UserRootLayout> */}
+          {/* <RootHeader /> */}
           {/* <UserRootContainer> */}
-          <UserRoute />
+          {/* <UserRoute /> */}
           {/* </UserRootContainer> */}
-        </UserRootLayout>
+        {/* </UserRootLayout> */}
       </BackgroundLayout>
     </>
   );
