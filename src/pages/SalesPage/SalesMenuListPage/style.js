@@ -62,18 +62,18 @@ export const list = css`
 `;
 
 export const categorieButton = (isActive) => css`
-background-color: ${isActive ? '#0076DF' : '#f0f0f0'};
-border: none;
-font-size: 20px;
-padding: 10px 25px;
-border-radius: 20px;
-border: 1px solid ${isActive ? '#0076DF' : '#ccc'};
-color: ${isActive ? '#ffffff' : '#646464'};;
-&:active {
-    background-color: #dddddd 
+  background-color: ${isActive ? "#0076DF" : "#f0f0f0"};
+  border: none;
+  font-size: 20px;
+  padding: 10px 25px;
+  border-radius: 20px;
+  border: 1px solid ${isActive ? "#0076DF" : "#ccc"};
+  color: ${isActive ? "#ffffff" : "#646464"};
+  &:active {
+    background-color: #dddddd;
   }
-&:hover {
-    background-color:${isActive ? '#00559b' : '#bebebe'}; 
+  &:hover {
+    background-color: ${isActive ? "#00559b" : "#bebebe"};
   }
 `;
 
