@@ -2,12 +2,14 @@
 import { useState } from "react";
 import * as s from "./style";
 import { FaBars } from "react-icons/fa6";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { IoClose } from "react-icons/io5";
+import { FaHome } from "react-icons/fa";
 
 function Sidebar() {
   const [isShow, setShow] = useState(false);
   const [isButtonVisible, setButtonVisible] = useState(true);
+  const navigate = useNavigate();
 
   const handleOpenButtonClick = () => {
     setShow(true);
@@ -19,6 +21,10 @@ function Sidebar() {
     setTimeout(() => {
       setButtonVisible(true);
     }, 400);
+  };
+
+  const handleHomeButtonClick = () => {
+    navigate("/sales/home");
   };
 
   return (
@@ -33,6 +39,9 @@ function Sidebar() {
         <div>
           <button css={s.closeButton} onClick={handleCloseButtonClick}>
             <IoClose size={"30"} />
+          </button>
+          <button css={s.homeButton} onClick={handleHomeButtonClick}>
+            <FaHome size={"30"} />
           </button>
           <ul css={s.menuList}>
             <li css={s.menuItem}>
