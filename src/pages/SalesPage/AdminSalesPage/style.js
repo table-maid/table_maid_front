@@ -10,6 +10,27 @@ export const layout = css`
   scrollbar-width: none;
   background-color: #f5f5f7;
   border-radius: 40px 30px;
+
+  &.animate {
+    animation: fadeInUp 1s forwards;
+  }
+
+  &.hide {
+    opacity: 0;
+    transform: translateY(50px);
+    transition: opacity 1s, transform 1s;
+  }
+
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(50px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
 `;
 
 export const header = css`
@@ -18,51 +39,94 @@ export const header = css`
   display: flex;
   justify-content: center;
   align-items: center;
+
+  &.animate {
+    animation: fadeInUp 1s forwards;
+  }
+
+  &.hide {
+    opacity: 0;
+    transform: translateY(50px);
+    transition: opacity 1s, transform 1s;
+  }
 `;
 
 export const title = css`
   box-sizing: border-box;
-  border-bottom: 2px solid #222;
-  color: #222;
+  color: #1d1d1f;
   width: 90%;
   height: 50%;
-  font-size: 40px;
+  font-size: 30px;
   font-weight: 700;
+  margin-top: 80px;
 `;
+
 export const main = css`
   display: flex;
   flex-direction: column;
   align-items: center;
   width: 100%;
   height: 70%;
+
+  &.animate {
+    animation: fadeInUp 1s forwards;
+  }
+
+  &.hide {
+    opacity: 0;
+    transform: translateY(50px);
+    transition: opacity 1s, transform 1s;
+  }
 `;
 
 export const chartContainer = css`
   box-sizing: border-box;
   width: 90%;
   height: 380px;
-  border-radius: 30px;
+  border-radius: 20px;
   box-shadow: 0px 3px 10px 2px hsla(0, 0%, 0%, 0.2);
   background-color: #fefefe;
+
+  &.animate {
+    animation: fadeInUp 1s forwards;
+  }
+
+  &.hide {
+    opacity: 0;
+    transform: translateY(50px);
+    transition: opacity 1s, transform 1s;
+  }
 `;
+
 export const salesLayout = css`
   box-sizing: border-box;
   width: 90%;
   height: 80%;
   margin-top: 40px;
+
+  &.animate {
+    animation: fadeInUp 1s forwards;
+  }
+
+  &.hide {
+    opacity: 0;
+    transform: translateY(50px);
+    transition: opacity 1s, transform 1s;
+  }
 `;
 
 export const selectBox = css`
   box-sizing: border-box;
   background-color: #fefefe;
   box-shadow: rgba(0, 0, 0, 0.25) 0px 15px 20px -12px;
-  border-radius: 30px;
+  border-radius: 20px;
   width: 100%;
   height: 180px;
   display: flex;
   flex-direction: column;
   align-items: center;
 `;
+
 export const selectContainer = css`
   box-sizing: border-box;
   width: 100%;
@@ -74,8 +138,8 @@ export const selectContainer = css`
 export const selectButton = css`
   box-sizing: border-box;
   background-color: #bbbbbbea;
-  border-top-right-radius: 30px;
-  border-top-left-radius: 30px;
+  border-top-right-radius: 20px;
+  border-top-left-radius: 20px;
   width: 100%;
   height: 100%;
   display: flex;
@@ -93,7 +157,9 @@ export const font = css`
   align-items: center;
   justify-content: center;
   text-align: center;
+
 `;
+
 export const buttonBox = css`
   width: 90%;
   height: 70%;
@@ -101,7 +167,7 @@ export const buttonBox = css`
   display: flex;
   flex-direction: row;
   align-items: center;
-`;
+  `;
 
 export const calenderLayout = css`
   width: 35%;
@@ -142,7 +208,8 @@ export const customButton = css`
     background-color: #eee;
   }
 `;
-export const sercher = (isDisabled) => css`
+
+export const sercher = (isActive) => css`
   box-sizing: border-box;
   padding: 13px 30px;
   font-size: 15px;
@@ -150,19 +217,9 @@ export const sercher = (isDisabled) => css`
   border: 1px solid hsl(0, 0%, 60%);
   cursor: pointer;
   text-align: center;
-  box-shadow: 0px 3px 7px 2px hsla(0, 0%, 0%, 0.2);
+  box-shadow: ${isActive ? "inset -4px -4px 10px #fff, inset 4px 2px 8px #aeb0b8" : "0px 3px 10px 2px hsla(0, 0%, 0%, 0.2)"};
   transition: transform 0.3s, box-shadow 0.3s;
-  z-index: 5;
-  margin-left: 16px;
   border-radius: 10px;
-
-  &:hover {
-    box-shadow: inset -4px -4px 10px #fff, inset 4px 2px 8px #aeb0b8;
-  }
-  &:active {
-    background-color: #eee;
-  }
-  background-color: ${isDisabled ? "#e4e4e4ad" : "#fefefe;"};
 `;
 
 export const searchIcon = (isDisabled) => css`
@@ -180,6 +237,16 @@ export const totalLayout = css`
   flex-direction: column;
   border-radius: 25px;
   margin-top: 40px;
+
+  &.animate {
+    animation: fadeInUp 1s forwards;
+  }
+
+  &.hide {
+    opacity: 0;
+    transform: translateY(50px);
+    transition: opacity 1s, transform 1s;
+  }
 `;
 
 export const totalBox = css`
@@ -241,14 +308,14 @@ export const count = css`
   }
 `;
 
-export const button = css`
+export const button = (isActive) => css`
   box-sizing: border-box;
   border: 1px solid #dbdbdb;
   padding: 12px 130px;
   margin-right: 30px;
-  border-radius: 15px;
+  border-radius: 10px;
   background-color: #fefefe;
-  box-shadow: 0px 3px 10px 2px hsla(0, 0%, 0%, 0.2);
+  box-shadow: ${isActive ? "inset -4px -4px 10px #fff, inset 4px 2px 8px #aeb0b8" : "0px 3px 10px 2px hsla(0, 0%, 0%, 0.2)"};
   font-size: 15px;
   color: #575757;
   font-weight: 600;
@@ -265,6 +332,16 @@ export const list = css`
   margin-top: 20px;
   box-shadow: rgba(0, 0, 0, 0.336) 0px 25px 30px -12px;
   border-radius: 30px;
+
+  &.animate {
+    animation: fadeInUp 1s forwards;
+  }
+
+  &.hide {
+    opacity: 0;
+    transform: translateY(50px);
+    transition: opacity 1s, transform 1s;
+  }
 `;
 
 export const noDateBox = css`

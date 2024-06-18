@@ -8,29 +8,42 @@ export const layout = (isShow) => css`
   z-index: 99;
   border-right: 1px solid #dbdbdb;
   width: 300px;
-  height: 99%;
+  height: 100%;
   transition: left 0.5s ease-in-out;
-  background-color: white;
+  background-color: #707070;
   box-shadow: 1px 0px 3px #22222222;
   border-radius: 30px;
 `;
 
-export const button = css`
+export const openButton = (isButtonVisible) => css`
+  box-sizing: border-box;
+  position: fixed;
+  border: none;
+  transform: translateY(-50%);
+  top: 80px;
+  left: 135px;
+  padding: 0;
+  background-color: #f5f5f7;
+  cursor: pointer;
+  z-index: 100; 
+  transition: opacity 0.3s ease-in; /* 트랜지션 시간과 효과 */
+  opacity: ${isButtonVisible ? 1 : 0}; /* 버튼 표시 여부 */
+  pointer-events: ${isButtonVisible ? 'auto' : 'none'}; /* 클릭 가능 여부 */
+`;
+
+export const closeButton = css`
   box-sizing: border-box;
   position: absolute;
-  transform: translateY(-50%);
-  top: 50%;
-  right: -25px;
+  top: 10px;
+  right: 10px;
   display: flex;
   justify-content: center;
   align-items: center;
   padding: 0;
-  border: 1px solid #dbdbdb;
-  border-top-right-radius: 8px;
-  border-bottom-right-radius: 8px;
-  width: 25px;
-  height: 70px;
-  background-color: white;
+  border: none;
+  background: none;
+  font-size: 24px;
+  color: white;
   cursor: pointer;
 `;
 
@@ -47,12 +60,23 @@ export const menuItem = css`
   display: flex;
   justify-content: center;
   align-items: center;
-
-  border-bottom: 1px solid #dbdbdb;
+  /* border-bottom: 1px solid #dbdbdb; */
   width: 100%;
   height: 50px;
   color: black;
   font-weight: 600;
   text-decoration: none;
   cursor: pointer;
+  /* background-color: aqua; */
+  padding: 40px 0;
 `;
+
+export const link = css`
+    display: flex;
+    margin-top: 15px;
+    text-decoration: none;
+    cursor: pointer;
+    color: #eee;
+    font-size: 20px;
+`;
+

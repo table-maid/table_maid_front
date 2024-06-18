@@ -10,7 +10,9 @@ export const layout = css`
   scrollbar-width: none;
   background-color: #f5f5f7;
   border-radius: 40px 30px;
+
 `;
+
 
 export const header = css`
   width: 100%;
@@ -18,16 +20,20 @@ export const header = css`
   display: flex;
   justify-content: center;
   align-items: center;
+
 `;
 
 export const title = css`
   box-sizing: border-box;
-  border-bottom: 2px solid #222;
+  /* border-bottom: 2px solid #222; */
   color: #222;
   width: 90%;
   height: 50%;
-  font-size: 40px;
+  font-size: 30px;
   font-weight: 700;
+  margin-top: 60px;
+  margin-left: 20px;
+
 `;
 export const main = css`
   width: 100%;

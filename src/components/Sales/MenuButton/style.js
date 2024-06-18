@@ -19,14 +19,21 @@ export const menu = css`
   align-items: center;
   border: none;
   background-color: transparent;
-   overflow-wrap: break-word; /* 단어가 길 경우 줄바꿈 */
+  overflow-wrap: break-word; /* 단어가 길 경우 줄바꿈 */
   white-space: pre-wrap; /* 공백 처리 및 줄바꿈 유지 */
 `;
 export const imgLayout = css`
+  box-sizing: border-box;
   width: 130px;
   height: 120px;
   border-radius: 50%;
   background-color: #dfdfdf;
+
+  & img {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+  }
 `;
 export const menuListLayout = css`
   /* background-color: beige; */
