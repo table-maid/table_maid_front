@@ -45,11 +45,11 @@ export const menuListLayout = css`
 `;
 
 export const img = css`
-  width: 100%; /* 컨테이너의 너비에 맞게 이미지 크기 조정 */
-  height: 100%; /* 컨테이너의 높이에 맞게 이미지 크기 조정 */
-  object-fit: cover;  
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
   position: absolute;
   top: 50%;
-  left: 50%;  
+  left: 50%;
   transform: translate(-50%, -50%);
 `;

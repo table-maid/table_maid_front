@@ -1,5 +1,5 @@
 /** @jsxImportSource @emotion/react */
-import * as s from "./style";
+import React from "react";
 import ReactApexChart from "react-apexcharts";
 import { useEffect, useState } from "react";
 
@@ -10,6 +10,9 @@ const AdminSalesChart = ({
   keyName,
   dataKey,
   viewType,
+  lineColor = "#79ceff", 
+  height = "380px", 
+  width = "100%", 
 }) => {
   const [options, setOptions] = useState({});
   const [series, setSeries] = useState([]);
@@ -54,8 +57,8 @@ const AdminSalesChart = ({
 
     setOptions({
       chart: {
-        height: "100%",
-        width: "100%",
+        height: height,
+        width: width,
         type: seriesData.length === 1 && Math.max(...seriesData) === Math.min(...seriesData) ? "bar" : "line",
         zoom: {
           enabled: false,
@@ -105,9 +108,9 @@ const AdminSalesChart = ({
       },
       fill: {
         type: "gradient",
-        gradient: { gradientToColors: ["#a4fff3"], stops: [0, 100] },
+        gradient: { gradientToColors: [lineColor], stops: [0, 100] }, 
       },
-      colors: ["#c8dbff"],
+      colors: [lineColor], 
       plotOptions: {
         bar: {
           columnWidth: "5%", 
@@ -117,20 +120,19 @@ const AdminSalesChart = ({
         enabled: false, 
       },
     });
-  }, [sales, monthKey, dayKey, keyName, dataKey, viewType]);
+  }, [sales, monthKey, dayKey, keyName, dataKey, viewType, lineColor, height, width]);
 
   return (
     <div id="chart">
       {sales.length === 0 ? (
-        <div css={s.dataLayout}>
-          <div css={s.dataBox}>데이터가 존재하지 않습니다.</div>
-        </div>
+        <div>데이터가 존재하지 않습니다.</div>
       ) : (
         <ReactApexChart
           options={options}
           series={series}
           type={series[0]?.type || "line"}
-          height={"380px"}
+          height={height} 
+          width={width}
         />
       )}
     </div>

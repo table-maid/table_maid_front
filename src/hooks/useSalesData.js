@@ -1,4 +1,3 @@
-// hooks/useSalesData.js
 import { useEffect, useState } from "react";
 import { getDaysAgo } from "../utils/dateFortmatter";
 import { calculateTotals } from "../utils/calculateUtils";
@@ -7,7 +6,7 @@ import {
   filterDataByYearAndMonth,
 } from "../utils/filters/salesFilters";
 
-const useSalesData = (selectSalesData) => { // 일주일, 저번달 날짜 계산
+const useSalesData = (selectSalesData) => {
   const [data, setData] = useState({
     oneWeekData: [],
     lastMonthData: [],
@@ -18,6 +17,7 @@ const useSalesData = (selectSalesData) => { // 일주일, 저번달 날짜 계�
     },
     oneWeekTotals: { totalSales: 0, totalCount: 0 },
     lastMonthTotals: { totalSales: 0, totalCount: 0 },
+    dailySales: 0, 
   });
 
   const processSalesData = async (salesData) => {
@@ -33,11 +33,17 @@ const useSalesData = (selectSalesData) => { // 일주일, 저번달 날짜 계�
     const oneWeekTotals = calculateTotals(oneWeekData);
     const lastMonthTotals = calculateTotals(lastMonthData);
 
+    // 하루 매출 계산
+    const today = new Date();
+    const todayData = filterDataByDate(salesData, today, today);
+    const dailySalesTotal = calculateTotals(todayData).totalSales;
+
     setData({
       oneWeekData,
       lastMonthData,
       oneWeekTotals,
       lastMonthTotals,
+      dailySales: dailySalesTotal, 
       customDateRangeData: {
         totalSales: 0,
         totalCount: 0,
@@ -58,7 +64,7 @@ const useSalesData = (selectSalesData) => { // 일주일, 저번달 날짜 계�
     fetchData();
   }, [selectSalesData]);
 
-  const customTotalDay = (startDate, endDate) => { // 사용자 지정 날짜 범위 날짜 계산
+  const customTotalDay = (startDate, endDate) => {
     const filteredData = filterDataByDate(selectSalesData, startDate, endDate);
     const totals = calculateTotals(filteredData);
     return { ...totals, filteredData };

@@ -1,6 +1,7 @@
 /** @jsxImportSource @emotion/react */
 import * as s from "./style";
 import nothingImage from "../../../icons8-이미지-없음-100.png"
+
 function MenuButton({ img, menuName, onClick, maxCharsPerLine = 8 }) {
   const splitText  = (text, maxChars) => {
     const regex = new RegExp(`.{1,${maxChars}}`, 'g');
