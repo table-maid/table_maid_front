@@ -61,13 +61,19 @@ export const list = css`
   gap: 20px;
 `;
 
-export const categorieButton = css`
-width: 100px;
-background-color: transparent;
+export const categorieButton = (isActive) => css`
+background-color: ${isActive ? '#0076DF' : '#f0f0f0'};
 border: none;
 font-size: 20px;
+padding: 10px 25px;
+border-radius: 20px;
+border: 1px solid ${isActive ? '#0076DF' : '#ccc'};
+color: ${isActive ? '#ffffff' : '#646464'};;
 &:active {
-    background-color: #a7a7a7; 
+    background-color: #dddddd 
+  }
+&:hover {
+    background-color:${isActive ? '#00559b' : '#bebebe'}; 
   }
 `;
 

@@ -12,7 +12,7 @@ export const listContainer = css`
 
 export const askTitle = css`
   list-style-type: none;
-  background-color: #bbbbbbea;
+  background-color: #666666ea;
   border-top-right-radius: 20px;
   border-top-left-radius: 20px;
   display: flex;

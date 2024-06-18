@@ -18,6 +18,7 @@ function MenuListPage(props) {
   const [menuSalesList, setMenuSalesList] = useState(menuList);
   const navigate = useNavigate();
   const [categoryId, setCategoryId] = useState(0);
+  const [selectedCategoryId, setSelectedCategoryId] = useState(null); // 선택된 카테고리 ID 상태 추가
   const { categories, error: categoriesError } = useCategory(adminId);
   const {
     menus,
@@ -52,6 +53,7 @@ function MenuListPage(props) {
 
   const handleCategoryId = (category) => {
     setCategoryId(category);
+    setSelectedCategoryId(category); // 선택된 카테고리 ID 업데이트
   };
 
   return (
@@ -65,7 +67,7 @@ function MenuListPage(props) {
             <div css={s.list}>
               {categories.map((cat) => (
                 <button
-                  css={s.categorieButton}
+                  css={s.categorieButton(cat.menuCategoryId === selectedCategoryId)}
                   onClick={() => handleCategoryId(cat.menuCategoryId)}
                   key={cat.menuCategoryId}
                 >

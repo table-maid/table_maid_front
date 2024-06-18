@@ -9,6 +9,7 @@ const AdminSalesChart = ({
   dayKey,
   keyName,
   dataKey,
+  viewType,
 }) => {
   const [options, setOptions] = useState({});
   const [series, setSeries] = useState([]);
@@ -17,10 +18,10 @@ const AdminSalesChart = ({
     const getDateLabel = (monthNumber, dayNumber) => {
       const date = new Date();
       date.setMonth(monthNumber - 1);
-      if (dayNumber !== null && dayNumber !== undefined) {
+      if (viewType !== "all" && dayNumber !== null && dayNumber !== undefined) {
         date.setDate(dayNumber);
       }
-      return date.toLocaleString("en-US", { month: "short", day: "numeric" });
+      return date.toLocaleString("en-US", { month: "short", day: viewType !== "all" ? "numeric" : undefined });
     };
 
     const categories = sales.map((data) =>
@@ -61,10 +62,10 @@ const AdminSalesChart = ({
         },
         toolbar: { show: false },
       },
-      stroke: {
-        width: [4],
-        curve: "smooth",
-      },
+      // stroke: {
+      //   width: [4],
+      //   curve: "smooth",
+      // },
       title: {
         text: keyName,
         align: "center",
@@ -116,7 +117,7 @@ const AdminSalesChart = ({
         enabled: false, 
       },
     });
-  }, [sales, monthKey, dayKey, keyName, dataKey]);
+  }, [sales, monthKey, dayKey, keyName, dataKey, viewType]);
 
   return (
     <div id="chart">

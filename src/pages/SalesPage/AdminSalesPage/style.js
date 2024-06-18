@@ -277,7 +277,7 @@ export const total = css`
   flex-direction: row;
   align-items: center;
   justify-content: space-around;
-  background-color: #bbbbbbea;
+  background-color: #666666ea;
   border-top-right-radius: 20px;
   border-top-left-radius: 20px;
 

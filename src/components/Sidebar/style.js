@@ -21,7 +21,7 @@ export const openButton = (isButtonVisible) => css`
   border: none;
   transform: translateY(-50%);
   top: 80px;
-  left: 135px;
+  left: 140px;
   padding: 0;
   background-color: #f5f5f7;
   cursor: pointer;

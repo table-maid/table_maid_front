@@ -202,7 +202,6 @@ function AdminSalesPage(props) {
               dayKey={"day"}
               keyName={keyName}
               dataKey={dataKey}
-              lineColor={"#e78a42"}
               viewType={viewType}
             />
           </div>

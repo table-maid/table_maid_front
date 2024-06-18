@@ -3,11 +3,12 @@ import { useQuery } from "react-query";
 import * as s from "./style";
 import { getMenuTotalSalesRequest } from "../../../apis/api/salesApi";
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import AdminSalesChart from "../../../components/Sales/AdminSalesChart/AdminSalesChart";
 import SalesModal from "../../../components/Sales/SalesModal/SalesModal";
 import { adminIdState } from "../../../atoms/AdminIdStateAtom";
 import { useRecoilState } from "recoil";
+import { IoChevronBack } from "react-icons/io5";
 
 function MenuSalesPage(props) {
   const [adminId] = useRecoilState(adminIdState);
@@ -15,6 +16,7 @@ function MenuSalesPage(props) {
   const [viewType, setViewType] = useState("");
   const [dataKey, setDataKey] = useState("menuTotalSales");
   const { menuId } = useParams();
+  const navigate = useNavigate();
 
   useEffect(() => {
     console.log(menuId);
@@ -71,6 +73,7 @@ function MenuSalesPage(props) {
   return (
     <SalesModal>
       <div>
+        <button onClick={() => navigate('/sales/menu')} css={s.backButton} ><IoChevronBack size={"50"}/></button>
         <div css={s.buttonContainer}>
           <div css={s.ChoiceContainer}>
             <button css={s.button} onClick={() => handleViewChange("monthly")}>

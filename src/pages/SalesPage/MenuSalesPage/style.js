@@ -9,6 +9,16 @@ export const buttonContainer = css`
   padding: 30px 0;
 `;
 
+export const backButton = css`
+  position: fixed;
+  transform: translateY(-50%);
+  top: 80px;
+  left: 135px;
+  cursor: pointer;
+  background-color: transparent;
+  border: none;
+`;
+
 export const ChoiceContainer = css`
   width: 100%;
   height: 100%;
