@@ -3,12 +3,14 @@ import { Route, Routes } from 'react-router-dom'
 import { useQueryClient } from 'react-query'
 import SigninPage from '../pages/AuthPage/SigninPage/SigninPage'
 import SignupPage from '../pages/AuthPage/SignupPage/SignupPage'
-import SearchUserName from '../pages/AuthPage/SearchUserName/SearchUserName'
+import SearchUserNamePage from '../pages/AuthPage/SearchUserNamePage/SearchUserNamePage'
+import SearchPasswordPage from '../pages/AuthPage/SearchPasswordPage/SearchPasswordPage'
 
 
 function AuthRoute() {
     const queryClient = useQueryClient();
     const principalData = queryClient.getQueryData("principalQuery")
+    console.log(principalData);
 
     useEffect(() => {
         if(!!principalData) {
@@ -22,7 +24,8 @@ function AuthRoute() {
             <Routes>
                 <Route path='/signin' element={<SigninPage/>} />
                 <Route path='/signup/*' element={<SignupPage/>} />
-                <Route path='/search/username' element={<SearchUserName/>}/>
+                <Route path='/search/username' element={<SearchUserNamePage/>}/>
+                <Route path='/search/password' element={<SearchPasswordPage/>}/>
             </Routes>
         </>
     )

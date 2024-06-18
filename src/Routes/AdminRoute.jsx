@@ -6,6 +6,17 @@ import { getPrincipalRequest } from '../apis/api/principal';
 import SalesRoute from './SalesRoute';
 
 function AdminRoute(props) {
+    const principalQuery = useQuery("principalQuery", getPrincipalRequest, {
+        retry: 0,
+        refetchOnWindowFocus: false,
+        onSuccess: (response) => {
+            console.log("프린스퍼");
+            console.log(response);
+        },
+        onError: (error) => {
+          console.log(error);
+        },
+      });
 
     return (
         <>

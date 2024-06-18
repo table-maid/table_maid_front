@@ -4,7 +4,7 @@ import { useInput } from '../../../hooks/useInput';
 import { searchUsernameByEmailRequest } from '../../../apis/api/account';
 import { useMutation } from 'react-query';
 
-function SearchUserName() {
+function SearchUserNamePage() {
     const [adminName, adminNameChange, adminNameMessage] = useInput("adminName");
     const [email, emailChange, emailMessage] = useInput("email");
 
@@ -71,6 +71,6 @@ function SearchUserName() {
     )
 }
 
-export default SearchUserName
+export default SearchUserNamePage
 
 

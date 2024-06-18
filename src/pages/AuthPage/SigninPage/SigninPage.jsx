@@ -6,8 +6,8 @@ import { Link } from "react-router-dom";
 import { signinRequest } from "../../../apis/api/signin";
 
 function SigninPage() {
-    const [username, userNameChange, usernameMessage, setUsernameValue, setUsernameMessage] = useInput("username");
-    const [password, passwordChange, passwordMessage] = useInput("password");
+    const [username, userNameChange] = useInput("username");
+    const [password, passwordChange] = useInput("password");
 
     const handleSigninSubmit = () => {
         console.log("실행");
@@ -35,7 +35,6 @@ function SigninPage() {
                 placeholder={"아이디"}
                 value={username}
                 onChange={userNameChange}
-                message={usernameMessage}
             />
             <AuthPageInput
                 type={"password"}
@@ -43,7 +42,6 @@ function SigninPage() {
                 placeholder={"비밀번호"}
                 value={password}
                 onChange={passwordChange}
-                message={passwordMessage}
             />
 
 
