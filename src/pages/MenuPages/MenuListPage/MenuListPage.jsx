@@ -112,7 +112,6 @@ function MenuListPage(props) {
   };
 
   return (
-    <AdminPageLayout>
       <div css={s.layout}>
         {menuModal === true ? (
           <MenuRegisterModal
@@ -283,7 +282,6 @@ function MenuListPage(props) {
           </div>
         </div>
       </div>
-    </AdminPageLayout>
   );
 }
 

@@ -32,7 +32,6 @@ export const customButton = css`
   text-align: center;
   border-radius: 10px;
   transition: transform 0.3s, box-shadow 0.3s;
-  z-index: 5;
   &:hover {
     box-shadow: inset -4px -4px 10px #fff, inset 4px 2px 8px #aeb0b8;
   }

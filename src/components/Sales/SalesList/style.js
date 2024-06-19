@@ -65,3 +65,34 @@ export const list = css`
   }
 
 `;
+
+export const pagination = css`
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  margin-top: 20px;
+  list-style: none;
+  padding: 0;
+
+  li {
+    display: inline;
+    margin: 0 5px;
+
+    button {
+      padding: 5px 10px;
+      border: none;
+      background-color: #0e76ff;
+      color: white;
+      cursor: pointer;
+
+      &:disabled {
+        background-color: grey;
+        cursor: default;
+      }
+    }
+  }
+
+  .active {
+    font-weight: bold;
+  }
+`;

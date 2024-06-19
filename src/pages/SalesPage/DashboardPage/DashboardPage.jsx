@@ -12,7 +12,7 @@ import { useRecoilState } from "recoil";
 import { adminIdState } from "../../../atoms/AdminIdStateAtom";
 import { useQuery } from "react-query";
 import { Link, useNavigate } from "react-router-dom";
-import Image from "../../../file.png";
+import Image from "../../../profil.png";
 import { searchMenuListRequest } from "../../../apis/api/menuManagentApi";
 import { IoMdTrophy } from "react-icons/io";
 
@@ -107,6 +107,7 @@ function DashboardPage(props) {
             <div css={[s.graphBox, s.firstGraphBox]}>
               <h1>Today</h1>
               <div css={s.imgLayout}>
+                {/* <input type="file" name="" id="" /> */}
                 <img src={Image} alt="" css={s.img} />
               </div>
               <div css={s.sales}>

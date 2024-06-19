@@ -109,7 +109,7 @@ function MenuSalesPage(props) {
             keyName={viewType === "monthly" ? "월별" : "일별"}
             dataKey={dataKey}
             viewType={viewType}
-            lineColor={"#d55cfa"}
+            lineColor={"#f1c4ff"}
           />
         </div>
       </div>

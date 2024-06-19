@@ -36,6 +36,7 @@ function AdminSalesPage(props) {
   const [chartRef, chartInView] = useAnimateView();
   const [salesLayoutRef, salesLayoutInView] = useAnimateView();
   const [totalLayoutRef, totalLayoutInView] = useAnimateView();
+  const [totalListRef, totalListInView] = useAnimateView();
 
   const {
     oneWeekData,
@@ -49,9 +50,7 @@ function AdminSalesPage(props) {
     setViewType("all");
   }, []);
 
-  const salesQuery = useQuery(
-    ["salesQuery"], 
-    () => getSalesRequest(adminId), {
+  const salesQuery = useQuery(["salesQuery"], () => getSalesRequest(adminId), {
     retry: 0,
     onSuccess: (response) => {
       setSales(response.data);
@@ -206,12 +205,12 @@ function AdminSalesPage(props) {
               lineColor={"#0e76ff"}
             />
           </div>
-          <div
-            css={s.salesLayout}
-            ref={salesLayoutRef}
-            className={salesLayoutInView ? "animate" : "hide"}
-          >
-            <div css={s.selectBox}>
+          <div css={s.salesLayout}>
+            <div
+              css={s.selectBox}
+              ref={salesLayoutRef}
+              className={salesLayoutInView ? "animate" : "hide"}
+            >
               <SalesButtons
                 handleViewTypeChange={handleViewTypeChange}
                 activeButton={activeButton}
@@ -246,8 +245,8 @@ function AdminSalesPage(props) {
             </div>
             <div
               css={s.list}
-              ref={totalLayoutRef}
-              className={totalLayoutInView ? "animate" : "hide"}
+              ref={totalListRef}
+              className={totalListInView ? "animate" : "hide"}
             >
               <SalesListContainer
                 viewType={viewType}
