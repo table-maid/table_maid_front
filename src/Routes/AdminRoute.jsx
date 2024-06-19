@@ -4,6 +4,7 @@ import AuthRoute from './AuthRoute';
 import { useQuery } from 'react-query';
 import { getPrincipalRequest } from '../apis/api/principal';
 import SalesRoute from './SalesRoute';
+import AdminMainPage from '../pages/AdminPage/AdminMainPage/AdminMainPage';
 
 function AdminRoute(props) {
     const principalQuery = useQuery("principalQuery", getPrincipalRequest, {
@@ -24,6 +25,7 @@ function AdminRoute(props) {
                 <Route path="/auth/*" element={<AuthRoute/>}/>
                 <Route path="/menu/*" element={null}/>
                 <Route path="/sales/*" element={<SalesRoute/>}/>
+                <Route path="/main" element={<AdminMainPage />}/>
                 {/* <Route path="" element={null}/>
                 <Route path="" element={null}/>
                 <Route path="" element={null}/> */}
