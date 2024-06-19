@@ -11,24 +11,25 @@ import useSalesData from "../../../hooks/useSalesData";
 import { useRecoilState } from "recoil";
 import { adminIdState } from "../../../atoms/AdminIdStateAtom";
 import { useQuery } from "react-query";
-import { Link, useNavigate } from "react-router-dom";
-import Image from "../../../profil.png";
+import { useNavigate } from "react-router-dom";
+import Image from "../../../817729.png";
 import { searchMenuListRequest } from "../../../apis/api/menuManagentApi";
-import { IoMdTrophy } from "react-icons/io";
+import { FaMedal } from "react-icons/fa";
+import SalesList from "../../../components/Sales/SalesList/SalesList";
 
 function DashboardPage(props) {
   const [adminId] = useRecoilState(adminIdState);
   const [selectSalesData, setSelectSalesData] = useState([]);
   const [menuList, setMenuList] = useState([]);
-  const [topMenu, setTopMenu] = useState(null);
+  const [topMenus, setTopMenus] = useState([]);
   const navigate = useNavigate();
 
   const { oneWeekData, lastMonthData, dailySales } =
     useSalesData(selectSalesData);
 
-	const handleClick = () => {
-		navigate("/sales/sale");
-	  };
+  const handleClick = () => {
+    navigate("/sales/sale");
+  };
 
   const selectSalesQuery = useQuery(
     ["selectSalesQuery"],
@@ -80,24 +81,22 @@ function DashboardPage(props) {
             menuCounts[menu.menuId] = count;
           }
         }
-        const topMenuId = Object.keys(menuCounts).reduce(
-          (a, b) => (menuCounts[a] > menuCounts[b] ? a : b),
-          null
-        ); //menuId를 배열로 변환 -> 가장 큰 count값 가진 menuId 반환
-        if (topMenuId) {
-          const topMenuItem = menuList.find(
-            (menu) => menu.menuId === parseInt(topMenuId)
-          ); // menuList에서 topMenuId와 일치하는 메뉴 찾은 뒤 정수로 변환
-          if (topMenuItem) {
-            setTopMenu({ ...topMenuItem, count: menuCounts[topMenuId] }); // topMenuItem에 count 값 추가 -> topMenu 상태로 설정(주간 판매량 가장 많은 메뉴)
-          }
-        } else {
-          setTopMenu(null);
-        }
+        const sortedMenuIds = Object.keys(menuCounts).sort(
+          (a, b) => menuCounts[b] - menuCounts[a]
+        );
+
+        const top3Menus = sortedMenuIds.slice(0, 3).map((menuId) => {
+          const menuItem = menuList.find(
+            (menu) => menu.menuId === parseInt(menuId)
+          );
+          return { ...menuItem, count: menuCounts[menuId] };
+        });
+
+        setTopMenus(top3Menus);
       };
       fetchTopMenu(); // 판매량 가장 많은 메뉴 계산
     }
-  }, [menuList, adminId, topMenu]);
+  }, [menuList, adminId, topMenus]);
 
   return (
     <AdminPageLayout>
@@ -118,7 +117,9 @@ function DashboardPage(props) {
             <div css={s.graphBox}>
               <div css={s.link}>
                 <h3>Weekly</h3>
-                <button onClick={handleClick} css={s.button}>ALL</button>
+                <button onClick={handleClick} css={s.button}>
+                  ALL
+                </button>
               </div>
               <AdminSalesChart
                 sales={oneWeekData.map((data) => ({
@@ -138,7 +139,9 @@ function DashboardPage(props) {
             <div css={s.graphBox}>
               <div css={s.link}>
                 <h3>Month</h3>
-                <button onClick={handleClick} css={s.button}>ALL</button>
+                <button onClick={handleClick} css={s.button}>
+                  ALL
+                </button>
               </div>
               <AdminSalesChart
                 sales={lastMonthData.map((data) => ({
@@ -157,16 +160,24 @@ function DashboardPage(props) {
             </div>
           </div>
           <div css={s.menuLayout}>
-            <div css={s.listBox}>리스트</div>
+            <div css={s.listBox}>
+              {oneWeekData.length > 4 ? (
+                <SalesList salesData={oneWeekData} viewType="limited" css={s.list} />
+              ) : (
+                <SalesList salesData={oneWeekData} viewType="all" css={s.list} />
+              )}
+            </div>
             <div css={s.menuBox}>
-              <h1>
-                <IoMdTrophy size={"35"} /> Weekly Top 1
-              </h1>
-              {topMenu ? (
-                <div css={s.menu}>
-                  <h2>{topMenu.menuName}</h2>
-                  <img src={topMenu.menuImgUrl} alt={topMenu.menuName} />
-                </div>
+              <h1>Weekly Top 3</h1>
+              {topMenus.length > 0 ? (
+                topMenus.map((menu, index) => (
+                  <div key={menu.menuId} css={s.menu(index)}>
+                    <h2>
+                      <FaMedal />
+                      {menu.menuName}
+                    </h2>
+                  </div>
+                ))
               ) : (
                 <p>데이터가 존재하지 않습니다.</p>
               )}

@@ -225,36 +225,38 @@ function AdminSalesPage(props) {
                 activeButton={activeButton}
               />
             </div>
-            <div
-              css={s.totalLayout}
-              ref={totalLayoutRef}
-              className={totalLayoutInView ? "animate" : "hide"}
-            >
-              <div css={s.totalBox}>
-                <div css={s.box}>
-                  <div css={s.total}>
-                    <h1>매출 합계</h1>
-                    <h1>주문 수 합계 </h1>
-                  </div>
-                  <div css={s.count}>
-                    <h1>{totalSales} 원</h1>
-                    <h1>{totalCount} 건</h1>
+            <div css={s.test}>
+              <div
+                css={s.totalLayout}
+                ref={totalLayoutRef}
+                className={totalLayoutInView ? "animate" : "hide"}
+              >
+                <div css={s.totalBox}>
+                  <div css={s.box}>
+                    <div css={s.total}>
+                      <h1>매출 합계</h1>
+                      <h1>주문 수 합계 </h1>
+                    </div>
+                    <div css={s.count}>
+                      <h1>{totalSales} 원</h1>
+                      <h1>{totalCount} 건</h1>
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
-            <div
-              css={s.list}
-              ref={totalListRef}
-              className={totalListInView ? "animate" : "hide"}
-            >
-              <SalesListContainer
-                viewType={viewType}
-                oneWeekData={oneWeekData}
-                lastMonthData={lastMonthData}
-                filteredSalesData={filteredSalesData}
-                sales={sales}
-              />
+              <div
+                css={s.list}
+                ref={totalListRef}
+                className={totalListInView ? "animate" : "hide"}
+              >
+                <SalesListContainer
+                  viewType={viewType}
+                  oneWeekData={oneWeekData}
+                  lastMonthData={lastMonthData}
+                  filteredSalesData={filteredSalesData}
+                  sales={sales}
+                />
+              </div>
             </div>
           </div>
         </div>

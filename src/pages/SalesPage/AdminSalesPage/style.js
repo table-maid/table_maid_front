@@ -129,16 +129,22 @@ export const selectBox = css`
     transition: opacity 1s, transform 1s;
   }
 `;
-
+export const test = css`
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-around;
+`
 
 export const totalLayout = css`
   box-sizing: border-box;
   width: 100%;
-  height: 30%;
+  height: 30px;
   display: flex;
   flex-direction: column;
   border-radius: 25px;
-  margin-top: 40px;
 
   &.animate {
     animation: fadeInUp 1s forwards;
@@ -214,6 +220,8 @@ export const count = css`
 
 
 export const list = css`
+width: 100%;
+height: auto;
   margin-top: 20px;
   box-shadow: rgba(0, 0, 0, 0.336) 0px 25px 30px -12px;
   border-radius: 30px;

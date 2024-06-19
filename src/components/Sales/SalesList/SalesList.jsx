@@ -2,11 +2,11 @@
 import { useState } from 'react';
 import ReactPaginate from 'react-paginate';
 import * as s from './style';
-import { MdKeyboardArrowLeft,MdKeyboardArrowRight } from "react-icons/md";
+import { MdKeyboardArrowLeft, MdKeyboardArrowRight } from "react-icons/md";
 
 function SalesList({ salesData, viewType }) {
   const [currentPage, setCurrentPage] = useState(0);
-  const itemCount = 10;
+  const itemCount = viewType === 'limited' ? 4 : 10;
 
   const handlePageClick = ({ selected }) => {
     setCurrentPage(selected);
@@ -38,9 +38,9 @@ function SalesList({ salesData, viewType }) {
           <li>{viewType === 'all' ? item.totalSales : item.dayTotalSales} 원</li>
         </ul>
       ))}
-      {pageCount > 1 && (
+      {salesData.length > (viewType === 'limited' ? 4 : 10) && pageCount > 1 && (
         <ReactPaginate
-          previousLabel={<MdKeyboardArrowLeft />}
+          previousLabel={currentPage > 0 ? <MdKeyboardArrowLeft /> : null}
           nextLabel={<MdKeyboardArrowRight />}
           pageCount={pageCount}
           marginPagesDisplayed={2}

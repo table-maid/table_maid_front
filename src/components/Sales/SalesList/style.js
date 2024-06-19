@@ -6,8 +6,10 @@ export const listContainer = css`
   display: flex;
   flex-direction: column;
   width: 100%;
-  height: 100%;
+  height: auto;
   text-align: center;
+  position: absolute;
+  border-radius: 20px;
 `;
 
 export const askTitle = css`
@@ -19,7 +21,7 @@ export const askTitle = css`
   align-items: center;
   justify-content: space-around;
   width: 100%;
-  height: 60px;
+  height: 50px;
   color: white;
 
   & > li {
@@ -49,6 +51,7 @@ export const list = css`
   padding: 0;
   list-style: none;
   font-size: 18px;
+  margin: 13px 0;
 
   & > li {
     text-align: center;
