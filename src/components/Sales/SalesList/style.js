@@ -39,7 +39,7 @@ export const askTitle = css`
 
 export const list = css`
   box-sizing: border-box;
-  border-radius: 30px;
+  /* border-radius: 30px; */
   display: flex;
   flex-direction: row;
   align-items: center;

@@ -10,3 +10,8 @@ export const layout = css`
     border-radius: 30px;
     
 `;
+
+export const sideBar = css`
+    position: absolute;
+    height: 100%;
+`;

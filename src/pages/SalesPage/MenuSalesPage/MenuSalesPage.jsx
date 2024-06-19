@@ -31,7 +31,6 @@ function MenuSalesPage(props) {
       retry: 0,
       refetchOnWindowFocus: false,
       onSuccess: (response) => {
-        console.log(response.data);
         setSales(response.data);
       },
       onError: (error) => {
@@ -105,7 +104,6 @@ function MenuSalesPage(props) {
             dayKey={"day"}
             keyName={viewType === "monthly" ? "월별" : "일별"}
             dataKey={dataKey}
-            lineColor={"#ff7300"}
             viewType={viewType}
           />
         </div>

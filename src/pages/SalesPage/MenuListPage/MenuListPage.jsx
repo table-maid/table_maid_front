@@ -2,23 +2,23 @@
 import * as s from "./style";
 
 import { useQuery } from "react-query";
-import { getMenuTotalSalesRequest } from "../../../apis/api/salesApi";
 import { useState } from "react";
 import MenuButton from "../../../components/Sales/MenuButton/MenuButton";
-import { Route, Routes, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { searchMenuListRequest } from "../../../apis/api/menuManagentApi";
 import useGetMenus from "../../../hooks/useGetMenu";
 import useCategory from "../../../hooks/useCategory";
-import MenuSalesPage from "../MenuSalesPage/MenuSalesPage";
+import { adminIdState } from "../../../atoms/AdminIdStateAtom";
+import { useRecoilState } from "recoil";
+import AdminPageLayout from "../../../components/AdminPageLayout/AdminPageLayout";
 
 function MenuListPage(props) {
-  const [adminId, setAdminId] = useState(1);
+  const [adminId] = useRecoilState(adminIdState);
   const [menuList, setMenuList] = useState([]);
   const [menuSalesList, setMenuSalesList] = useState(menuList);
   const navigate = useNavigate();
   const [categoryId, setCategoryId] = useState(0);
   const { categories, error: categoriesError } = useCategory(adminId);
-  
   const {
     menus,
     error: menusError,
@@ -47,7 +47,6 @@ function MenuListPage(props) {
   );
 
   const handleMenuClick = (menuId) => {
-    // console.log(menuId)
     navigate(`/sales/menu/detail/${menuId}`);
   };
 
@@ -56,45 +55,46 @@ function MenuListPage(props) {
   };
 
   return (
-    <div css={s.layout}>
-      <div css={s.header}>
-        <div css={s.title}>메뉴 매출 조회</div>
-      </div>
-      <div css={s.main}>
-        <div css={s.ListLayout}>
-          <div css={s.list}>
-            {categories.map((cat) => (
-              <button
-                css={s.categorieButton}
-                onClick={() => handleCategoryId(cat.menuCategoryId)}
-                key={cat.menuCategoryId}
-              >
-                {cat.menuCategoryName}
-              </button>
-            ))}
-            {menu.categoryName?.map((category) => (
-              <div key={category}>
-                <h3>{category}</h3>
-                <div css={s.menulist}>
-                  {menu.menuName
-                    .filter(
-                      (menuItem) => menuItem.menuCategoryName === category
-                    )
-                    .map((menuItem) => (
-                      <MenuButton
-                        key={menuItem.menuId}
-                        onClick={() => handleMenuClick(menuItem.menuId)}
-                        menuName={menuItem.menuName}
-                        img={menuItem.menuIngUrl}
-                      />
-                    ))}
+    <AdminPageLayout>
+      <div css={s.layout}>
+        <div css={s.header}>
+          <div css={s.title}>메뉴 매출 조회</div>
+        </div>
+        <div css={s.main}>
+          <div css={s.ListLayout}>
+            <div css={s.list}>
+              {categories.map((cat) => (
+                <button
+                  css={s.categorieButton}
+                  onClick={() => handleCategoryId(cat.menuCategoryId)}
+                  key={cat.menuCategoryId}
+                >
+                  {cat.menuCategoryName}
+                </button>
+              ))}
+              {menu.categoryName?.map((category) => (
+                <div key={category}>
+                  <div css={s.menulist}>
+                    {menu.menuName
+                      .filter(
+                        (menuItem) => menuItem.menuCategoryName === category
+                      )
+                      .map((menuItem) => (
+                        <MenuButton
+                          key={menuItem.menuId}
+                          onClick={() => handleMenuClick(menuItem.menuId)}
+                          menuName={menuItem.menuName}
+                          img={menuItem.menuImgUrl}
+                        />
+                      ))}
+                  </div>
                 </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
         </div>
       </div>
-    </div>
+    </AdminPageLayout>
   );
 }
 
