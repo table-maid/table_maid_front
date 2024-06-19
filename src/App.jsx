@@ -14,14 +14,14 @@ function App() {
     <>
       <BackgroundLayout>
         <AdminRootLayout>
-        {/* <AdminRootContainer> */}
-        <AdminRoute />
-        <MenuRoute />
-        {/* </AdminRootContainer> */}
-        </AdminRootLayout>
+         <AdminRootContainer>
+         <AdminRoute />
+         <MenuRoute />
+         </AdminRootContainer>
+         </AdminRootLayout>
 
-        {/* <UserRootLayout> */}
-          {/* <RootHeader /> */}
+        {/* <UserRootLayout>
+          <RootHeader /> */}
           {/* <UserRootContainer> */}
           {/* <UserRoute /> */}
           {/* </UserRootContainer> */}
