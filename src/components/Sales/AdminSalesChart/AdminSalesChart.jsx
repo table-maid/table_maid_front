@@ -1,7 +1,8 @@
 /** @jsxImportSource @emotion/react */
-import * as s from "./style";
+import React from "react";
 import ReactApexChart from "react-apexcharts";
 import { useEffect, useState } from "react";
+import numeral from "numeral";
 
 const AdminSalesChart = ({
   sales,
@@ -9,6 +10,11 @@ const AdminSalesChart = ({
   dayKey,
   keyName,
   dataKey,
+  viewType,
+  lineColor = "#79ceff",
+  height = "380px",
+  width = "100%",
+  smooth = false, 
 }) => {
   const [options, setOptions] = useState({});
   const [series, setSeries] = useState([]);
@@ -17,10 +23,13 @@ const AdminSalesChart = ({
     const getDateLabel = (monthNumber, dayNumber) => {
       const date = new Date();
       date.setMonth(monthNumber - 1);
-      if (dayNumber !== null && dayNumber !== undefined) {
+      if (viewType !== "all" && dayNumber !== null && dayNumber !== undefined) {
         date.setDate(dayNumber);
       }
-      return date.toLocaleString("en-US", { month: "short", day: "numeric" });
+      return date.toLocaleString("en-US", {
+        month: "short",
+        day: viewType !== "all" ? "numeric" : undefined,
+      });
     };
 
     const categories = sales.map((data) =>
@@ -35,7 +44,7 @@ const AdminSalesChart = ({
       setSeries([
         {
           name: keyName,
-          type: "bar", 
+          type: "bar",
           data: seriesData,
         },
       ]);
@@ -53,9 +62,13 @@ const AdminSalesChart = ({
 
     setOptions({
       chart: {
-        height: "100%",
-        width: "100%",
-        type: seriesData.length === 1 && Math.max(...seriesData) === Math.min(...seriesData) ? "bar" : "line",
+        height: height,
+        width: width,
+        type:
+          seriesData.length === 1 &&
+          Math.max(...seriesData) === Math.min(...seriesData)
+            ? "bar"
+            : "line",
         zoom: {
           enabled: false,
         },
@@ -63,7 +76,7 @@ const AdminSalesChart = ({
       },
       stroke: {
         width: [4],
-        curve: "smooth",
+        curve: smooth ? "smooth" : "straight",
       },
       title: {
         text: keyName,
@@ -86,7 +99,7 @@ const AdminSalesChart = ({
           min: 0,
           max: yMax,
           labels: {
-            formatter: (val) => val.toFixed(0),
+            formatter: (val) => numeral(val).format("0a"),
             style: {
               fontSize: "18px",
             },
@@ -96,6 +109,9 @@ const AdminSalesChart = ({
       tooltip: {
         shared: true,
         intersect: false,
+        y: {
+          formatter: (val) => numeral(val).format("0,0a"),
+        },
       },
       legend: {
         position: "top",
@@ -104,32 +120,42 @@ const AdminSalesChart = ({
       },
       fill: {
         type: "gradient",
-        gradient: { gradientToColors: ["#a4fff3"], stops: [0, 100] },
+        gradient: { gradientToColors: ["#79ceff"], stops: [0, 100] },
       },
-      colors: ["#c8dbff"],
+      colors: [lineColor],
       plotOptions: {
         bar: {
-          columnWidth: "5%", 
+          columnWidth: "5%",
         },
       },
       dataLabels: {
-        enabled: false, 
+        enabled: false,
       },
     });
-  }, [sales, monthKey, dayKey, keyName, dataKey]);
+  }, [
+    sales,
+    monthKey,
+    dayKey,
+    keyName,
+    dataKey,
+    viewType,
+    lineColor,
+    height,
+    width,
+    smooth,
+  ]);
 
   return (
     <div id="chart">
       {sales.length === 0 ? (
-        <div css={s.dataLayout}>
-          <div css={s.dataBox}>데이터가 존재하지 않습니다.</div>
-        </div>
+        <div>데이터가 존재하지 않습니다.</div>
       ) : (
         <ReactApexChart
           options={options}
           series={series}
           type={series[0]?.type || "line"}
-          height={"380px"}
+          height={height}
+          width={width}
         />
       )}
     </div>

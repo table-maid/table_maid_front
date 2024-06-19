@@ -12,10 +12,10 @@ import { adminIdState } from "../../../atoms/AdminIdStateAtom";
 import { useRecoilState } from "recoil";
 import AdminPageLayout from "../../../components/AdminPageLayout/AdminPageLayout";
 
+
 function MenuListPage(props) {
   const [adminId] = useRecoilState(adminIdState);
   const [menuList, setMenuList] = useState([]);
-  const [menuSalesList, setMenuSalesList] = useState(menuList);
   const navigate = useNavigate();
   const [categoryId, setCategoryId] = useState(0);
   const { categories, error: categoriesError } = useCategory(adminId);
@@ -65,7 +65,7 @@ function MenuListPage(props) {
             <div css={s.list}>
               {categories.map((cat) => (
                 <button
-                  css={s.categorieButton}
+                  css={s.categorieButton(cat.menuCategoryId === categoryId)}
                   onClick={() => handleCategoryId(cat.menuCategoryId)}
                   key={cat.menuCategoryId}
                 >

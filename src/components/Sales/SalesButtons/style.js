@@ -2,7 +2,7 @@ import { css } from "@emotion/react";
 
 export const selectButton = css`
   box-sizing: border-box;
-  background-color: #bbbbbbea;
+  background-color: #666666ea;
   border-top-right-radius: 20px;
   border-top-left-radius: 20px;
   width: 100%;

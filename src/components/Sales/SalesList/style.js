@@ -6,20 +6,22 @@ export const listContainer = css`
   display: flex;
   flex-direction: column;
   width: 100%;
-  height: 100%;
+  height: auto;
   text-align: center;
+  position: absolute;
+  border-radius: 20px;
 `;
 
 export const askTitle = css`
   list-style-type: none;
-  background-color: #bbbbbbea;
+  background-color: #666666ea;
   border-top-right-radius: 20px;
   border-top-left-radius: 20px;
   display: flex;
   align-items: center;
   justify-content: space-around;
   width: 100%;
-  height: 60px;
+  height: 50px;
   color: white;
 
   & > li {
@@ -49,6 +51,7 @@ export const list = css`
   padding: 0;
   list-style: none;
   font-size: 18px;
+  margin: 13px 0;
 
   & > li {
     text-align: center;
@@ -64,4 +67,35 @@ export const list = css`
     width: 30%;
   }
 
+`;
+
+export const pagination = css`
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  margin-top: 20px;
+  list-style: none;
+  padding: 0;
+
+  li {
+    display: inline;
+    margin: 0 5px;
+
+    button {
+      padding: 5px 10px;
+      border: none;
+      background-color: #0e76ff;
+      color: white;
+      cursor: pointer;
+
+      &:disabled {
+        background-color: grey;
+        cursor: default;
+      }
+    }
+  }
+
+  .active {
+    font-weight: bold;
+  }
 `;

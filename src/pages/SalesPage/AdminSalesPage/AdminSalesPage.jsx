@@ -36,6 +36,7 @@ function AdminSalesPage(props) {
   const [chartRef, chartInView] = useAnimateView();
   const [salesLayoutRef, salesLayoutInView] = useAnimateView();
   const [totalLayoutRef, totalLayoutInView] = useAnimateView();
+  const [totalListRef, totalListInView] = useAnimateView();
 
   const {
     oneWeekData,
@@ -49,9 +50,7 @@ function AdminSalesPage(props) {
     setViewType("all");
   }, []);
 
-  const salesQuery = useQuery(
-    ["salesQuery"], 
-    () => getSalesRequest(adminId), {
+  const salesQuery = useQuery(["salesQuery"], () => getSalesRequest(adminId), {
     retry: 0,
     onSuccess: (response) => {
       setSales(response.data);
@@ -202,16 +201,16 @@ function AdminSalesPage(props) {
               dayKey={"day"}
               keyName={keyName}
               dataKey={dataKey}
-              lineColor={"#e78a42"}
               viewType={viewType}
+              lineColor={"#0e76ff"}
             />
           </div>
-          <div
-            css={s.salesLayout}
-            ref={salesLayoutRef}
-            className={salesLayoutInView ? "animate" : "hide"}
-          >
-            <div css={s.selectBox}>
+          <div css={s.salesLayout}>
+            <div
+              css={s.selectBox}
+              ref={salesLayoutRef}
+              className={salesLayoutInView ? "animate" : "hide"}
+            >
               <SalesButtons
                 handleViewTypeChange={handleViewTypeChange}
                 activeButton={activeButton}
@@ -226,36 +225,38 @@ function AdminSalesPage(props) {
                 activeButton={activeButton}
               />
             </div>
-            <div
-              css={s.totalLayout}
-              ref={totalLayoutRef}
-              className={totalLayoutInView ? "animate" : "hide"}
-            >
-              <div css={s.totalBox}>
-                <div css={s.box}>
-                  <div css={s.total}>
-                    <h1>매출 합계</h1>
-                    <h1>주문 수 합계 </h1>
-                  </div>
-                  <div css={s.count}>
-                    <h1>{totalSales} 원</h1>
-                    <h1>{totalCount} 건</h1>
+            <div css={s.test}>
+              <div
+                css={s.totalLayout}
+                ref={totalLayoutRef}
+                className={totalLayoutInView ? "animate" : "hide"}
+              >
+                <div css={s.totalBox}>
+                  <div css={s.box}>
+                    <div css={s.total}>
+                      <h1>매출 합계</h1>
+                      <h1>주문 수 합계 </h1>
+                    </div>
+                    <div css={s.count}>
+                      <h1>{totalSales} 원</h1>
+                      <h1>{totalCount} 건</h1>
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
-            <div
-              css={s.list}
-              ref={totalLayoutRef}
-              className={totalLayoutInView ? "animate" : "hide"}
-            >
-              <SalesListContainer
-                viewType={viewType}
-                oneWeekData={oneWeekData}
-                lastMonthData={lastMonthData}
-                filteredSalesData={filteredSalesData}
-                sales={sales}
-              />
+              <div
+                css={s.list}
+                ref={totalListRef}
+                className={totalListInView ? "animate" : "hide"}
+              >
+                <SalesListContainer
+                  viewType={viewType}
+                  oneWeekData={oneWeekData}
+                  lastMonthData={lastMonthData}
+                  filteredSalesData={filteredSalesData}
+                  sales={sales}
+                />
+              </div>
             </div>
           </div>
         </div>

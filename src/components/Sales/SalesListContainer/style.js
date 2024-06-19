@@ -1,7 +1,9 @@
 import { css } from "@emotion/react";
 
 export const list = css`
-  margin-top: 20px;
+  width: 100%;
+  height: 100%;
+  /* margin-top: 20px; */
   box-shadow: rgba(0, 0, 0, 0.336) 0px 25px 30px -12px;
   border-radius: 30px;
 

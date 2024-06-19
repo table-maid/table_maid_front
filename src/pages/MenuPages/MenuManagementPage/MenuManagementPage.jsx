@@ -56,7 +56,6 @@ function MenuManagementPage(props) {
   };
 
   return (
-    <AdminPageLayout>
       <div>
         {menuModal !== 0 && (
           <MenuRegisterModal
@@ -152,7 +151,6 @@ function MenuManagementPage(props) {
           </div>
         </div>
       </div>
-    </AdminPageLayout>
   );
 }
 
