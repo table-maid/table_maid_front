@@ -63,6 +63,10 @@ function MenuDetails() {
   );
 
   useEffect(() => {
+    console.log(selectedOptions);
+  }, [selectedOptions]);
+
+  useEffect(() => {
     if (!searchOptionQuery.isLoading && !searchOptionQuery.isFetching) {
       setOptionList(searchOptionQuery.data?.data);
     }
@@ -82,7 +86,7 @@ function MenuDetails() {
         } else {
           return [
             ...prevSelectedOptions,
-            { optionId, optionName, optionPrice },
+            { optionId, optionName, optionPrice: parseInt(optionPrice, 10) },
           ];
         }
       });
@@ -112,7 +116,7 @@ function MenuDetails() {
             {optionList.map((option) => (
               <div key={option.optionTitleId}>
                 옵션제목: {option.titleName}
-                {option.optionNames.map((name) => (
+                {option.optionNames.map((name, index) => (
                   <div key={name}>
                     <label>
                       <input
@@ -126,11 +130,11 @@ function MenuDetails() {
                           handleCheckboxChange(
                             option.optionTitleId,
                             name,
-                            option.optionPrices
+                            option.optionPrices[index]
                           )
                         }
                       />
-                      {name} ( + {option.optionPrices} )
+                      {name} ( + {option.optionPrices[index]} )
                     </label>
                   </div>
                 ))}
