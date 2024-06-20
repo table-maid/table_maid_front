@@ -135,6 +135,12 @@ export const button = css`
   margin-top: 10px;
   background-color: #187cff;
   color: white;
+  &:hover {
+    transform: scale(1.02);
+    box-shadow: 0 6px 18px rgba(80, 80, 80, 0.2);
+  }
+
+  cursor: pointer;
 `;
 
 export const listBox = css`

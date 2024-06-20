@@ -12,7 +12,7 @@ export const layout = (isShow) => css`
   transition: left 0.5s ease-in-out;
   background-color: #707070;
   box-shadow: 1px 0px 3px #22222222;
-  border-radius: 30px;
+  border-radius: 28px;
 `;
 
 export const openButton = (isButtonVisible) => css`
