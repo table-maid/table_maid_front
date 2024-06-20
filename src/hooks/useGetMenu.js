@@ -14,8 +14,6 @@ const useGetMenus = (adminId, menuCategoryId) => {
                 const response = await serachMenuList(params);
                 setUniqueMenuCategoryNames([...new Set(response.data.map(menu => menu.menuCategoryName))]);
                 setMenus(response.data);
-                console.log(response.data);
-                console.log(uniqueMenuCategoryNames);
                 
             } catch (error) {
                 console.log("에러", error);
