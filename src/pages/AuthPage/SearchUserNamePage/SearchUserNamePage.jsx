@@ -5,11 +5,15 @@ import { useInput } from "../../../hooks/useInput";
 import { searchUsernameByEmailRequest } from "../../../apis/api/account";
 import { useMutation } from "react-query";
 import { useState, useEffect } from "react";
+import { MdPeopleAlt } from "react-icons/md";
+import { IoIosArrowBack } from "react-icons/io";
+import { useNavigate } from "react-router-dom";
 
 function SearchUserNamePage() {
   const [adminName, adminNameChange, adminNameMessage] = useInput("adminName");
   const [email, emailChange, emailMessage] = useInput("email");
   const [isFormValid, setIsFormValid] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     setIsFormValid(adminName.trim() !== "" || email.trim() !== "");
@@ -41,10 +45,20 @@ function SearchUserNamePage() {
     }
   };
 
+  const handleClick = () => {
+    navigate("/auth/signin");
+  };
+
   return (
     <div css={s.userNameLayout}>
+        <button onClick={handleClick} css={s.backButton}><IoIosArrowBack size={"40"}/></button>
       <div css={s.userNameContainer}>
-        <h1>아이디 찾기</h1>
+        <div css={s.header}>
+          <span>
+            <MdPeopleAlt size={80} color="#757575"/>
+          </span>
+          <h1>아이디 찾기</h1>
+        </div>
         <div css={s.input}>
           <AuthPageInput
             type={"text"}
