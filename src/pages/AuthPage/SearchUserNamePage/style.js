@@ -23,8 +23,8 @@ export const userNameContainer = css`
 
 export const backButton = css`
 position: fixed;
-top: 70px;
-left: 100px;
+top: 60px;
+left: 140px;
 background-color: transparent;
 border: none;
 `
