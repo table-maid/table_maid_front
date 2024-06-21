@@ -1,5 +1,5 @@
 /** @jsxImportSource @emotion/react */
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import useCategory from "../../../hooks/useCategory";
 import * as s from "./style";
 import useGetMenus from "../../../hooks/useGetMenu";
@@ -25,12 +25,20 @@ function PosTableDetailPage(props) {
     const [selectedOptions, setSelectedOptions] = useState([]);
     const [menuCount, setMenuCount] = useState(1);
     const [checkedItems, setCheckedItems] = useState([]);
+    const [totalPrice, setTotalPrice] = useState(0);
 
     const emptyCategoryArray = Array.from({ length: 5 - (categories ? categories.length : 0) }, (_, index) => index);
     const emptyMenuArray = Array.from({ length: 25 - (menus ? menus.length : 0) }, (_, index) => index);
     
     const totalCategoryPages = Math.ceil((categories ? categories.length : 0) / 4);
     const totalMenuPages = Math.ceil((menus ? menus.length : 0) / 24);
+
+    useEffect(() => {
+        const total = selectedItems.reduce((acc, item) => {
+            return acc + (item.menuPrice + item.optionTotalPrice) * item.menuCount;
+        }, 0);
+        setTotalPrice(total);
+    }, [selectedItems]);
 
     const openModal = (menuId) => {
         setMenuId(menuId);
@@ -117,13 +125,13 @@ function PosTableDetailPage(props) {
                             </thead>
                             <tbody>
                                 {selectedItems.map((item, index) => (
-                                    <tr key={index}>
+                                    <tr key={index} onClick={() => handleSelectItem(index)}>
                                         <td>{index + 1}</td>
                                         <td>{item.menuName}</td>
                                         <td>{item.menuCount}</td>
-                                        <td>{item.selectedOptions.map(opt => `${opt.name} + ${opt.price}원`).join(", ")}</td>
-                                        <td>{(item.menuPrice + item.optionTotalPrice) * item.menuCount}</td>
-                                        <td><input type="checkbox" checked={checkedItems.includes(index)} onChange={() => handleSelectItem(index)} /></td>
+                                        <td>{item.selectedOptions.map(opt => `${opt.name} + ${opt.price.toLocaleString()}원`).join(", ")}</td>
+                                        <td>{((item.menuPrice + item.optionTotalPrice) * item.menuCount).toLocaleString()}원</td>
+                                        <td><input type="checkbox" checked={checkedItems.includes(index)} onChange={(e) => e.stopPropagation()} /></td>
                                     </tr>
                                 ))}
                             </tbody>
@@ -141,7 +149,7 @@ function PosTableDetailPage(props) {
                         <div css={s.calculation}>
                             <div css={s.totalPrice}>
                                 <div>총 금액</div>
-                                <div>999,999,999</div>
+                                <div>{totalPrice.toLocaleString()}원</div>
                             </div>
                             <div css={s.paymentLayout}>
                                 <div>
@@ -158,50 +166,41 @@ function PosTableDetailPage(props) {
                     <div css={s.menuTabs}>
                         <div css={s.menuBox}>
                             <button css={s.categoryButton} onClick={() => setCategoryId(0)}>전체</button>
-                            {
-                                categories?.map((category, index) => (
-                                    <button key={index} css={s.categoryButton} onClick={() => setCategoryId(category.menuCategoryId)} >{category.menuCategoryName}</button>
-                                ))
-                            }
-                            {
-                                emptyCategoryArray.map((_, index) => (
-                                    <button key={`empty-${index}`} css={s.categoryButton}></button>
-                                ))
-                            }
-                            <div>
-                                <button 
-                                    onClick={() => setCategoryPageNum(categoryPageNum - 1)} 
-                                    disabled={categoryPageNum === 1}
-                                >
-                                    &lt;
-                                </button>
-                                <button 
-                                    onClick={() => setCategoryPageNum(categoryPageNum + 1)} 
-                                    disabled={categories.length < 5}
-                                >
-                                    &gt;
-                                </button>
-                            </div>
+                            {categories?.map((category, index) => (
+                                <button key={index} css={s.categoryButton} onClick={() => setCategoryId(category.menuCategoryId)}>{category.menuCategoryName}</button>
+                            ))}
+                            {emptyCategoryArray.map((_, index) => (
+                                <button key={`empty-${index}`} css={s.categoryButton}></button>
+                            ))}
+                        </div>
+                        <div>
+                            <button 
+                                onClick={() => setCategoryPageNum(categoryPageNum - 1)} 
+                                disabled={categoryPageNum === 1}
+                            >
+                                &lt;
+                            </button>
+                            <button 
+                                onClick={() => setCategoryPageNum(categoryPageNum + 1)} 
+                                disabled={categories.length < 5}
+                            >
+                                &gt;
+                            </button>
                         </div>
                     </div>
                     <div css={s.menuItems}>
-                        {
-                            menus?.map(menu => 
-                                <div key={menu.menuId} css={s.menuItem} onClick={() => openModal(menu.menuId)}>
-                                    <div>{menu.menuName}</div>
-                                    <div>{menu.menuPrice}</div>
-                                </div>
-                            )
-                        }
-                        {
-                            emptyMenuArray?.map((_, index) => (
-                                <div key={index} css={s.menuItem}>
-                                    <div></div>
-                                    <div></div>
-                                </div>)
-                            )
-                        }
- 
+                        {menus?.map(menu => (
+                            <div key={menu.menuId} css={s.menuItem} onClick={() => openModal(menu.menuId)}>
+                                <div>{menu.menuName}</div>
+                                <div>{menu.menuPrice.toLocaleString()}원</div>
+                            </div>
+                        ))}
+                        {emptyMenuArray?.map((_, index) => (
+                            <div key={index} css={s.menuItem}>
+                                <div></div>
+                                <div></div>
+                            </div>
+                        ))}
                         <div>
                             {menuPageNum > 1 && (
                                 <>
