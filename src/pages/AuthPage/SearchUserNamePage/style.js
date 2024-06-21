@@ -21,6 +21,14 @@ export const userNameContainer = css`
   border-radius: 10px;
 `;
 
+export const backButton = css`
+position: fixed;
+top: 70px;
+left: 100px;
+background-color: transparent;
+border: none;
+`
+
 export const header = css`
   width: 100%;
   height: 40%;
@@ -30,7 +38,7 @@ export const header = css`
   justify-content: center;
   & h1 {
     font-size: 30px;
-    margin: 10px 0;
+    margin: 5px 0 10px 0;
     cursor: default;
   }
 

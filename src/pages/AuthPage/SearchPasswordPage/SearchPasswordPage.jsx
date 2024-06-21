@@ -5,7 +5,7 @@ import AuthPageInput from "../../../components/AuthPage/AuthPageInput/AuthPageIn
 import { useInput } from "../../../hooks/useInput";
 import { searchPasswordByEmailRequest } from "../../../apis/api/account";
 import { useState, useEffect } from "react";
-
+import { CiLock } from "react-icons/ci";
 
 function SearchPasswordPage() {
   const [username, userNameChange, usernameMessage] = useInput("username");
@@ -42,8 +42,12 @@ function SearchPasswordPage() {
   return (
     <div css={s.userPasswordLayout}>
       <div css={s.userPasswordContainer}>
-        <span></span>
-        <h1>비밀번호 찾기</h1>
+        <div css={s.header}>
+          <span>
+            <CiLock size={80}/>
+          </span>
+          <h1>비밀번호 찾기</h1>
+        </div>
         <div css={s.input}>
           <AuthPageInput
             type={"text"}
