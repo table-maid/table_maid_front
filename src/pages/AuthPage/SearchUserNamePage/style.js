@@ -19,12 +19,21 @@ export const userNameContainer = css`
   justify-content: space-around;
   border: 1px solid #dbdbdb;
   border-radius: 10px;
+`;
 
+export const header = css`
+  width: 100%;
+  height: 40%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
   & h1 {
-    font-size: 35px;
+    font-size: 30px;
     margin: 10px 0;
     cursor: default;
   }
+
 `;
 
 export const input = css`

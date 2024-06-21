@@ -5,6 +5,7 @@ import { useInput } from "../../../hooks/useInput";
 import { searchUsernameByEmailRequest } from "../../../apis/api/account";
 import { useMutation } from "react-query";
 import { useState, useEffect } from "react";
+import { MdPeopleAlt } from "react-icons/md";
 
 function SearchUserNamePage() {
   const [adminName, adminNameChange, adminNameMessage] = useInput("adminName");
@@ -44,7 +45,12 @@ function SearchUserNamePage() {
   return (
     <div css={s.userNameLayout}>
       <div css={s.userNameContainer}>
-        <h1>아이디 찾기</h1>
+        <div css={s.header}>
+          <span>
+            <MdPeopleAlt size={80} />
+          </span>
+          <h1>아이디 찾기</h1>
+        </div>
         <div css={s.input}>
           <AuthPageInput
             type={"text"}
