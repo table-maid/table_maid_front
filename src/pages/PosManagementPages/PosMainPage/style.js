@@ -1,6 +1,10 @@
 
 import { css } from "@emotion/react";
 
+export const posLayout = css`
+    width: 100%;
+    height: 100%;
+`;
 export const timeLayout = css`
     width: 100%;
     display: flex;
