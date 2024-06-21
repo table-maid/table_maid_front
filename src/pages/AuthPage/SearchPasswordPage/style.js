@@ -27,6 +27,13 @@ export const userPasswordContainer = css`
   }
 `;
 
+export const backButton = css`
+position: fixed;
+top: 70px;
+left: 100px;
+background-color: transparent;
+border: none;
+`
 
 export const header = css`
   width: 100%;

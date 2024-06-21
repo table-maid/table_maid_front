@@ -6,11 +6,14 @@ import { useInput } from "../../../hooks/useInput";
 import { searchPasswordByEmailRequest } from "../../../apis/api/account";
 import { useState, useEffect } from "react";
 import { CiLock } from "react-icons/ci";
+import { useNavigate } from "react-router-dom";
+import { IoIosArrowBack } from "react-icons/io";
 
 function SearchPasswordPage() {
   const [username, userNameChange, usernameMessage] = useInput("username");
   const [email, emailChange, emailMessage] = useInput("email");
   const [isFormValid, setIsFormValid] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     setIsFormValid(username.trim() !== "" || email.trim() !== "");
@@ -39,8 +42,14 @@ function SearchPasswordPage() {
     }
   };
 
+  const handleClick = () => {
+    navigate("/auth/signin");
+  };
+
+
   return (
     <div css={s.userPasswordLayout}>
+         <button onClick={handleClick} css={s.backButton}><IoIosArrowBack size={"40"}/></button>
       <div css={s.userPasswordContainer}>
         <div css={s.header}>
           <span>
