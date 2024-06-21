@@ -35,6 +35,7 @@ export const header = css`
   & h1 {
     font-size: 35px;
     margin: 10px 0;
+    cursor: default;
   }
 `;
 
@@ -115,6 +116,7 @@ export const link = css`
   justify-content: center;
   text-decoration-line: none;
   color: #636363;
+  font-size: 14px;
 `;
 
 export const singUpBox = css`
@@ -143,7 +145,9 @@ export const singUp = css`
   flex-direction: row;
   align-items: center;
   justify-content: center;
-
+  & p {
+    cursor: default;
+  }
 `;
 
 export const link2 = css`
