@@ -5,6 +5,8 @@ import SigninPage from '../pages/AuthPage/SigninPage/SigninPage'
 import SignupPage from '../pages/AuthPage/SignupPage/SignupPage'
 import SearchUserNamePage from '../pages/AuthPage/SearchUserNamePage/SearchUserNamePage'
 import SearchPasswordPage from '../pages/AuthPage/SearchPasswordPage/SearchPasswordPage'
+import TACPage from '../pages/AuthPage/SignupPage/TACPage/TACPage'
+
 
 
 function AuthRoute() {
@@ -24,8 +26,10 @@ function AuthRoute() {
             <Routes>
                 <Route path='/signin' element={<SigninPage/>} />
                 <Route path='/signup/*' element={<SignupPage/>} />
+                <Route path="/agreement" element={<TACPage />} />
                 <Route path='/search/username' element={<SearchUserNamePage/>}/>
                 <Route path='/search/password' element={<SearchPasswordPage/>}/>
+
             </Routes>
         </>
     )
