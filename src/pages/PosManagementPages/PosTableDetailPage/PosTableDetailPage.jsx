@@ -3,21 +3,97 @@ import { useState } from "react";
 import useCategory from "../../../hooks/useCategory";
 import * as s from "./style";
 import useGetMenus from "../../../hooks/useGetMenu";
+import useGetOption from "../../../hooks/useGetOption";
+import PosMenuOptionsModal from "../../../components/Pos/PosMenuOptionsModal";
 
 function PosTableDetailPage(props) {
     const adminId = 1;
     const [categoryPageNum, setCategoryPageNum] = useState(1);
+    const [menuPageNum, setMenuPageNum] = useState(1);
     const { categories, error: categoriesError } = useCategory(adminId, categoryPageNum); 
     const [categoryId, setCategoryId] = useState(0);
+    const [menuId, setMenuId] = useState(0);
     const {
         menus,
         error: menusError,
         uniqueMenuCategoryNames,
-      } = useGetMenus(adminId, categoryId);
+      } = useGetMenus(adminId, categoryId, menuPageNum);
+    const { options, error: optionsError } = useGetOption(adminId, menuId);
 
-      console.log(menus);
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [selectedItems, setSelectedItems] = useState([]);
+    const [selectedOptions, setSelectedOptions] = useState([]);
+    const [menuCount, setMenuCount] = useState(1);
+    const [checkedItems, setCheckedItems] = useState([]);
 
-    const emptyArray = Array.from({ length: 11 - (categories ? categories.length : 0) }, (_, index) => index);
+    const emptyCategoryArray = Array.from({ length: 5 - (categories ? categories.length : 0) }, (_, index) => index);
+    const emptyMenuArray = Array.from({ length: 25 - (menus ? menus.length : 0) }, (_, index) => index);
+    
+    const totalCategoryPages = Math.ceil((categories ? categories.length : 0) / 4);
+    const totalMenuPages = Math.ceil((menus ? menus.length : 0) / 24);
+
+    const openModal = (menuId) => {
+        setMenuId(menuId);
+        setSelectedOptions([]);
+        setMenuCount(1);
+        setIsModalOpen(true);
+    };
+
+    const closeModal = () => {
+        setIsModalOpen(false);
+    };
+
+    const handleAddItem = (menuCount, selectedOptions) => {
+        const selectedMenu = menus.find(menu => menu.menuId === menuId);
+        const optionTotalPrice = selectedOptions.reduce((total, opt) => total + opt.price, 0);
+        const newItem = {
+            menuName: selectedMenu.menuName,
+            menuPrice: selectedMenu.menuPrice,
+            menuCount,
+            selectedOptions,
+            optionTotalPrice
+        };
+        setSelectedItems([...selectedItems, newItem]);
+        closeModal();
+    };
+
+    const handleSelectItem = (index) => {
+        if (checkedItems.includes(index)) {
+            setCheckedItems(checkedItems.filter(item => item !== index));
+        } else {
+            setCheckedItems([...checkedItems, index]);
+        }
+    };
+
+    const handleCancelSelected = () => {
+        setSelectedItems(selectedItems.filter((item, index) => !checkedItems.includes(index)));
+        setCheckedItems([]);
+    };
+
+    const handleCancelAll = () => {
+        setSelectedItems([]);
+        setCheckedItems([]);
+    };
+
+    const handleIncreaseCount = () => {
+        const updatedItems = selectedItems.map((item, index) => {
+            if (checkedItems.includes(index)) {
+                return { ...item, menuCount: item.menuCount + 1 };
+            }
+            return item;
+        });
+        setSelectedItems(updatedItems);
+    };
+
+    const handleDecreaseCount = () => {
+        const updatedItems = selectedItems.map((item, index) => {
+            if (checkedItems.includes(index) && item.menuCount > 1) {
+                return { ...item, menuCount: item.menuCount - 1 };
+            }
+            return item;
+        });
+        setSelectedItems(updatedItems);
+    };
 
     return (
         <div css={s.layout}>
@@ -34,28 +110,32 @@ function PosTableDetailPage(props) {
                                     <th>No.</th>
                                     <th>메뉴</th>
                                     <th>수량</th>
-                                    <th>금액</th>
                                     <th>옵션</th>
+                                    <th>금액</th>
+                                    <th></th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <td>1</td>
-                                    <td>마라탕 떡볶이</td>
-                                    <td>1</td>
-                                    <td>15,000</td>
-                                    <td></td>
-                                </tr>
+                                {selectedItems.map((item, index) => (
+                                    <tr key={index}>
+                                        <td>{index + 1}</td>
+                                        <td>{item.menuName}</td>
+                                        <td>{item.menuCount}</td>
+                                        <td>{item.selectedOptions.map(opt => `${opt.name} + ${opt.price}원`).join(", ")}</td>
+                                        <td>{(item.menuPrice + item.optionTotalPrice) * item.menuCount}</td>
+                                        <td><input type="checkbox" checked={checkedItems.includes(index)} onChange={() => handleSelectItem(index)} /></td>
+                                    </tr>
+                                ))}
                             </tbody>
                         </table>
                     </div>
                     <div css={s.totalSection}>
                         <div css={s.selectLayout}>
                             <div css={s.quantityChange}>
-                                <button css={s.cancelButton}>전체 취소</button>
-                                <button css={s.cancelButton}>수량 변경</button>
-                                <button css={s.cancelButton}>+</button>
-                                <button css={s.cancelButton}>-</button>
+                                <button css={s.cancelButton} onClick={handleCancelAll}>전체 취소</button>
+                                <button css={s.cancelButton} onClick={handleCancelSelected}>선택 취소</button>
+                                <button css={s.cancelButton} onClick={handleIncreaseCount}>+</button>
+                                <button css={s.cancelButton} onClick={handleDecreaseCount}>-</button>
                             </div>
                         </div>
                         <div css={s.calculation}>
@@ -73,7 +153,7 @@ function PosTableDetailPage(props) {
                             </div>
                         </div>
                     </div>
-                </div>
+                </div> 
                 <div css={s.menuSection}>
                     <div css={s.menuTabs}>
                         <div css={s.menuBox}>
@@ -84,22 +164,58 @@ function PosTableDetailPage(props) {
                                 ))
                             }
                             {
-                                emptyArray.map((_, index) => (
+                                emptyCategoryArray.map((_, index) => (
                                     <button key={`empty-${index}`} css={s.categoryButton}></button>
                                 ))
                             }
                             <div>
-                                <button>&lt;</button>
-                                <button>&gt;</button>
+                                <button 
+                                    onClick={() => setCategoryPageNum(categoryPageNum - 1)} 
+                                    disabled={categoryPageNum === 1}
+                                >
+                                    &lt;
+                                </button>
+                                <button 
+                                    onClick={() => setCategoryPageNum(categoryPageNum + 1)} 
+                                    disabled={categories.length < 5}
+                                >
+                                    &gt;
+                                </button>
                             </div>
                         </div>
                     </div>
                     <div css={s.menuItems}>
-                        <div css={s.menuItem}>
-                            <div>마라 떡볶이</div>
-                            <div>15,000</div>
+                        {
+                            menus?.map(menu => 
+                                <div key={menu.menuId} css={s.menuItem} onClick={() => openModal(menu.menuId)}>
+                                    <div>{menu.menuName}</div>
+                                    <div>{menu.menuPrice}</div>
+                                </div>
+                            )
+                        }
+                        {
+                            emptyMenuArray?.map((_, index) => (
+                                <div key={index} css={s.menuItem}>
+                                    <div></div>
+                                    <div></div>
+                                </div>)
+                            )
+                        }
+ 
+                        <div>
+                            {menuPageNum > 1 && (
+                                <>
+                                    <button onClick={() => setMenuPageNum(menuPageNum - 1)}>&lt;</button>
+                                    <button>&gt;</button>
+                                </>
+                            )}
+                            {menuPageNum < totalMenuPages && (
+                                <>
+                                    <button>&lt;</button>
+                                    <button onClick={() => setMenuPageNum(menuPageNum + 1)}>&gt;</button>
+                                </>
+                            )}
                         </div>
-                        
                     </div>
                     <div css={s.bottomButtons}>
                         <button>👑 인원수</button>
@@ -107,6 +223,16 @@ function PosTableDetailPage(props) {
                     </div>
                 </div>
             </div>
+            <PosMenuOptionsModal 
+                isOpen={isModalOpen} 
+                onClose={closeModal} 
+                options={options} 
+                handleAddItem={handleAddItem} 
+                menuCount={menuCount}
+                setMenuCount={setMenuCount}
+                selectedOptions={selectedOptions}
+                setSelectedOptions={setSelectedOptions}
+            />
         </div>
     );
 }

@@ -8,6 +8,7 @@ const useCategory = (adminId, categoryPageNum) => {
     useEffect(() => {
         const getCategories = async () => {
             try {
+                console.log(categoryPageNum)
                 const params = { adminId, categoryPageNum };
                 const response = await searchCategoryRequest(params);
                 setCategories(response.data);
@@ -18,7 +19,7 @@ const useCategory = (adminId, categoryPageNum) => {
         };
 
         getCategories();
-    }, [adminId]);
+    }, [adminId, categoryPageNum]);
 
     return { categories, error };
 };

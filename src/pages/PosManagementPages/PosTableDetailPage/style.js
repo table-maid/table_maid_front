@@ -156,6 +156,9 @@ export const menuItem = css`
     height: 70px;
     padding: 10px;
     border: 1px solid #ccc;
+    div {
+        overflow: hidden;
+    }
 `;
 
 export const customerRequest = css`

@@ -17,7 +17,8 @@ import AdminPageLayout from "../../../components/AdminPageLayout/AdminPageLayout
 
 function MenuManagementPage(props) {
   const [adminId, setAdminId] = useState(1);
-  const { categories, error: categoriesError } = useCategory(adminId);
+  const [categoryPageNum, setCategoryPageNum] = useState();
+  const { categories, error: categoriesError } = useCategory(adminId, categoryPageNum);
   const [categoryId, setCategoryId] = useState(0);
   const [menuId, setMenuId] = useState(0);
   const {
