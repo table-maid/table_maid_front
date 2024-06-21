@@ -5,15 +5,20 @@ export const inputBox = css`
     box-sizing: border-box;
     width: 100%;
     margin-bottom: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 `;
 
 export const input = css`
     box-sizing: border-box;
+    background-color: #fafafa;
     border: 1px solid #dbdbdb;
-    border-radius: 1px;
-    padding: 10px 50px 10px 10px;
-    width: 90%;
-    font-size: 14px;
+    border-radius: 8px;
+    padding: 15px 50px 15px 15px;
+    width: 75%;
+    font-size: 16px;
+
 `;
 
 export const inputIcon = (type) => css`
