@@ -9,6 +9,7 @@ import { marketingTerms, serviceTerms } from "./terms";
 
 function TACPage() {
   const [agreed, setAgreed] = useRecoilState(agreedState);
+  const [isAgreedRequired, setIsAgreedRequired] = useState(false);
   const [check, setCheck] = useState({
     "이용약관 동의 (필수)": false,
     "마켓팅 동의 (선택)": false,
@@ -24,15 +25,19 @@ function TACPage() {
     const allChecked = Object.values(check)
       .slice(0, -1)
       .every((value) => value);
+    const requiredChecked =
+      check["이용약관 동의 (필수)"] && check["만 14세 이상 동의 (필수)"];
     setCheck((prev) => ({ ...prev, 전체동의: allChecked }));
-    setAgreed(allChecked);
+    setIsAgreedRequired(requiredChecked);
+    setAgreed(allChecked || requiredChecked);
   }, [check]);
 
   const handleNextClick = () => {
-    if (!!oAuth2Name || !!provider) {
-      navigator(`/auth/user/signup?name=${oAuth2Name}&provider=${provider}`);
+    if (!check["이용약관 동의 (필수)"] || !check["만 14세 이상 동의 (필수)"]) {
+      alert("필수 항목에 동의해야 합니다.");
+      return;
     } else {
-      navigator("/auth/user/signup");
+      navigator("/auth/signup/adminInfo");
     }
   };
 
@@ -50,11 +55,13 @@ function TACPage() {
                 setCheck={setCheck}
                 check={check}
                 isAllChecked={check["전체동의"]}
+                noToggle
               />
               <Agreement
                 title={"만 14세 이상 동의 (필수)"}
                 setCheck={setCheck}
                 check={check}
+                noToggle
               />
               <Agreement
                 title={"이용약관 동의 (필수)"}
@@ -72,7 +79,7 @@ function TACPage() {
           </div>
         </div>
         <div css={s.buttonBox}>
-          <button disabled={!agreed} onClick={handleNextClick} css={s.button}>
+          <button onClick={handleNextClick} css={s.button(isAgreedRequired)}>
             다음
           </button>
         </div>

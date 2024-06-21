@@ -3,11 +3,8 @@ import { useState } from "react";
 import * as s from "./style";
 import { MdCheckBoxOutlineBlank, MdCheckBox } from "react-icons/md";
 
-function AgreementAccordion({ title, content, setCheck, check, isAllChecked }) {
+function Agreement({ title, content, setCheck, check, isAllChecked, noToggle }) {
   const [isShow, setShow] = useState(false);
-  const handleClick = () => {
-    setShow(() => !isShow);
-  };
 
   const handleCheckClick = () => {
     setCheck((prev) => {
@@ -29,17 +26,26 @@ function AgreementAccordion({ title, content, setCheck, check, isAllChecked }) {
   return (
     <div css={s.container}>
       <div css={s.checkContainer}>
-        <div css={s.checkBox} onClick={handleCheckClick}>
+        <div
+          css={s.checkBox(check[title])}
+          onClick={handleCheckClick}
+        >
           {check[title] ? <MdCheckBox /> : <MdCheckBoxOutlineBlank />}
         </div>
         <h3>{title}</h3>
       </div>
-      <span onClick={handleClick}>{isShow ? "접기" : "펼치기"}</span>
-      <div>
-        <textarea css={s.textarea(isShow)}>{content}</textarea>
-      </div>
+      {!noToggle && (
+        <>
+          <span onClick={() => setShow((prev) => !prev)}>
+            {isShow ? "접기" : "펼치기"}
+          </span>
+          <div>
+            <textarea css={s.textarea(isShow)} readOnly value={content} />
+          </div>
+        </>
+      )}
     </div>
   );
 }
 
-export default AgreementAccordion;
+export default Agreement;
