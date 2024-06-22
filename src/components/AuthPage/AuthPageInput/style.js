@@ -3,17 +3,18 @@ import { css } from "@emotion/react";
 export const inputBox = css`
   position: relative;
   box-sizing: border-box;
-  width: 100%;
+  width: 80%;
   margin-bottom: 5px;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  /* background-color: aqua; */
 `;
 
 export const inputContainer = css`
   position: relative;
-  width: 75%;
+  width: 100%;
 `;
 
 export const input = css`
@@ -31,14 +32,14 @@ export const label = (isFocusedOrFilled) => css`
   left: 13px;
   font-size: ${isFocusedOrFilled ? "12px" : "14px"};
   color: ${isFocusedOrFilled ? "#afafaf" : "#818181"};
-  background-color: #fafafa;
+  background-color: transparent;
   padding: 0 5px;
   transform: translateY(-50%);
   transition: all 0.2s ease-in-out;
 `;
 
 export const message = css`
-  width: 75%;
+  width: 90%;
   display: flex;
   flex-direction: column;
   align-items: center;

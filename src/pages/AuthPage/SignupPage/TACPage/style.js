@@ -13,6 +13,14 @@ export const pageLayout = css`
   /* background-color: aqua; */
 `;
 
+export const backButton = css`
+position: fixed;
+top: 60px;
+left: 140px;
+background-color: transparent;
+border: none;
+`
+
 export const header = css`
   width: 100%;
   height: 20%;

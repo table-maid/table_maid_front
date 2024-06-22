@@ -153,4 +153,5 @@ export const singUp = css`
 export const link2 = css`
   text-decoration-line: none;
   color: #007fd4;
+  font-weight: 700;
 `;
