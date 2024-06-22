@@ -3,6 +3,8 @@ import { css } from "@emotion/react";
 export const layout = css`
   width: 100%;
   height: 100%;
+  background-color: #f5f5f5;
+  border-radius: 30px;
 `;
 
 export const backButton = css`
@@ -23,13 +25,13 @@ export const container = css`
   /* background-color: orange; */
 `;
 export const containerBox = css`
+background-color: white;
   width: 30%;
   height: auto;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  background-color: transparent;
   border-radius: 10px;
   border: 1px solid #dbdbdb;
 `;

@@ -3,7 +3,8 @@ import { css } from "@emotion/react";
 export const loginLayout = css`
   width: 100%;
   height: 100%;
-  /* background-color: aqua; */
+  background-color: #f5f5f5;
+  border-radius: 30px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -14,7 +15,7 @@ export const loginContainer = css`
   box-sizing: border-box;
   width: 30%;
   height: 60%;
-  /* background-color: orange; */
+  background-color: white;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -120,7 +121,7 @@ export const link = css`
 `;
 
 export const singUpBox = css`
-  /* background-color: aqua; */
+  background-color: white;
   width: 30%;
   height: 10%;
   display: flex;
