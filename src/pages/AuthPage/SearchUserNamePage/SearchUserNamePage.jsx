@@ -51,13 +51,19 @@ function SearchUserNamePage() {
 
   return (
     <div css={s.userNameLayout}>
-        <button onClick={handleClick} css={s.backButton}><IoIosArrowBack size={"40"}/></button>
+      <button onClick={handleClick} css={s.backButton}>
+        <IoIosArrowBack size={"40"} />
+      </button>
       <div css={s.userNameContainer}>
         <div css={s.header}>
           <span>
-            <MdPeopleAlt size={80} color="#757575"/>
+            <MdPeopleAlt size={80} color="#757575" />
           </span>
           <h1>아이디 찾기</h1>
+          <h3>
+            사용자 이름, 이메일 주소을 입력하시면 계정에 다시
+            액세스할 수 있는 링크를 보내드립니다.
+          </h3>
         </div>
         <div css={s.input}>
           <AuthPageInput

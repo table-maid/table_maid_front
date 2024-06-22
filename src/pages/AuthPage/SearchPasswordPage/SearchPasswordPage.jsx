@@ -56,6 +56,10 @@ function SearchPasswordPage() {
             <CiLock size={80}/>
           </span>
           <h1>비밀번호 찾기</h1>
+          <h3>
+            아이디, 이메일 주소을 입력하시면 계정에 다시
+            액세스할 수 있는 링크를 보내드립니다.
+          </h3>
         </div>
         <div css={s.input}>
           <AuthPageInput
