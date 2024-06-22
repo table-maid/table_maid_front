@@ -59,7 +59,7 @@ function SigninPage() {
       <div css={s.singUpBox}>
         <span css={s.singUp}>
           <p>계정이 없으신가요 ?</p>
-          <Link to={"/auth/signup/adminInfo"} css={s.link2}>
+          <Link to={"/auth/agreement"} css={s.link2}>
             가입하기
           </Link>
         </span>

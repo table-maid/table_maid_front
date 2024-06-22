@@ -30,16 +30,22 @@ border: none;
 `
 
 export const header = css`
-  width: 100%;
+  width: 75%;
   height: 40%;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   & h1 {
-    font-size: 30px;
+    font-size: 23px;
     margin: 5px 0 10px 0;
     cursor: default;
+  }
+  & h3 {
+    margin: 0;
+    margin-bottom: 10px;
+    font-size: 13px;
+    font-weight: 300;
   }
 
 `;
@@ -62,7 +68,7 @@ export const button = (isFormValid) => css`
   background-color: ${isFormValid ? "#4cb5f9" : "#B2DFFC"};
   border-radius: 8px;
   color: white;
-  cursor: ${isFormValid ? "pointer" : "not-allowed"};
+  cursor: ${isFormValid ? "pointer" : "default"};
 
   &:hover {
     background-color: ${isFormValid ? "#4494fc" : "#B2DFFC"};

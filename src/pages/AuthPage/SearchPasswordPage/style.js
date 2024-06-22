@@ -36,18 +36,23 @@ border: none;
 `
 
 export const header = css`
-  width: 100%;
+  width: 75%;
   height: 40%;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   & h1 {
-    font-size: 30px;
-    margin: 10px 0;
+    font-size: 23px;
+    margin: 5px 0 10px 0;
     cursor: default;
   }
-
+  & h3 {
+    margin: 0;
+    margin-bottom: 10px;
+    font-size: 13px;
+    font-weight: 300;
+  }
 `;
 
 
