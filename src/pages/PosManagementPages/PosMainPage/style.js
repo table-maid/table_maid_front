@@ -27,7 +27,7 @@ export const tableLayout = css`
 
 export const tableContainer = css`
   width: 90%;
-  height: 550px;
+  height: 600px;
   border-radius: 10px;
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -41,8 +41,8 @@ export const tableButton = css`
   padding: 0;
   box-sizing: border-box;
   width: 70%;
-  height: 150px;
-  border: 1px solid #adadad;
+  height: 165px;
+  border: 1px solid #c7c7c7;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -86,7 +86,7 @@ export const buttonBox = css`
   display: flex;
   align-items: center;
   justify-content: center;
-  padding-bottom: 30px;
+  padding-bottom: 40px;
 `;
 
 export const button = css`
@@ -96,7 +96,7 @@ export const button = css`
   pointer-events: auto;
 
   & svg {
-    color: #aaaaaa;
+    color: #bebebe;
     cursor: pointer;
   }
 `;
@@ -110,7 +110,7 @@ export const tableDetails = css`
 `;
 
 export const selectedTableHeader = css`
-  background-color: #9c9c9c; // 선택된 테이블의 헤더 색상 변경
+  background-color: #b1b1b1; // 선택된 테이블의 헤더 색상 변경
 `;
 
 export const menuBox = css`
@@ -140,19 +140,22 @@ export const managmentLayout = css`
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-top: 10px;
 `;
 
 export const managmentContainer = css`
-  width: 90%;
-  height: 150px;
-  border: 1px solid black;
+  width: 82%;
+  height: 100px;
+  /* border: 1px solid black; */
   display: flex;
   justify-content: space-around;
   align-items: center;
+  /* background-color: aqua; */
 `;
 
 export const managementButton = css`
   width: 160px;
   height: 80px;
+  border-radius: 10px;
+  border: 1px solid #c7c7c7;
+  background-color: white;
 `;

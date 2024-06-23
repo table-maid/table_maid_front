@@ -6,7 +6,7 @@ export const tablesState = atom({
     default: Array(9).fill({ selectedItems: [], totalPrice: 0 }),
 });
 
-export const selectedTableIndexState = atom({
+export const selectedTableIndexState = atom({ // 테이블이 선택되지 않은 상태
     key: "selectedTableIndexState",
     default: -1,
 });

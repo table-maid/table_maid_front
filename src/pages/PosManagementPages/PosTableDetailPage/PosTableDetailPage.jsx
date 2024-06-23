@@ -113,7 +113,7 @@ function PosTableDetailPage(props) {
         setSelectedItems(updatedItems);
     };
 
-    const handleRegisterComplete = () => {
+    const handleRegisterComplete = () => { // 현재 테이블 상태 업데이트
         const updatedTables = [...tables];
         updatedTables[selectedTableIndex] = { ...updatedTables[selectedTableIndex], selectedItems, totalPrice };
         setTables(updatedTables);

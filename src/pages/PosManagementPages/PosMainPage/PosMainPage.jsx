@@ -15,25 +15,30 @@ function PosMainPage() {
   const navigate = useNavigate();
   const [currentTime, setCurrentTime] = useState(new Date());
   const [tables, setTables] = useRecoilState(tablesState);
-  const [selectedTableIndex, setSelectedTableIndex] = useRecoilState(selectedTableIndexState);
-  const [currentTableData, setCurrentTableData] = useRecoilState(currentTableDataState);
-  const [mergeGroups, setMergeGroups] = useRecoilState(mergeGroupsState);
-  const [selectedTableIndices, setSelectedTableIndices] = useState([]);
-  const [tableColors, setTableColors] = useState({}); // 테이블 헤더 색상을 관리하는 상태
-  const [moveMode, setMoveMode] = useState(false); // 이동 모드 상태
+  const [selectedTableIndex, setSelectedTableIndex] = useRecoilState(
+    selectedTableIndexState
+  ); // 선택된 테이블 인덱스
+  const [currentTableData, setCurrentTableData] = useRecoilState(
+    currentTableDataState
+  ); // 현재 테이블 데이터
+  const [mergeGroups, setMergeGroups] = useRecoilState(mergeGroupsState); // 합석 상태
+  const [selectedTableIndices, setSelectedTableIndices] = useState([]); // 선택된 테이블 인덱스 상태 
+  const [tableColors, setTableColors] = useState({});
+  const [moveMode, setMoveMode] = useState(false); 
 
   const usedColors = useRef(new Set());
   const initialized = useRef(false);
 
   useEffect(() => {
     if (!initialized.current) {
-      // 초기 마운트 시 로컬 스토리지에서 색상 로드
+      // 로컬 스토리지에 저장된 색
       const savedColors = localStorage.getItem("tableColors");
       if (savedColors) {
         const parsedColors = JSON.parse(savedColors);
         setTableColors(parsedColors);
         usedColors.current = new Set(Object.values(parsedColors));
       } else {
+         // 초기 테이블 색상 설정
         const initialColors = {};
         for (let i = 0; i < tables.length; i++) {
           const color = getRandomUniquePastelColor(usedColors.current);
@@ -46,21 +51,21 @@ function PosMainPage() {
       initialized.current = true;
     }
 
-    const interval = setInterval(() => {
+    const interval = setInterval(() => { // 현재시간 
       setCurrentTime(new Date());
     }, 1000);
 
     return () => clearInterval(interval);
   }, [tables.length]);
 
-  const formatTime = (date) => {
+  const formatTime = (date) => { // 시간 포맷
     const hours = date.getHours().toString().padStart(2, "0");
     const minutes = date.getMinutes().toString().padStart(2, "0");
     const seconds = date.getSeconds().toString().padStart(2, "0");
     return `${hours}:${minutes}:${seconds}`;
   };
 
-  const formatDate = (date) => {
+  const formatDate = (date) => { // 날짜 포맷
     const year = date.getFullYear();
     const month = (date.getMonth() + 1).toString().padStart(2, "0");
     const day = date.getDate().toString().padStart(2, "0");
@@ -69,33 +74,34 @@ function PosMainPage() {
     return `${year}년 ${month}월 ${day}일 (${weekDay})`;
   };
 
-  const handleClick = (index) => {
+  const handleClick = (index) => { // 테이블 클릭했을때 실행
     setSelectedTableIndex(index);
     setCurrentTableData(tables[index]);
     navigate("/pos/table/detail");
   };
 
-  const handleTableSelect = (index) => {
+  const handleTableSelect = (index) => { // 테이블 선택했을 때 실행
     if (moveMode) {
-      // 이동 모드일 때
       handleMoveTable(index);
     } else {
       if (selectedTableIndices.includes(index)) {
-        setSelectedTableIndices(selectedTableIndices.filter((i) => i !== index));
+        setSelectedTableIndices(
+          selectedTableIndices.filter((i) => i !== index)
+        );
       } else {
         setSelectedTableIndices([...selectedTableIndices, index]);
       }
     }
   };
 
-  const getRandomPastelColor = () => {
+  const getRandomPastelColor = () => { // 랜덤 색
     const hue = Math.floor(Math.random() * 360);
-    const saturation = Math.floor(Math.random() * 25) + 70; // 70%에서 95% 사이의 채도
+    const saturation = Math.floor(Math.random() * 25) + 60; // 70%에서 95% 사이의 채도
     const lightness = Math.floor(Math.random() * 25) + 70; // 70%에서 95% 사이의 밝기
     return `hsl(${hue}, ${saturation}%, ${lightness}%)`;
   };
 
-  const getRandomUniquePastelColor = (existingColors) => {
+  const getRandomUniquePastelColor = (existingColors) => { // 기존 색을 겹치지 않게
     let color;
     do {
       color = getRandomPastelColor();
@@ -116,18 +122,26 @@ function PosMainPage() {
       alert("이동할 테이블을 하나만 선택하세요.");
       return;
     }
-    const sourceIndex = selectedTableIndices[0];
-    const sourceTable = tables[sourceIndex];
-    const targetTable = tables[targetIndex];
+    const sourceIndex = selectedTableIndices[0]; // 이동할 테이블 인덱스
+    const sourceTable = tables[sourceIndex]; // 이동할 테이블 데이터
+    const targetTable = tables[targetIndex]; // 이동 대상 테이블 데이터
 
     const newTables = [...tables];
-    newTables[targetIndex] = { ...targetTable, selectedItems: sourceTable.selectedItems, totalPrice: sourceTable.totalPrice };
-    newTables[sourceIndex] = { ...sourceTable, selectedItems: [], totalPrice: 0 };
+    newTables[targetIndex] = {
+      ...targetTable,
+      selectedItems: sourceTable.selectedItems,
+      totalPrice: sourceTable.totalPrice,
+    };
+    newTables[sourceIndex] = {
+      ...sourceTable,
+      selectedItems: [],
+      totalPrice: 0,
+    };
 
     setTables(newTables);
     setSelectedTableIndex(targetIndex); // 이동 후 선택된 테이블 인덱스 업데이트
     setCurrentTableData(newTables[targetIndex]); // 이동 후 현재 테이블 데이터 업데이트
-    setSelectedTableIndices([]);
+    setSelectedTableIndices([]); // 선택된 테이블 인덱스 초기화(비우기)
     setMoveMode(false);
   };
 
@@ -144,7 +158,7 @@ function PosMainPage() {
     const newTableColors = { ...tableColors };
     selectedTableIndices.forEach((index) => {
       newMergeGroups[index] = { color: mergeColor, groupId };
-      newTableColors[index] = mergeColor; // 모든 선택된 테이블에 동일한 색상 적용
+      newTableColors[index] = mergeColor; // 선택된 테이블에 동일한 색상 적용
     });
 
     setMergeGroups(newMergeGroups);
@@ -173,16 +187,19 @@ function PosMainPage() {
       [tableIndex]: newColor,
     });
 
-    // mergeGroups에서 해당 테이블 제거
+    // 합석에서 해당 테이블 제거
     const newMergeGroups = { ...mergeGroups };
     delete newMergeGroups[tableIndex];
     setMergeGroups(newMergeGroups);
 
-    localStorage.setItem("tableColors", JSON.stringify({ ...tableColors, [tableIndex]: newColor }));
+    localStorage.setItem(
+      "tableColors",
+      JSON.stringify({ ...tableColors, [tableIndex]: newColor })
+    );
     setSelectedTableIndices([]);
   };
 
-  const renderTables = () => {
+  const renderTables = () => { // 주문내역이 있을때 헤더 색상 변경
     return tables.map((table, index) => {
       const hasItems = table.selectedItems.length > 0;
       const headerColor = mergeGroups[index]
@@ -204,7 +221,7 @@ function PosMainPage() {
               css={[
                 s.tableHeader(hasItems),
                 { backgroundColor: headerColor },
-                isSelected && s.selectedTableHeader, // 선택된 테이블의 헤더 색상 변경
+                isSelected && s.selectedTableHeader,
               ]}
             >
               <span css={s.tableNumber}>{index + 1}</span>
@@ -227,9 +244,8 @@ function PosMainPage() {
                 table.selectedItems.map((item, itemIndex) => (
                   <div css={s.menuBox} key={itemIndex}>
                     <div css={s.menuItem}>
-                      <span>
-                        {item.menuName} {item.menuCount}
-                      </span>
+                      <span>{item.menuName}</span>
+                      <span>{item.menuCount}</span>
                     </div>
                   </div>
                 ))
