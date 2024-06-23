@@ -11,7 +11,6 @@ export const timeLayout = css`
   width: 100%;
   height: 5%;
   display: flex;
-  /* background-color: white; */
   border-top-right-radius: 30px;
   border-top-left-radius: 30px;
   border-bottom: 2px solid #5e5e5e;
@@ -38,12 +37,11 @@ export const tableContainer = css`
   justify-items: center;
 `;
 
-export const tableButton = (bgColor) => css`
+export const tableButton = css`
   padding: 0;
   box-sizing: border-box;
   width: 70%;
   height: 150px;
-  background-color: ${bgColor};
   border: 1px solid #adadad;
   display: flex;
   flex-direction: column;
@@ -62,16 +60,14 @@ export const table = css`
   justify-content: space-between;
   background-color: white;
   border-radius: 10px;
-  
 `;
 
-export const tableHeader = css`
-  width: 255px;
-  height: 20px;
+export const tableHeader = (hasItems) => css`
+  width: 252px;
   display: flex;
-  padding: 10px 9px;
+  padding: 5px 10px;
   justify-content: space-between;
-  background-color: #b2f7ef;
+  background-color: ${hasItems ? "inherit" : "transparent"};
   font-weight: bold;
   border-top-right-radius: 10px;
   border-top-left-radius: 10px;
@@ -91,8 +87,8 @@ export const buttonBox = css`
   align-items: center;
   justify-content: center;
   padding-bottom: 30px;
-
 `;
+
 export const button = css`
   width: 25%;
   background-color: transparent;
@@ -100,7 +96,6 @@ export const button = css`
   pointer-events: auto;
 
   & svg {
-    /* padding: 0 65px; */
     color: #aaaaaa;
     cursor: pointer;
   }
@@ -114,19 +109,29 @@ export const tableDetails = css`
   scrollbar-width: none;
 `;
 
+export const selectedTableHeader = css`
+  background-color: #9c9c9c; // 선택된 테이블의 헤더 색상 변경
+`;
+
+export const menuBox = css`
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+`;
+
 export const menuItem = css`
   width: 100%;
   display: flex;
   justify-content: space-between;
-  
+
   & span {
     padding: 5px 0;
   }
 `;
 
 export const totalPrice = css`
-width: 90%;
-margin: 10px 0 15px 0;
+  width: 90%;
+  margin: 10px 0 15px 0;
   font-weight: bold;
   text-align: right;
 `;
