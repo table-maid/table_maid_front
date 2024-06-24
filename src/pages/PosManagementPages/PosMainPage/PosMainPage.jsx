@@ -8,7 +8,7 @@ import {
   selectedTableIndexState,
   currentTableDataState,
   mergeGroupsState,
-} from "../../../hooks/usePosStateAtom";
+} from "../../../atoms/usePosStateAtom";
 import { FaPlus } from "react-icons/fa";
 
 function PosMainPage() {
@@ -22,9 +22,9 @@ function PosMainPage() {
     currentTableDataState
   ); // 현재 테이블 데이터
   const [mergeGroups, setMergeGroups] = useRecoilState(mergeGroupsState); // 합석 상태
-  const [selectedTableIndices, setSelectedTableIndices] = useState([]); // 선택된 테이블 인덱스 상태 
+  const [selectedTableIndices, setSelectedTableIndices] = useState([]); // 선택된 테이블 인덱스 상태
   const [tableColors, setTableColors] = useState({});
-  const [moveMode, setMoveMode] = useState(false); 
+  const [moveMode, setMoveMode] = useState(false);
 
   const usedColors = useRef(new Set());
   const initialized = useRef(false);
@@ -38,7 +38,7 @@ function PosMainPage() {
         setTableColors(parsedColors);
         usedColors.current = new Set(Object.values(parsedColors));
       } else {
-         // 초기 테이블 색상 설정
+        // 초기 테이블 색상 설정
         const initialColors = {};
         for (let i = 0; i < tables.length; i++) {
           const color = getRandomUniquePastelColor(usedColors.current);
@@ -51,21 +51,24 @@ function PosMainPage() {
       initialized.current = true;
     }
 
-    const interval = setInterval(() => { // 현재시간 
+    const interval = setInterval(() => {
+      // 현재시간
       setCurrentTime(new Date());
     }, 1000);
 
     return () => clearInterval(interval);
   }, [tables.length]);
 
-  const formatTime = (date) => { // 시간 포맷
+  const formatTime = (date) => {
+    // 시간 포맷
     const hours = date.getHours().toString().padStart(2, "0");
     const minutes = date.getMinutes().toString().padStart(2, "0");
     const seconds = date.getSeconds().toString().padStart(2, "0");
     return `${hours}:${minutes}:${seconds}`;
   };
 
-  const formatDate = (date) => { // 날짜 포맷
+  const formatDate = (date) => {
+    // 날짜 포맷
     const year = date.getFullYear();
     const month = (date.getMonth() + 1).toString().padStart(2, "0");
     const day = date.getDate().toString().padStart(2, "0");
@@ -74,13 +77,14 @@ function PosMainPage() {
     return `${year}년 ${month}월 ${day}일 (${weekDay})`;
   };
 
-  const handleClick = (index) => { // 테이블 클릭했을때 실행
+  const handleClick = async (index) => { // 테이블 클릭했을때 실행
     setSelectedTableIndex(index);
     setCurrentTableData(tables[index]);
-    navigate("/pos/table/detail");
+    navigate(`/pos/table/detail/${index + 1}`);
   };
 
-  const handleTableSelect = (index) => { // 테이블 선택했을 때 실행
+  const handleTableSelect = (index) => {
+    // 테이블 선택했을 때 실행
     if (moveMode) {
       handleMoveTable(index);
     } else {
@@ -94,14 +98,16 @@ function PosMainPage() {
     }
   };
 
-  const getRandomPastelColor = () => { // 랜덤 색
+  const getRandomPastelColor = () => {
+    // 랜덤 색
     const hue = Math.floor(Math.random() * 360);
     const saturation = Math.floor(Math.random() * 25) + 60; // 70%에서 95% 사이의 채도
     const lightness = Math.floor(Math.random() * 25) + 70; // 70%에서 95% 사이의 밝기
     return `hsl(${hue}, ${saturation}%, ${lightness}%)`;
   };
 
-  const getRandomUniquePastelColor = (existingColors) => { // 기존 색을 겹치지 않게
+  const getRandomUniquePastelColor = (existingColors) => {
+    // 기존 색을 겹치지 않게
     let color;
     do {
       color = getRandomPastelColor();
@@ -199,7 +205,8 @@ function PosMainPage() {
     setSelectedTableIndices([]);
   };
 
-  const renderTables = () => { // 주문내역이 있을때 헤더 색상 변경
+  const renderTables = () => {
+    // 주문내역이 있을때 헤더 색상 변경
     return tables.map((table, index) => {
       const hasItems = table.selectedItems.length > 0;
       const headerColor = mergeGroups[index]
@@ -270,8 +277,9 @@ function PosMainPage() {
     const tableIndex = selectedTableIndices[0];
     setSelectedTableIndex(tableIndex);
     setCurrentTableData(tables[tableIndex]);
-    navigate("/pos/table/detail");
+    navigate(`/pos/table/detail/${tableIndex + 1}`);
   };
+
 
   return (
     <div css={s.posLayout}>
