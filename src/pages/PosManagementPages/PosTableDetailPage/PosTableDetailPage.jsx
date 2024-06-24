@@ -20,15 +20,14 @@ function PosTableDetailPage(props) {
     const { options, error: optionsError } = useGetOption(adminId, menuId);
 
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [selectedItems, setSelectedItems] = useState([]);
     const [selectedOptions, setSelectedOptions] = useState([]);
     const [menuCount, setMenuCount] = useState(1);
     const [checkedItems, setCheckedItems] = useState([]);
+    const [totalPrice, setTotalPrice] = useState(0);
+    
     const [tables, setTables] = useRecoilState(tablesState);
     const selectedTableIndex = useRecoilValue(selectedTableIndexState);
-
-    const [selectedItems, setSelectedItems] = useState([]);
-    const [totalPrice, setTotalPrice] = useState(0);
-
     const navigate = useNavigate();
 
     const emptyCategoryArray = Array.from({ length: 5 - (categories ? categories.length : 0) }, (_, index) => index);
