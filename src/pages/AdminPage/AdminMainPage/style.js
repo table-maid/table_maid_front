@@ -9,7 +9,7 @@ export const layout = css`
 
 export const header = css`
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
   padding: 10px 20px;
   background-color: #333;
@@ -22,7 +22,7 @@ export const logo = css`
 `;
 
 export const date = css`
-  font-size: 16px;
+  font-size: 30px;
 `;
 
 export const calendarSection = css`

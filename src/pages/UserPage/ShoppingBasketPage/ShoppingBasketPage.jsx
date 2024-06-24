@@ -6,10 +6,15 @@ import { useRecoilState } from "recoil";
 import { ShoppingCartState } from "../../../atoms/ShoppingCartAtom";
 import { useMutation } from "react-query";
 import { sendMenu } from "../../../apis/api/order";
+import {
+  ShoppingCartState,
+  TotalPriceState,
+} from "../../../atoms/ShoppingCartAtom";
 
 function ShoppingBasketPage(props) {
   const { adminInfo } = useUserApis();
   const [cart, setCart] = useRecoilState(ShoppingCartState);
+  const [totalPrice, setTotalPrice] = useRecoilState(TotalPriceState);
 
   const handleDeleteFromCart = (index) => {
     setCart((prevCart) => prevCart.filter((_, i) => i !== index));
@@ -30,8 +35,17 @@ function ShoppingBasketPage(props) {
   }) 
 
   useEffect(() => {
-    console.log(cart)
-  }, [])
+    const calculateTotalPrice = () => {
+      return cart.reduce((total, item) => {
+        const itemTotal =
+          item.menu.menuPrice +
+          item.options.reduce((acc, opt) => acc + opt.optionPrice, 0);
+        return total + itemTotal;
+      }, 0);
+    };
+
+    setTotalPrice(calculateTotalPrice());
+  }, [cart, setTotalPrice]);
 
   return (
     <div css={s.layout}>
@@ -55,7 +69,13 @@ function ShoppingBasketPage(props) {
           </button>
         </div>
       ))}
+      
+      <div>
+        <h2>전체 총 가격: {totalPrice}</h2>
+      </div>
+
       <button onClick={() => SEEsendMenus.mutate(cart)}>주문하기</button>
+
     </div>
   );
 }

@@ -1,23 +1,66 @@
 /** @jsxImportSource @emotion/react */
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import * as s from "./style";
 import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import interactionPlugin from "@fullcalendar/interaction";
 import Switch from "react-switch";
+import { useQuery } from "react-query";
+import { getSelectSalesRequest } from "../../../apis/api/salesApi";
+import { adminIdState } from "../../../atoms/AdminIdStateAtom";
+import { useRecoilState } from "recoil";
 
 function AdminMainPage(props) {
+  const [adminId] = useRecoilState(adminIdState);
   const [isOff, setIsOff] = useState(false);
+  const [timer, setTimer] = useState("00:00:00");
+  const [daySales, setDaySales] = useState([]);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      const date = new Date();
+      const hours = String(date.getHours()).padStart(2, "0");
+      const minutes = String(date.getMinutes()).padStart(2, "0");
+      const seconds = String(date.getSeconds()).padStart(2, "0");
+      setTimer(
+        `${date.getFullYear()}년 ${
+          date.getMonth() + 1
+        }월 ${date.getDate()}일${hours}:${minutes}:${seconds}`
+      );
+    }, 1000);
+    return () => clearInterval(interval);
+  }, []);
 
   const toggleSwitch = () => {
     setIsOff((prev) => !prev);
   };
 
+  const getSelectSalesQuery = useQuery(
+    ["getSelectSalesQuery"],
+    () =>
+      getSelectSalesRequest(adminId),
+    {
+      enabled: !adminId,
+      retry: 0,
+      refetchOnWindowFocus: false,
+      onSuccess: (response) => {
+        setDaySales(response.data);
+        console.log(response.data);
+      },
+      onError: (error) => {
+        console.log(error);
+      },
+    }
+  );
+
+  useEffect(() => {
+    console.log(daySales);
+  }, [daySales]);
+
   return (
     <div css={s.layout}>
       <div css={s.header}>
-        <div css={s.logo}>로고</div>
-        <div css={s.date}>2024.05.26(일) 13:26</div>
+        <div css={s.date}>{timer}</div>
       </div>
       <div css={s.calendarSection}>
         <div css={s.calendar}>
