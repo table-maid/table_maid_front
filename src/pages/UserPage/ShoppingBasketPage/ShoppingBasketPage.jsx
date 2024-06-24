@@ -4,6 +4,8 @@ import useUserApis from "../../../hooks/useUserApis";
 import { useEffect } from "react";
 import { useRecoilState } from "recoil";
 import { ShoppingCartState } from "../../../atoms/ShoppingCartAtom";
+import { useMutation } from "react-query";
+import { sendMenu } from "../../../apis/api/order";
 
 function ShoppingBasketPage(props) {
   const { adminInfo } = useUserApis();
@@ -12,6 +14,20 @@ function ShoppingBasketPage(props) {
   const handleDeleteFromCart = (index) => {
     setCart((prevCart) => prevCart.filter((_, i) => i !== index));
   };
+
+  // SEE로 get요청 보내기
+  const SEEsendMenus = useMutation({
+    mutationKey: "SEEsendMenus",
+    mutationFn: sendMenu,
+    onSuccess: (response) => {
+      console.log("주문성공");
+      console.log(response);
+    },
+    onError: (Error) => {
+      console.log("주문실패");
+      console.log(Error);
+    }
+  }) 
 
   useEffect(() => {
     console.log(cart)
@@ -39,7 +55,7 @@ function ShoppingBasketPage(props) {
           </button>
         </div>
       ))}
-      <button>주문하기</button>
+      <button onClick={() => SEEsendMenus.mutate(cart)}>주문하기</button>
     </div>
   );
 }

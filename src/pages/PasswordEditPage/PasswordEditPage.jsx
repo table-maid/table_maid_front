@@ -12,7 +12,6 @@ function PasswordEditPage() {
     const [ newPassword, handleNewPassword, newMessage, setNew, setNewMessage ] = useInput("newPassword");
     const [ newPasswordCheck, handleNewPasswordCheck, newCheckMessage, setNewCheck, setNewCheckMessage ] = useInput("newPasswordCheck");
 
-    
     const editPasswordMutation = useMutation({
         mutationKey: "editPasswordMutation",
         mutationFn: editPasswordRequest,
