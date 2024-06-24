@@ -7,10 +7,13 @@ export const userNameLayout = css`
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  background-color: #f5f5f5;
+  border-radius: 30px;
 `;
 
 export const userNameContainer = css`
   box-sizing: border-box;
+  background-color: white;
   width: 30%;
   height: 60%;
   display: flex;

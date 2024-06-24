@@ -96,7 +96,11 @@ function DashboardPage(props) {
       };
       fetchTopMenu(); // 판매량 가장 많은 메뉴 계산
     }
-  }, [menuList, adminId, topMenus]);
+  }, [menuList, adminId]);
+
+  useEffect(() => {
+    console.log("oneWeekData: ", oneWeekData);
+  }, [oneWeekData]);
 
   return (
     <AdminPageLayout>
@@ -106,7 +110,6 @@ function DashboardPage(props) {
             <div css={[s.graphBox, s.firstGraphBox]}>
               <h1>Today</h1>
               <div css={s.imgLayout}>
-                {/* <input type="file" name="" id="" /> */}
                 <img src={Image} alt="" css={s.img} />
               </div>
               <div css={s.sales}>
@@ -161,11 +164,11 @@ function DashboardPage(props) {
           </div>
           <div css={s.menuLayout}>
             <div css={s.listBox}>
-              {oneWeekData.length > 4 ? (
-                <SalesList salesData={oneWeekData} viewType="limited" css={s.list} />
-              ) : (
-                <SalesList salesData={oneWeekData} viewType="all" css={s.list} />
-              )}
+              <SalesList
+                salesData={oneWeekData}
+                viewType="limited"
+                css={s.list}
+              />
             </div>
             <div css={s.menuBox}>
               <h1>Weekly Top 3</h1>

@@ -1,10 +1,13 @@
 /** @jsxImportSource @emotion/react */
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { useRecoilValue, useRecoilState } from "recoil";
 import useCategory from "../../../hooks/useCategory";
-import * as s from "./style";
 import useGetMenus from "../../../hooks/useGetMenu";
 import useGetOption from "../../../hooks/useGetOption";
 import PosMenuOptionsModal from "../../../components/Pos/PosMenuOptionsModal";
+import { tablesState, selectedTableIndexState } from "../../../hooks/usePosStateAtom";
+import * as s from "./style";
 
 function PosTableDetailPage(props) {
     const adminId = 1;
@@ -13,11 +16,7 @@ function PosTableDetailPage(props) {
     const { categories, error: categoriesError } = useCategory(adminId, categoryPageNum); 
     const [categoryId, setCategoryId] = useState(0);
     const [menuId, setMenuId] = useState(0);
-    const {
-        menus,
-        error: menusError,
-        uniqueMenuCategoryNames,
-      } = useGetMenus(adminId, categoryId, menuPageNum);
+    const { menus, error: menusError, uniqueMenuCategoryNames } = useGetMenus(adminId, categoryId, menuPageNum);
     const { options, error: optionsError } = useGetOption(adminId, menuId);
 
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -26,12 +25,22 @@ function PosTableDetailPage(props) {
     const [menuCount, setMenuCount] = useState(1);
     const [checkedItems, setCheckedItems] = useState([]);
     const [totalPrice, setTotalPrice] = useState(0);
+    
+    const [tables, setTables] = useRecoilState(tablesState);
+    const selectedTableIndex = useRecoilValue(selectedTableIndexState);
+    const navigate = useNavigate();
 
     const emptyCategoryArray = Array.from({ length: 5 - (categories ? categories.length : 0) }, (_, index) => index);
     const emptyMenuArray = Array.from({ length: 25 - (menus ? menus.length : 0) }, (_, index) => index);
-    
+
     const totalCategoryPages = Math.ceil((categories ? categories.length : 0) / 4);
     const totalMenuPages = Math.ceil((menus ? menus.length : 0) / 24);
+
+    useEffect(() => {
+        const currentTable = tables[selectedTableIndex] || {};
+        setSelectedItems(currentTable.selectedItems || []);
+        setTotalPrice(currentTable.totalPrice || 0);
+    }, [tables, selectedTableIndex]);
 
     useEffect(() => {
         const total = selectedItems.reduce((acc, item) => {
@@ -61,7 +70,7 @@ function PosTableDetailPage(props) {
             selectedOptions,
             optionTotalPrice
         };
-        setSelectedItems([...selectedItems, newItem]);
+        setSelectedItems(prevItems => [...prevItems, newItem]);
         closeModal();
     };
 
@@ -101,6 +110,13 @@ function PosTableDetailPage(props) {
             return item;
         });
         setSelectedItems(updatedItems);
+    };
+
+    const handleRegisterComplete = () => { // 현재 테이블 상태 업데이트
+        const updatedTables = [...tables];
+        updatedTables[selectedTableIndex] = { ...updatedTables[selectedTableIndex], selectedItems, totalPrice };
+        setTables(updatedTables);
+        navigate("/pos/main");
     };
 
     return (
@@ -218,7 +234,7 @@ function PosTableDetailPage(props) {
                     </div>
                     <div css={s.bottomButtons}>
                         <button>👑 인원수</button>
-                        <button>등록완료</button>
+                        <button onClick={handleRegisterComplete}>등록완료</button>
                     </div>
                 </div>
             </div>
