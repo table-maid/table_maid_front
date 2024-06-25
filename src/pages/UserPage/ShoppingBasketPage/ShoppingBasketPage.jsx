@@ -3,7 +3,6 @@ import * as s from "./style";
 import useUserApis from "../../../hooks/useUserApis";
 import { useEffect } from "react";
 import { useRecoilState } from "recoil";
-import { ShoppingCartState } from "../../../atoms/ShoppingCartAtom";
 import { useMutation } from "react-query";
 import { sendMenu } from "../../../apis/api/order";
 import {
@@ -19,6 +18,8 @@ function ShoppingBasketPage(props) {
   const handleDeleteFromCart = (index) => {
     setCart((prevCart) => prevCart.filter((_, i) => i !== index));
   };
+
+  console.log(cart);
 
   // SEE로 get요청 보내기
   const SEEsendMenus = useMutation({

@@ -65,6 +65,25 @@ function PosMainPage() {
     return `${hours}:${minutes}:${seconds}`;
   };
 
+  // SSE 구독 로직
+  // useEffect(() => {
+  //   const eventSource = new EventSource("http://localhost:8080/send/menus/1")
+
+  //   eventSource.opopen = async () => {
+  //       await console.log("sse opened!");
+  //   }
+
+  //   eventSource.addEventListener("SSEOrder", (event) => {
+  //       console.log("SSEOrder");
+  //       const data = JSON.parse(event.data);
+  //       console.log(data);
+  //   })
+
+  //   return () => {
+  //       eventSource.close()
+  //   }
+  // },[])
+  
   const formatDate = (date) => { // 날짜 포맷
     const year = date.getFullYear();
     const month = (date.getMonth() + 1).toString().padStart(2, "0");
