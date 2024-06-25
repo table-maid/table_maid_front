@@ -8,8 +8,9 @@ import {
   selectedTableIndexState,
   currentTableDataState,
   mergeGroupsState,
-} from "../../../atoms/usePosStateAtom";
+} from "../../../atoms/PosStateAtom";
 import { FaPlus } from "react-icons/fa";
+import CurrentTime from "../../../components/CurrentTime/CurrentTime";
 
 function PosMainPage() {
   const navigate = useNavigate();
@@ -50,34 +51,10 @@ function PosMainPage() {
       }
       initialized.current = true;
     }
-
-    const interval = setInterval(() => {
-      // 현재시간
-      setCurrentTime(new Date());
-    }, 1000);
-
-    return () => clearInterval(interval);
   }, [tables.length]);
 
-  const formatTime = (date) => {
-    // 시간 포맷
-    const hours = date.getHours().toString().padStart(2, "0");
-    const minutes = date.getMinutes().toString().padStart(2, "0");
-    const seconds = date.getSeconds().toString().padStart(2, "0");
-    return `${hours}:${minutes}:${seconds}`;
-  };
-
-  const formatDate = (date) => {
-    // 날짜 포맷
-    const year = date.getFullYear();
-    const month = (date.getMonth() + 1).toString().padStart(2, "0");
-    const day = date.getDate().toString().padStart(2, "0");
-    const weekDays = ["일", "월", "화", "수", "목", "금", "토"];
-    const weekDay = weekDays[date.getDay()];
-    return `${year}년 ${month}월 ${day}일 (${weekDay})`;
-  };
-
-  const handleClick = async (index) => { // 테이블 클릭했을때 실행
+  const handleClick = async (index) => {
+    // 테이블 클릭했을때 실행
     setSelectedTableIndex(index);
     setCurrentTableData(tables[index]);
     navigate(`/pos/table/detail/${index + 1}`);
@@ -280,12 +257,11 @@ function PosMainPage() {
     navigate(`/pos/table/detail/${tableIndex + 1}`);
   };
 
-
   return (
     <div css={s.posLayout}>
       <div css={s.timeLayout}>
         <div>
-          {formatDate(currentTime)} {formatTime(currentTime)}
+        <CurrentTime />
         </div>
       </div>
       <div css={s.tableLayout}>

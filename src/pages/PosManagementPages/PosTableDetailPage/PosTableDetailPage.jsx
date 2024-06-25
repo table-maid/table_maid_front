@@ -9,7 +9,7 @@ import PosMenuOptionsModal from "../../../components/Pos/PosMenuOptionsModal";
 import {
   tablesState,
   selectedTableIndexState,
-} from "../../../atoms/usePosStateAtom";
+} from "../../../atoms/PosStateAtom";
 import * as s from "./style";
 
 function PosTableDetailPage(props) {
@@ -169,7 +169,7 @@ function PosTableDetailPage(props) {
       <div css={s.container}>
         <div css={s.tableSection}>
           <div css={s.tableHeader}>
-            <div>No.{selectedTableIndex+1}</div>
+            <div>No.{selectedTableIndex + 1}</div>
             <div css={s.tableNumber}>👑👑12</div>
           </div>
           <div css={s.tableLayout}>
