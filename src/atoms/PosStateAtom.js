@@ -1,5 +1,5 @@
 // hooks/usePosStateAtom.js
-import { atom } from "recoil";
+import { atom, selector } from "recoil";
 
 export const tablesState = atom({
     key: "tablesState",
@@ -20,3 +20,8 @@ export const mergeGroupsState = atom({
     key: "mergeGroupsState",
     default: {},
 });
+
+export const groupPaymentState = atom({
+    key: "groupPaymentState",
+    default: {},
+  });
