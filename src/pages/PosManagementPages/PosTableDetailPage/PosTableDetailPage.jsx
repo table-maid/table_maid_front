@@ -1,12 +1,12 @@
 /** @jsxImportSource @emotion/react */
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { useRecoilValue, useRecoilState } from "recoil";
+import { useRecoilValue, useRecoilState, useSetRecoilState } from "recoil";
 import useCategory from "../../../hooks/useCategory";
 import useGetMenus from "../../../hooks/useGetMenu";
 import useGetOption from "../../../hooks/useGetOption";
 import PosMenuOptionsModal from "../../../components/Pos/PosMenuOptionsModal";
-import { tablesState, selectedTableIndexState } from "../../../hooks/usePosStateAtom";
+import { tablesState, selectedTableIndexState, groupPaymentState } from "../../../atoms/PosStateAtom";
 import * as s from "./style";
 
 function PosTableDetailPage(props) {
@@ -28,6 +28,7 @@ function PosTableDetailPage(props) {
     
     const [tables, setTables] = useRecoilState(tablesState);
     const selectedTableIndex = useRecoilValue(selectedTableIndexState);
+    const [groupPayment] = useRecoilState(groupPaymentState); // 단체지정 상태
     const navigate = useNavigate();
 
     const emptyCategoryArray = Array.from({ length: 5 - (categories ? categories.length : 0) }, (_, index) => index);
@@ -60,6 +61,20 @@ function PosTableDetailPage(props) {
         setIsModalOpen(false);
     };
 
+    const updateGroupItems = (groupId, newItems) => {
+        const newTables = tables.map((table, index) => {
+            if (groupPayment[index]?.groupId === groupId) {
+                return {
+                    ...table,
+                    selectedItems: newItems,
+                    totalPrice: newItems.reduce((sum, item) => sum + (item.menuPrice + item.optionTotalPrice) * item.menuCount, 0),
+                };
+            }
+            return table;
+        });
+        setTables(newTables);
+    };
+
     const handleAddItem = (menuCount, selectedOptions) => {
         const selectedMenu = menus.find(menu => menu.menuId === menuId);
         const optionTotalPrice = selectedOptions.reduce((total, opt) => total + opt.price, 0);
@@ -70,7 +85,18 @@ function PosTableDetailPage(props) {
             selectedOptions,
             optionTotalPrice
         };
-        setSelectedItems(prevItems => [...prevItems, newItem]);
+        const newSelectedItems = [...selectedItems, newItem];
+        setSelectedItems(newSelectedItems);
+
+        const groupId = groupPayment[selectedTableIndex]?.groupId;
+        if (groupId) {
+            updateGroupItems(groupId, newSelectedItems);
+        } else {
+            const updatedTables = [...tables];
+            updatedTables[selectedTableIndex] = { ...updatedTables[selectedTableIndex], selectedItems: newSelectedItems, totalPrice: totalPrice + (selectedMenu.menuPrice + optionTotalPrice) * menuCount };
+            setTables(updatedTables);
+        }
+
         closeModal();
     };
 
@@ -83,12 +109,33 @@ function PosTableDetailPage(props) {
     };
 
     const handleCancelSelected = () => {
-        setSelectedItems(selectedItems.filter((item, index) => !checkedItems.includes(index)));
+        const updatedItems = selectedItems.filter((item, index) => !checkedItems.includes(index));
+        setSelectedItems(updatedItems);
+
+        const groupId = groupPayment[selectedTableIndex]?.groupId;
+        if (groupId) {
+            updateGroupItems(groupId, updatedItems);
+        } else {
+            const updatedTables = [...tables];
+            updatedTables[selectedTableIndex] = { ...updatedTables[selectedTableIndex], selectedItems: updatedItems, totalPrice: totalPrice };
+            setTables(updatedTables);
+        }
+
         setCheckedItems([]);
     };
 
     const handleCancelAll = () => {
         setSelectedItems([]);
+
+        const groupId = groupPayment[selectedTableIndex]?.groupId;
+        if (groupId) {
+            updateGroupItems(groupId, []);
+        } else {
+            const updatedTables = [...tables];
+            updatedTables[selectedTableIndex] = { ...updatedTables[selectedTableIndex], selectedItems: [], totalPrice: 0 };
+            setTables(updatedTables);
+        }
+
         setCheckedItems([]);
     };
 
@@ -100,6 +147,15 @@ function PosTableDetailPage(props) {
             return item;
         });
         setSelectedItems(updatedItems);
+
+        const groupId = groupPayment[selectedTableIndex]?.groupId;
+        if (groupId) {
+            updateGroupItems(groupId, updatedItems);
+        } else {
+            const updatedTables = [...tables];
+            updatedTables[selectedTableIndex] = { ...updatedTables[selectedTableIndex], selectedItems: updatedItems, totalPrice: totalPrice };
+            setTables(updatedTables);
+        }
     };
 
     const handleDecreaseCount = () => {
@@ -110,6 +166,15 @@ function PosTableDetailPage(props) {
             return item;
         });
         setSelectedItems(updatedItems);
+
+        const groupId = groupPayment[selectedTableIndex]?.groupId;
+        if (groupId) {
+            updateGroupItems(groupId, updatedItems);
+        } else {
+            const updatedTables = [...tables];
+            updatedTables[selectedTableIndex] = { ...updatedTables[selectedTableIndex], selectedItems: updatedItems, totalPrice: totalPrice };
+            setTables(updatedTables);
+        }
     };
 
     const handleRegisterComplete = () => { // 현재 테이블 상태 업데이트
