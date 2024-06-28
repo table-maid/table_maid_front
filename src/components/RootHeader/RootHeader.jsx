@@ -12,7 +12,7 @@ function RootHeader(props) {
     }
 
     const handleHomeClick = () => {
-        navigate(`/`);
+        navigate(`/user/main`);
     }
 
   return (

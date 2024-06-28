@@ -14,7 +14,7 @@ function AdminRoute(props) {
         refetchOnWindowFocus: false,
         onSuccess: (response) => {
             console.log("프린스퍼");
-            console.log(response);
+            console.log(response.data);
         },
         onError: (error) => {
           console.log(error);
