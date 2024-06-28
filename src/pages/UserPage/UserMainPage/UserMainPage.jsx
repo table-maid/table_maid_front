@@ -16,6 +16,10 @@ function UserMainPage() {
     navigate(`/user/details?menuId=${menuId}&categoryId=${categoryId}`);
   };
 
+  useEffect(() => {
+    console.log(adminInfo.companyNumber);
+  }, []);
+
   return (
     <div css={s.layout}>
       <div css={s.button}>

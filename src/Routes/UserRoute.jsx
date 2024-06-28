@@ -8,7 +8,7 @@ function UserRoute() {
     return (
         <>
             <Routes>
-                <Route path="/*" element={<UserMainPage />} />
+                <Route path="/user/main" element={<UserMainPage />} />
                 <Route path="/user/details" element={<MenuDetails />} />
                 <Route path="/user/shopping" element={<ShoppingBasketPage />} />
             </Routes>

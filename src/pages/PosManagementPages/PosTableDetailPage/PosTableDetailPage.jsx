@@ -36,6 +36,26 @@ function PosTableDetailPage(props) {
     const totalCategoryPages = Math.ceil((categories ? categories.length : 0) / 4);
     const totalMenuPages = Math.ceil((menus ? menus.length : 0) / 24);
 
+    
+      useEffect(() => {
+        const eventSource = new EventSource(
+          "http://localhost:8080/send/menus/1"
+        );
+
+        eventSource.opopen = async () => {
+          await console.log("sse opened!");
+        };
+
+        eventSource.addEventListener("SSEOrder", (event) => {
+          const data = JSON.parse(event.data);
+          console.log(data);
+        });
+
+        return () => {
+          eventSource.close();
+        };
+      }, []);
+
     useEffect(() => {
         const currentTable = tables[selectedTableIndex] || {};
         setSelectedItems(currentTable.selectedItems || []);
