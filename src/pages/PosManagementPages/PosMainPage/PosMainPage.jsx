@@ -30,6 +30,23 @@ function PosMainPage() {
   const initialized = useRef(false);
 
   useEffect(() => {
+    const eventSource = new EventSource("http://localhost:8080/send/menus/1")
+
+    eventSource.opopen = async () => {
+        await console.log("sse opened!");
+    }
+
+    eventSource.addEventListener('SSEOrder', (event) => {
+        const data = JSON.parse(event.data);
+        console.log(data);
+    })
+
+    return () => {
+        eventSource.close()
+    }
+},[])
+
+  useEffect(() => {
     if (!initialized.current) {
       // 로컬 스토리지에 저장된 색
       const savedColors = localStorage.getItem("tableColors");
@@ -74,10 +91,10 @@ function PosMainPage() {
     return `${year}년 ${month}월 ${day}일 (${weekDay})`;
   };
 
-  const handleClick = (index) => { // 테이블 클릭했을때 실행
+  const handleClick = async (index) => { // 테이블 클릭했을때 실행
     setSelectedTableIndex(index);
     setCurrentTableData(tables[index]);
-    navigate("/pos/table/detail");
+    navigate(`/pos/table/detail/${index + 1}`);
   };
 
   const handleTableSelect = (index) => { // 테이블 선택했을 때 실행
@@ -270,7 +287,7 @@ function PosMainPage() {
     const tableIndex = selectedTableIndices[0];
     setSelectedTableIndex(tableIndex);
     setCurrentTableData(tables[tableIndex]);
-    navigate("/pos/table/detail");
+    navigate(`/pos/table/detail/${tableIndex + 1}`);
   };
 
   return (

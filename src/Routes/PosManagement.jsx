@@ -8,7 +8,7 @@ function PosManagement(props) {
         <Routes>
             <Route path="/main" element={<PosMainPage/>} />
             <Route path="/setting" element={null} />
-            <Route path="/table/detail" element={<PosTableDetailPage />} />
+            <Route path="/table/detail/:tableId" element={<PosTableDetailPage />} />
         </Routes>
     );
 }

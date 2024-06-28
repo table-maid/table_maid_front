@@ -3,7 +3,6 @@ import * as s from "./style";
 import useUserApis from "../../../hooks/useUserApis";
 import { useEffect } from "react";
 import { useRecoilState } from "recoil";
-import { ShoppingCartState } from "../../../atoms/ShoppingCartAtom";
 import { useMutation } from "react-query";
 import { sendMenu } from "../../../apis/api/order";
 import {
