@@ -20,7 +20,7 @@ export const openButton = (isButtonVisible) => css`
   position: fixed;
   border: none;
   transform: translateY(-50%);
-  top: 80px;
+  top: 75px;
   left: 140px;
   padding: 0;
   background-color: transparent;
