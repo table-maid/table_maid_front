@@ -19,6 +19,8 @@ function ShoppingBasketPage(props) {
     setCart((prevCart) => prevCart.filter((_, i) => i !== index));
   };
 
+  console.log(cart);
+
   // SEE로 get요청 보내기
   const SEEsendMenus = useMutation({
     mutationKey: "SEEsendMenus",

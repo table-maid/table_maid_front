@@ -12,7 +12,7 @@ import { useRecoilState } from "recoil";
 
 function AdminMainPage(props) {
   const [adminId] = useRecoilState(adminIdState);
-  const [isOff, setIsOff] = useState(false);
+  const [isOff, setIsOff] = useState(true);
   const [timer, setTimer] = useState("00:00:00");
   const [daySales, setDaySales] = useState([]);
 
@@ -31,21 +31,26 @@ function AdminMainPage(props) {
     return () => clearInterval(interval);
   }, []);
 
+  useEffect(() => {
+    if (!isOff) {
+      // 마감 상태일 때
+      setDaySales([]);
+    }
+  }, [isOff]); // isOff 상태가 변경될 때마다 실행
+
   const toggleSwitch = () => {
     setIsOff((prev) => !prev);
   };
 
   const getSelectSalesQuery = useQuery(
     ["getSelectSalesQuery"],
-    () =>
-      getSelectSalesRequest(adminId),
+    () => getSelectSalesRequest(adminId),
     {
-      enabled: !adminId,
+      enabled: !!adminId,
       retry: 0,
       refetchOnWindowFocus: false,
       onSuccess: (response) => {
         setDaySales(response.data);
-        console.log(response.data);
       },
       onError: (error) => {
         console.log(error);
@@ -53,9 +58,52 @@ function AdminMainPage(props) {
     }
   );
 
-  useEffect(() => {
-    console.log(daySales);
-  }, [daySales]);
+  const convertToEvents = (sales) => {
+    if (!Array.isArray(sales)) {
+      console.error("Sales data is not an array:", sales);
+      return [];
+    }
+    return sales
+      .map((sale, index) => {
+        if (sale.year && sale.month && sale.day && sale.dayTotalSales) {
+          const date = new Date(sale.year, sale.month - 1, sale.day)
+            .toISOString()
+            .split("T")[0];
+          const formattedTotalSales = sale.dayTotalSales.toLocaleString();
+          return {
+            title: `일매출: ${formattedTotalSales}원`,
+            start: date,
+          };
+        } else {
+          console.error(
+            `Sale item at index ${index} is missing required fields:`,
+            sale
+          );
+          return null;
+        }
+      })
+      .filter((event) => event !== null);
+  };
+
+  const events = convertToEvents(daySales);
+
+  const handleLogoutClick = () => {
+    if (adminId === 0) {
+      return;
+    }
+
+    localStorage.removeItem("AccessToken");
+    alert("로그아웃 성공");
+    window.location.replace("/auth/signin");
+  };
+
+  const handleHoleClick = () => {
+    window.location.replace("/");
+  };
+
+  const handleSalesClick = () => {
+    window.location.replace("/sales/home");
+  };
 
   return (
     <div css={s.layout}>
@@ -72,6 +120,7 @@ function AdminMainPage(props) {
             dayMaxEventRows={true}
             plugins={[dayGridPlugin, interactionPlugin]}
             initialView="dayGridMonth"
+            events={events}
           />
         </div>
         <div css={s.sideSection}>
@@ -82,8 +131,6 @@ function AdminMainPage(props) {
           </div>
           <div css={s.inputSection}>
             <label>예치금</label>
-            <input type="text" />
-            <input type="text" />
             <input type="text" />
           </div>
           <div css={s.toggle}>
@@ -101,9 +148,9 @@ function AdminMainPage(props) {
             <div>개점</div>
           </div>
           <div css={s.buttons}>
-            <button>영업화면</button>
-            <button>관리하기</button>
-            <button>로그아웃</button>
+            <button onClick={handleHoleClick}>영업화면</button>
+            <button onClick={handleSalesClick}>관리하기</button>
+            <button onClick={handleLogoutClick}>로그아웃</button>
           </div>
         </div>
       </div>
