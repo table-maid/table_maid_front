@@ -20,7 +20,7 @@ export const container = css`
   box-sizing: border-box;
   width: 97%;
   height: 98%;
-  border-radius: 40px;
+  border-radius: 30px;
 
   background-color: white;
 `;

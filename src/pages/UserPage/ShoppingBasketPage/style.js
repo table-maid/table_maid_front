@@ -6,7 +6,7 @@ export const layout = css`
     margin: 30px auto;
     padding: 10px;
     width: 390px;
-    height: 750px;
+    height: 100%;
     overflow: hidden;
     background-color: #bdbaba;
 `;
