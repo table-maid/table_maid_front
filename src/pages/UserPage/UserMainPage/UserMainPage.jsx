@@ -1,6 +1,6 @@
 /** @jsxImportSource @emotion/react */
 import * as s from "./style";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import useUserApis from "../../../hooks/useUserApis";
 
@@ -8,6 +8,7 @@ function UserMainPage() {
   const { adminInfo, menuList, categoryList, setCategoryId } = useUserApis();
   const navigate = useNavigate();
   const [selectedCategory, setSelectedCategory] = useState(null);
+  const categoryBoxRef = useRef(null);
 
   const handleCategoryClick = (categoryId) => {
     setCategoryId(categoryId);
@@ -18,14 +19,26 @@ function UserMainPage() {
     navigate(`/user/details?menuId=${menuId}&categoryId=${categoryId}`);
   };
 
-  const handleWheel = (e) => {
-    if (e.deltaY !== 0) {
-      e.currentTarget.scrollBy({
-        left: e.deltaY < 0 ? -200 : 200, // 스크롤 속도를 100으로 설정
-        behavior: "smooth",
-      });
+  useEffect(() => {
+    const categoryBox = categoryBoxRef.current;
+
+    const handleWheel = (event) => {
+      if (event.deltaY !== 0) {
+        event.preventDefault();
+        categoryBox.scrollLeft += event.deltaY;
+      }
+    };
+
+    if (categoryBox) {
+      categoryBox.addEventListener('wheel', handleWheel);
     }
-  };
+
+    return () => {
+      if (categoryBox) {
+        categoryBox.removeEventListener('wheel', handleWheel);
+      }
+    };
+  }, []);
 
   useEffect(() => {
     console.log(adminInfo.companyNumber);
@@ -38,12 +51,16 @@ function UserMainPage() {
         <button css={s.button}>주문내역</button>
       </div>
       <div css={s.storeName}>{adminInfo.companyName}</div>
-      <div css={s.categoryBox} onWheel={handleWheel}>
+      <div css={s.categoryBox} ref={categoryBoxRef}>
         {categoryList.map((category) => (
           <div
             key={category.menuCategoryId}
             onClick={() => handleCategoryClick(category.menuCategoryId)}
-            css={selectedCategory === category.menuCategoryId ? s.selectedCategory : s.categor}
+            css={
+              selectedCategory === category.menuCategoryId
+                ? s.selectedCategory
+                : s.categor
+            }
           >
             {category.menuCategoryName}
           </div>
@@ -60,7 +77,11 @@ function UserMainPage() {
                   handleMenuClick(menu.menuId, menu.menuCategoryId)
                 }
               >
-                <div>{menu.menuName}</div>
+                <div css={s.menu}>
+                  <h3>{menu.menuName}</h3>
+                  <div>{menu.menuPrice} 원</div>
+                </div>
+                  <img src={menu.menuImgUrl} alt="" />
               </div>
             ))}
           </div>

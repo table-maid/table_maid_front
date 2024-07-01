@@ -3,7 +3,7 @@ import { css } from "@emotion/react";
 export const layout = css`
   box-sizing: border-box;
   position: relative;
-  padding: 10px 20px;
+  padding: 30px 20px 20px 20px;
   width: 100%;
   height: 100%;
   border-bottom-left-radius: 30px;
@@ -104,13 +104,36 @@ export const listBox = css`
   overflow: scroll;
   -ms-overflow-style: none;
   scrollbar-width: none;
-  /* border: 1px solid #dbdbdb; */
   border-radius: 10px;
 `;
+
 export const menuList = css`
   width: 90%;
-  height: 30px;
+  height: 100px;
+  padding: 15px;
   /* background-color: aqua; */
   display: flex;
-  padding: 15px;
+  align-items: center;
+  justify-content: space-between;
+  position: relative;
+  
+  & img {
+    width: 100px;
+    height: 100px;
+    border-radius: 10px;
+    background-color: #dbdbdb;
+    object-fit: cover; 
+  }
+`;
+export const menu = css`
+  width: 60%;
+  height: 55%;
+  /* background-color: aqua; */
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  & h3 {
+    font-size: 18px;
+    margin-top: 0;
+  }
 `;
