@@ -42,19 +42,18 @@ function AdminMainPage(props) {
   useEffect(() => {
     const today = new Date().toISOString().split("T")[0];
     const storedDate = localStorage.getItem("date");
-    if (storedDate !== today) {
-      // 날짜가 변경되었으면 준비금과 예치금을 0으로 초기화
+    if (storedDate !== today) { //  하루 지나면 초기화
       setReadyMoney(0);
       setDepositMoney(0);
       localStorage.setItem("readyMoney", 0);
       localStorage.setItem("depositMoney", 0);
       localStorage.setItem("date", today);
     } else {
-      // 날짜가 변경되지 않았으면 로컬 스토리지에서 값 복원
+      // 하루 안지나면 값 복원
       const storedReadyMoney = localStorage.getItem("readyMoney");
       const storedDepositMoney = localStorage.getItem("depositMoney");
-      if (storedReadyMoney) setReadyMoney(Number(storedReadyMoney));
-      if (storedDepositMoney) setDepositMoney(Number(storedDepositMoney));
+      if (storedReadyMoney) setReadyMoney(storedReadyMoney);
+      if (storedDepositMoney) setDepositMoney(storedDepositMoney);
     }
   }, []);
 
@@ -70,22 +69,25 @@ function AdminMainPage(props) {
 
   const toggleSwitch = () => {
     const newStatus = !isOff;
-    const message = newStatus ? "개점 상태로 변경하시겠습니까?" : "마감 상태로 변경하시겠습니까?";
+    const message = newStatus
+      ? "개점 상태로 변경하시겠습니까?"
+      : "마감 상태로 변경하시겠습니까?";
     if (window.confirm(message)) {
       setIsOff(newStatus);
       if (newStatus) {
-        // 개점 상태로 변경되었을 때 로컬 스토리지에서 값 복원
+        // 개점 상태로 변경되었을 때 값 복원
         const storedReadyMoney = localStorage.getItem("readyMoney");
         const storedDepositMoney = localStorage.getItem("depositMoney");
-        if (storedReadyMoney) setReadyMoney(Number(storedReadyMoney));
-        if (storedDepositMoney) setDepositMoney(Number(storedDepositMoney));
+        if (storedReadyMoney) setReadyMoney(storedReadyMoney);
+        if (storedDepositMoney) setDepositMoney(storedDepositMoney);
       }
     }
   };
 
-  const handleMoneyChange = (setter) => (e) => {
-    const value = parseFloat(e.target.value) || 0;
-    setter(value);
+  const handleMoneyChange = (item) => (e) => {
+    // console.log(e.target);
+    const value = e.target.value || 0;
+    item(value);
     localStorage.setItem(e.target.name, value);
   };
 
@@ -147,7 +149,7 @@ function AdminMainPage(props) {
         <div css={s.calendarSection}>
           <div css={s.calendar}>
             <FullCalendar
-              height={600}
+              height={670}
               locale={"ko"}
               selectable="true"
               navLinks="true"
@@ -158,7 +160,9 @@ function AdminMainPage(props) {
             />
           </div>
           <div css={s.sideSection}>
-            <h1 css={s.logo}>가게 로고</h1>
+            <div css={s.logoBox}>
+              <h1 css={s.logo}>𝓣𝓪𝓫𝓵𝓮𝓜𝓪𝓲𝓭</h1>
+            </div>
             <div css={s.inputSection}>
               <label>준비금</label>
               <div css={s.inputContainer}>
@@ -193,16 +197,16 @@ function AdminMainPage(props) {
                 offColor="#767577"
                 onColor="#b6b6b6"
                 offHandleColor="#f4f3f4"
-                onHandleColor="#81b0ff"
+                onHandleColor="#4cb5f9"
                 checkedIcon={false}
                 uncheckedIcon={false}
               />
               <span>개점</span>
             </div>
             <div css={s.buttons}>
-              <button onClick={handleHoleClick}>영업화면</button>
-              <button onClick={handleSalesClick}>관리하기</button>
-              <button onClick={handleLogoutClick}>로그아웃</button>
+              <button onClick={handleHoleClick} disabled={!isOff}>영업화면</button>
+              <button onClick={handleSalesClick} disabled={!isOff}>관리하기</button>
+              <button onClick={handleLogoutClick} disabled={!isOff}>로그아웃</button>
             </div>
           </div>
         </div>

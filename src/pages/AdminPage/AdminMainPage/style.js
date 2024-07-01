@@ -52,6 +52,15 @@ export const sideSection = css`
   display: flex;
   flex-direction: column;
   justify-content: space-around;
+
+`;
+export const logoBox = css`
+display: flex;
+align-items: center;
+justify-content: center;
+& h1 {
+  font-size: 45px;
+}
 `;
 
 export const inputSection = css`
@@ -99,7 +108,7 @@ export const toggle = css`
 `;
 
 export const buttons = css`
-  height: 20%;
+  height: 23%;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -132,6 +141,11 @@ export const buttons = css`
     &:nth-of-type(3) {
       background-color: #f44336;
       color: white;
+    }
+    
+    &:disabled {
+      cursor: default; 
+      background-color: #e0e0e0;
     }
   }
 `;
