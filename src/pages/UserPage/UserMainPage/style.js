@@ -40,8 +40,7 @@ export const storeName = css`
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 10px 0;
-  margin-top: 10px;
+  padding: 25px 0;
   /* background-color: aqua; */
 `;
 export const categoryBox = css`
