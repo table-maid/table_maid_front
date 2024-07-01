@@ -8,7 +8,7 @@ export const layout = css`
   align-items: center;
   margin-top: 40px;
   /* box-shadow: 3px 1px 5px 1px white; */
-  width: 98%;
+  width: 100%;
   height: 25px;
   background-color: #fff;
   z-index: 99;

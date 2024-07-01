@@ -17,8 +17,8 @@ function RootHeader(props) {
 
   return (
     <div css={s.layout}>
-        <AiFillShopping onClick={handleShoppingClick} size={30} css={s.icon}/>
-        <FaHome onClick={handleHomeClick} size={30} css={s.icon}/>
+        <FaHome onClick={handleHomeClick} size={25} css={s.icon}/>
+        <AiFillShopping onClick={handleShoppingClick} size={25} css={s.icon}/>
 
     </div>
   );

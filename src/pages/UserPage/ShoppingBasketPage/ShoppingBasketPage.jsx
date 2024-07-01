@@ -24,7 +24,7 @@ function ShoppingBasketPage(props) {
   const handleIncreaseQuantity = (index) => {
     setCart((prevCart) =>
       prevCart.map((item, i) =>
-        i === index ? { ...item, quantity: (item.quantity || 1) + 1 } : item
+        i === index ? { ...item, count: (item.count || 1) + 1 } : item
       )
     );
   };
@@ -33,7 +33,7 @@ function ShoppingBasketPage(props) {
     setCart((prevCart) =>
       prevCart.map((item, i) =>
         i === index
-          ? { ...item, quantity: item.quantity > 1 ? item.quantity - 1 : 1 }
+          ? { ...item, count: item.count > 1 ? item.count - 1 : 1 }
           : item
       )
     );
@@ -60,7 +60,8 @@ function ShoppingBasketPage(props) {
       return cart.reduce((total, item) => {
         const itemTotal =
           (item.menu.menuPrice +
-            item.options.reduce((acc, opt) => acc + opt.optionPrice, 0)) * (item.quantity || 1);
+            item.options.reduce((acc, opt) => acc + opt.optionPrice, 0)) *
+          (item.count || 1); // 수량 반영
         return total + itemTotal;
       }, 0);
     };
@@ -102,7 +103,7 @@ function ShoppingBasketPage(props) {
                 </div>
                 <div css={s.countBox}>
                   <div css={s.count}>
-                    {item.quantity > 1 ? (
+                    {item.count > 1 ? (
                       <button onClick={() => handleDecreaseQuantity(index)}>
                         <FaMinus />
                       </button>
@@ -111,7 +112,7 @@ function ShoppingBasketPage(props) {
                         <FaRegTrashCan size={20} />
                       </button>
                     )}
-                    <p>{item.quantity || 1}</p>
+                    <p>{item.count || 1}</p>
                     <button onClick={() => handleIncreaseQuantity(index)}>
                       <FaPlus />
                     </button>
