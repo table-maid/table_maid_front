@@ -12,7 +12,7 @@ import { useRecoilState } from "recoil";
 import { adminIdState } from "../../../atoms/AdminIdStateAtom";
 import { useQuery } from "react-query";
 import { useNavigate } from "react-router-dom";
-import Image from "../../../817729.png";
+import Image from "../../../assets/img/817729.png";
 import { searchMenuListRequest } from "../../../apis/api/menuManagentApi";
 import { FaMedal } from "react-icons/fa";
 import SalesList from "../../../components/Sales/SalesList/SalesList";
