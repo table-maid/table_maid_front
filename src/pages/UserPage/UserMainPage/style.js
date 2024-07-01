@@ -3,10 +3,11 @@ import { css } from "@emotion/react";
 export const layout = css`
     box-sizing: border-box;
     position: relative;
-    margin: 30px auto;
     padding: 10px;
-    width: 390px;
-    height: 750px;
+    width: 100%;
+    height: 745px;
+    border-bottom-left-radius: 30px;
+    border-bottom-right-radius: 30px;
     overflow: hidden;
     background-color: #bdbaba;
 `;
