@@ -5,22 +5,21 @@ import { AiFillShopping } from "react-icons/ai";
 import { FaHome } from "react-icons/fa";
 
 function RootHeader(props) {
-    const navigate = useNavigate();
+  const navigate = useNavigate();
 
-    const handleShoppingClick = () => {
-        navigate(`/user/shopping`);
-    }
+  const handleShoppingClick = () => {
+    navigate(`/user/shopping`);
+  };
 
-    const handleHomeClick = () => {
-        navigate(`/user/main`);
-    }
+  const handleHomeClick = () => {
+    navigate(`/user/main`);
+  };
 
   return (
     <div css={s.layout}>
-        <div>
-            <AiFillShopping onClick={handleShoppingClick}/>
-            <FaHome onClick={handleHomeClick} />
-        </div>
+        <AiFillShopping onClick={handleShoppingClick} size={30} css={s.icon}/>
+        <FaHome onClick={handleHomeClick} size={30} css={s.icon}/>
+
     </div>
   );
 }
