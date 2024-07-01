@@ -8,11 +8,11 @@ export const layout = css`
   align-items: center;
   margin-top: 40px;
   /* box-shadow: 3px 1px 5px 1px white; */
-  width: 100%;
-  height: 35px;
-  background-color: transparent;
+  width: 98%;
+  height: 25px;
+  background-color: #fff;
   z-index: 99;
-  padding: 0px 10px; 
+  padding: 18px 10px; 
 `;
 
 export const icon = css`
