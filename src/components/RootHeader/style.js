@@ -12,7 +12,7 @@ export const layout = css`
   height: 25px;
   background-color: #fff;
   z-index: 99;
-  padding: 20px 10px; 
+  padding: 18px 10px; 
 `;
 
 export const icon = css`
