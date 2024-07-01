@@ -90,8 +90,9 @@ function ShoppingBasketPage(props) {
                     <h2>{item.menu.menuName}</h2>
                     <p>가격: {item.menu.menuPrice}</p>
                   </div>
-                  <img src={item.menu.menuImgUrl} alt="메뉴 이미지" />
-                  <div>
+                  <img src={item.menu.menuImgUrl} alt="" />
+                </div>
+                  <div css={s.option}>
                     {item.options.map((opt, idx) => (
                       <div key={idx}>
                         <p>
@@ -100,7 +101,6 @@ function ShoppingBasketPage(props) {
                       </div>
                     ))}
                   </div>
-                </div>
                 <div css={s.countBox}>
                   <div css={s.count}>
                     {item.count > 1 ? (

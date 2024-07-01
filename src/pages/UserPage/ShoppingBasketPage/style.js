@@ -51,11 +51,14 @@ export const menuList = css`
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
-
+  
   & img {
+    box-sizing: border-box;
     width: 90px;
     height: 90px;
     border-radius: 10px;
+    margin: 0 20px;
+    background-color: #f5f5f5;
   }
 `;
 
@@ -82,6 +85,17 @@ export const button = css`
   display: flex;
   align-items: center;
   justify-content: flex-start;
+`;
+export const option = css`
+  display: flex;
+  flex-direction: column;
+  width: 80%;
+  /* background-color: aqua; */
+  margin-left: 18px;
+
+  & p {
+    margin: 8px 0;
+  }
 `;
 
 export const countBox = css`
