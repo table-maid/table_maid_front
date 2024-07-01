@@ -23,17 +23,17 @@ export const container = css`
   position: relative;
 `;
 export const noItem = css`
-    background-color: transparent;
-    width: 100%;
-    height: 400px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
+  background-color: transparent;
+  width: 100%;
+  height: 400px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 
-    & p {
-        padding-top: 30px;
-    }
+  & p {
+    padding-top: 30px;
+  }
 `;
 export const menuBox = css`
   box-sizing: border-box;
@@ -51,7 +51,7 @@ export const menuList = css`
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
-  
+
   & img {
     box-sizing: border-box;
     width: 90px;
@@ -69,7 +69,7 @@ export const menuItem = css`
   flex-direction: column;
   justify-content: center;
   /* background-color: orange; */
-margin: 20px 0 0 20px;
+  margin: 20px 0 0 20px;
 
   & h2 {
     margin: 0;
@@ -89,12 +89,28 @@ export const button = css`
 export const option = css`
   display: flex;
   flex-direction: column;
-  width: 80%;
+  width: 90%;
   /* background-color: aqua; */
   margin-left: 18px;
 
   & p {
     margin: 8px 0;
+  }
+`;
+
+export const Xbutton = css`
+  height: 20%;
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  /* background-color: aqua; */
+
+  & button {
+    background-color: transparent;
+    border: none;
+    padding: 0;
   }
 `;
 
@@ -106,15 +122,17 @@ export const countBox = css`
   align-items: center;
   justify-content: end;
 
-  & button {
-    padding: 10px 20px 20px 20px;
-    background-color: transparent;
-    border: none;
-  }
+`;
+export const optionChange = css`
+  background-color: transparent;
+  padding: 10px 20px;
+border: 1px solid #dbdbdb;
+margin-right: 10px;
+border-radius: 8px;
 `;
 
 export const count = css`
-box-sizing: border-box;
+  box-sizing: border-box;
   width: 30%;
   height: 40px;
   display: flex;
@@ -124,7 +142,7 @@ box-sizing: border-box;
   border: 1px solid #dbdbdb;
   border-radius: 7px;
   background-color: transparent;
-  margin-bottom: 10px;
+  margin: 10px 0;
 
   & button {
     padding: 0;
@@ -134,23 +152,24 @@ box-sizing: border-box;
 `;
 
 export const bottom = css`
-    position: fixed;
-    height: 110px;
-    bottom: 220px;
-    background-color: #fff;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: flex-end;
+  position: fixed;
+  height: 110px;
+  bottom: 220px;
+  background-color: #fff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  transform: translateX(-50%, -50%);
 
-    & button {
-        box-sizing: border-box;
-        background-color: #187cff;
-        border: 1px solid #187cff;
-        border-radius: 10px;
-        padding: 15px 155px;
-        color: white;
-        font-size: 15px;
-        font-weight: 300;
-    }
+  & button {
+    box-sizing: border-box;
+    background-color: #187cff;
+    border: 1px solid #187cff;
+    border-radius: 10px;
+    padding: 15px 155px;
+    color: white;
+    font-size: 15px;
+    font-weight: 300;
+  }
 `;

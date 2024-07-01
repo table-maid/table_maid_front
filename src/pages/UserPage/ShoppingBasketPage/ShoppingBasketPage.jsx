@@ -1,21 +1,25 @@
 /** @jsxImportSource @emotion/react */
+import { useEffect, useState } from "react";
+import OptionRegisterModal from "../../../components/Menu/OptionSelectModal/OptionSelectModal";
 import * as s from "./style";
 import useUserApis from "../../../hooks/useUserApis";
-import { useEffect } from "react";
 import { useRecoilState } from "recoil";
-import { useMutation } from "react-query";
-import { sendMenu } from "../../../apis/api/order";
 import {
   ShoppingCartState,
   TotalPriceState,
 } from "../../../atoms/ShoppingCartAtom";
+import { useMutation } from "react-query";
+import { sendMenu } from "../../../apis/api/order";
 import { FaRegTrashCan, FaPlus, FaMinus } from "react-icons/fa6";
 import Image from "../../../assets/img/장바구니2.png";
+import { IoClose } from "react-icons/io5";
 
 function ShoppingBasketPage(props) {
   const { adminInfo } = useUserApis();
   const [cart, setCart] = useRecoilState(ShoppingCartState);
   const [totalPrice, setTotalPrice] = useRecoilState(TotalPriceState);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedItemIndex, setSelectedItemIndex] = useState(null);
 
   const handleDeleteFromCart = (index) => {
     setCart((prevCart) => prevCart.filter((_, i) => i !== index));
@@ -39,9 +43,43 @@ function ShoppingBasketPage(props) {
     );
   };
 
+  const handleOptionChange = (index) => {
+    setSelectedItemIndex(index);
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+    setSelectedItemIndex(null);
+  };
+
+  const handleApplyOptions = (options) => {
+    setCart((prevCart) =>
+      prevCart.map((item, i) =>
+        i === selectedItemIndex
+          ? { ...item, options: [...item.options, ...options] }
+          : item
+      )
+    );
+    console.log("적용된 옵션:", options);
+    closeModal();
+  };
+
+  const handleRemoveOption = (itemIndex, optionIndex) => {
+    setCart((prevCart) =>
+      prevCart.map((item, i) =>
+        i === itemIndex
+          ? {
+              ...item,
+              options: item.options.filter((_, idx) => idx !== optionIndex),
+            }
+          : item
+      )
+    );
+  };
+
   console.log(cart);
 
-  // SEE로 get요청 보내기
   const SEEsendMenus = useMutation({
     mutationKey: "SEEsendMenus",
     mutationFn: sendMenu,
@@ -88,20 +126,28 @@ function ShoppingBasketPage(props) {
                 <div css={s.menuList}>
                   <div css={s.menuItem}>
                     <h2>{item.menu.menuName}</h2>
-                    <p>가격: {item.menu.menuPrice}</p>
+                    <p>{item.menu.menuPrice} 원</p>
                   </div>
                   <img src={item.menu.menuImgUrl} alt="" />
                 </div>
-                  <div css={s.option}>
-                    {item.options.map((opt, idx) => (
-                      <div key={idx}>
-                        <p>
-                          {opt.optionName} ( + {opt.optionPrice} )
-                        </p>
-                      </div>
-                    ))}
-                  </div>
+                <div css={s.option}>
+                  {item.options.map((opt, idx) => (
+                    <div key={idx} css={s.Xbutton}>
+                      <p>
+                        {opt.optionName} ( + {opt.optionPrice} )
+                      </p>
+                        <button onClick={() => handleRemoveOption(index, idx)}>
+                        <IoClose size={23}/>
+                        </button>
+                    </div>
+                  ))}
+                </div>
                 <div css={s.countBox}>
+                  {item.options.length > 0 && (
+                    <button onClick={() => handleOptionChange(index)} css={s.optionChange}>
+                      옵션 변경
+                    </button>
+                  )}
                   <div css={s.count}>
                     {item.count > 1 ? (
                       <button onClick={() => handleDecreaseQuantity(index)}>
@@ -128,6 +174,14 @@ function ShoppingBasketPage(props) {
           <button onClick={() => SEEsendMenus.mutate(cart)}>주문하기</button>
         </div>
       </div>
+
+      {isModalOpen && selectedItemIndex !== null && (
+        <OptionRegisterModal
+          closeModal={closeModal}
+          menuId={cart[selectedItemIndex].menu.menuId}
+          onApply={handleApplyOptions}
+        />
+      )}
     </div>
   );
 }
