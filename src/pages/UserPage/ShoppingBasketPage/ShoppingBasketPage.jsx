@@ -61,7 +61,6 @@ function ShoppingBasketPage(props) {
           : item
       )
     );
-    console.log("적용된 옵션:", options);
     closeModal();
   };
 
@@ -136,9 +135,9 @@ function ShoppingBasketPage(props) {
                       <p>
                         {opt.optionName} ( + {opt.optionPrice} )
                       </p>
-                        <button onClick={() => handleRemoveOption(index, idx)}>
-                        <IoClose size={23}/>
-                        </button>
+                      <button onClick={() => handleRemoveOption(index, idx)}>
+                        <IoClose size={23} />
+                      </button>
                     </div>
                   ))}
                 </div>

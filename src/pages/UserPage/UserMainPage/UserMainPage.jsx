@@ -19,6 +19,10 @@ function UserMainPage() {
     navigate(`/user/details?menuId=${menuId}&categoryId=${categoryId}`);
   };
 
+  const handleEmployeeCallClick = () => {
+    navigate(`/user/call`);
+  };
+
   useEffect(() => {
     const categoryBox = categoryBoxRef.current;
 
@@ -47,7 +51,7 @@ function UserMainPage() {
   return (
     <div css={s.layout}>
       <div css={s.buttonBox}>
-        <button css={s.button}>직원호출</button>
+        <button css={s.button} onClick={handleEmployeeCallClick}>직원호출</button>
         <button css={s.button}>주문내역</button>
       </div>
       <div css={s.storeName}>{adminInfo.companyName}</div>
