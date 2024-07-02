@@ -6,13 +6,13 @@ import ShoppingBasketPage from "../pages/UserPage/ShoppingBasketPage/ShoppingBas
 
 function UserRoute() {
     return (
-        <>
-            <Routes>
-                <Route path="/user/main" element={<UserMainPage />} />
-                <Route path="/user/details" element={<MenuDetails />} />
-                <Route path="/user/shopping" element={<ShoppingBasketPage />} />
-            </Routes>
-        </>
+      <>
+        <Routes>
+          <Route path="/user/main/:companyNumber/:tableNumber" element={<UserMainPage />} />
+          <Route path="/user/details" element={<MenuDetails />} />
+          <Route path="/user/shopping" element={<ShoppingBasketPage />} />
+        </Routes>
+      </>
     );
 }
 
