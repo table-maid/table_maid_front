@@ -1,6 +1,6 @@
 /** @jsxImportSource @emotion/react */
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useRecoilValue, useRecoilState, useSetRecoilState } from "recoil";
 import useCategory from "../../../hooks/useCategory";
 import useGetMenus from "../../../hooks/useGetMenu";
@@ -11,6 +11,7 @@ import * as s from "./style";
 
 function PosTableDetailPage(props) {
     const adminId = 1;
+    const {tableId} = useParams();
     const [categoryPageNum, setCategoryPageNum] = useState(1);
     const [menuPageNum, setMenuPageNum] = useState(1);
     const { categories, error: categoriesError } = useCategory(adminId, categoryPageNum); 
@@ -36,6 +37,23 @@ function PosTableDetailPage(props) {
 
     const totalCategoryPages = Math.ceil((categories ? categories.length : 0) / 4);
     const totalMenuPages = Math.ceil((menus ? menus.length : 0) / 24);
+    useEffect(() => {
+        const eventSource = new EventSource(`http://localhost:8080/send/menus/1`)
+
+        eventSource.opopen = async () => {
+            await console.log("sse opened!");
+        }
+
+        eventSource.addEventListener('SSEOrder', (event) => {
+            const data = JSON.parse(event.data);
+            console.log(data);
+            console.log('SSEOrder');
+        })
+
+        return () => {
+            eventSource.close()
+        }
+    },[])
 
     
       useEffect(() => {
@@ -209,7 +227,7 @@ function PosTableDetailPage(props) {
             <div css={s.container}>
                 <div css={s.tableSection}>
                     <div css={s.tableHeader}>
-                        <div>홀 1</div>
+                        <div>홀 {tableId}</div>
                         <div css={s.tableNumber}>👑👑12</div>
                     </div>
                     <div css={s.tableLayout}>

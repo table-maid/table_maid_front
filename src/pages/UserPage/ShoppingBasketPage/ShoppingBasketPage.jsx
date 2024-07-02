@@ -11,6 +11,8 @@ import {
 } from "../../../atoms/ShoppingCartAtom";
 import { useSearchParams } from "react-router-dom";
 import { getCompanyNameRequest } from "../../../apis/api/user";
+import { FaRegTrashCan, FaPlus, FaMinus } from "react-icons/fa6";
+import Image from "../../../assets/img/장바구니2.png";
 
 function ShoppingBasketPage(props) {
   const { adminInfo } = useUserApis();
@@ -22,6 +24,24 @@ function ShoppingBasketPage(props) {
 
   const handleDeleteFromCart = (index) => {
     setCart((prevCart) => prevCart.filter((_, i) => i !== index));
+  };
+
+  const handleIncreaseQuantity = (index) => {
+    setCart((prevCart) =>
+      prevCart.map((item, i) =>
+        i === index ? { ...item, quantity: (item.quantity || 1) + 1 } : item
+      )
+    );
+  };
+
+  const handleDecreaseQuantity = (index) => {
+    setCart((prevCart) =>
+      prevCart.map((item, i) =>
+        i === index
+          ? { ...item, quantity: item.quantity > 1 ? item.quantity - 1 : 1 }
+          : item
+      )
+    );
   };
 
   console.log(cart);
@@ -59,19 +79,24 @@ function ShoppingBasketPage(props) {
         },
       }
     );
+    },
+  });
 
   useEffect(() => {
     const calculateTotalPrice = () => {
       return cart.reduce((total, item) => {
         const itemTotal =
-          item.menu.menuPrice +
-          item.options.reduce((acc, opt) => acc + opt.optionPrice, 0);
+          (item.menu.menuPrice +
+            item.options.reduce((acc, opt) => acc + opt.optionPrice, 0)) * (item.quantity || 1);
         return total + itemTotal;
       }, 0);
     };
 
-    setTotalPrice(calculateTotalPrice());
-  }, [cart, setTotalPrice]);
+    const newTotalPrice = calculateTotalPrice();
+    if (newTotalPrice !== totalPrice) {
+      setTotalPrice(newTotalPrice);
+    }
+  }, [cart, totalPrice, setTotalPrice]);
 
   return (
     <div css={s.layout}>
@@ -87,20 +112,59 @@ function ShoppingBasketPage(props) {
                 <p>
                   {opt.optionName} ( + {opt.optionPrice} )
                 </p>
+      <h1>{companyName?.companyName}</h1>
+      <div css={s.container}>
+        {cart.length === 0 ? (
+          <div css={s.noItem}>
+            <img src={Image} alt="" />
+            <p>장바구니가 텅 비어 있습니다.</p>
+          </div>
+        ) : (
+          <div css={s.menuBox}>
+            {cart.map((item, index) => (
+              <div key={index}>
+                <div css={s.menuList}>
+                  <div css={s.menuItem}>
+                    <h2>{item.menu.menuName}</h2>
+                    <p>가격: {item.menu.menuPrice}</p>
+                  </div>
+                  <img src={item.menu.menuImgUrl} alt="메뉴 이미지" />
+                  <div>
+                    {item.options.map((opt, idx) => (
+                      <div key={idx}>
+                        <p>
+                          {opt.optionName} ( + {opt.optionPrice} )
+                        </p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+                <div css={s.countBox}>
+                  <div css={s.count}>
+                    {item.quantity > 1 ? (
+                      <button onClick={() => handleDecreaseQuantity(index)}>
+                        <FaMinus />
+                      </button>
+                    ) : (
+                      <button onClick={() => handleDeleteFromCart(index)}>
+                        <FaRegTrashCan size={20} />
+                      </button>
+                    )}
+                    <p>{item.quantity || 1}</p>
+                    <button onClick={() => handleIncreaseQuantity(index)}>
+                      <FaPlus />
+                    </button>
+                  </div>
+                </div>
               </div>
             ))}
           </div>
-          <button onClick={() => handleDeleteFromCart(index)}>
-            장바구니에서 삭제
-          </button>
+        )}
+
+        <div css={s.bottom}>
+          <h2>총 가격 {totalPrice} 원</h2>
+          <button onClick={() => SEEsendMenus.mutate(cart)}>주문하기</button>
         </div>
-      ))}
-
-      <div>
-        <h2>전체 총 가격: {totalPrice}</h2>
-      </div>
-
-      <button onClick={() => SEEsendMenus.mutate(cart)}>주문하기</button>
     </div>
   );
 }

@@ -22,7 +22,8 @@ function PosMainPage() {
   );
   const [currentTableData, setCurrentTableData] = useRecoilState(
     currentTableDataState
-  );
+  ); // 현재 테이블 데이터
+  
   const [mergeGroups, setMergeGroups] = useRecoilState(mergeGroupsState);
   const [groupPayment, setGroupPayment] = useRecoilState(groupPaymentState); // 단체결제 상태
   const [selectedTableIndices, setSelectedTableIndices] = useState([]);
@@ -39,7 +40,6 @@ function PosMainPage() {
   // SSE 구독 로직
   // useEffect(() => {
   //   const eventSource = new EventSource("http://localhost:8080/send/menus/1")
-
   //   eventSource.opopen = async () => {
   //       await console.log("sse opened!");
   //   }
@@ -323,7 +323,7 @@ function PosMainPage() {
       );
     });
   };
-
+  
   return (
     <div css={s.posLayout}>
       <div css={s.timeLayout}>
