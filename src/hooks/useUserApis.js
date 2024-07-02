@@ -7,6 +7,7 @@ const useUserApis = (props) => {
   const [categoryId, setCategoryId] = useState(0);
   const [categoryList, setCategoryList] = useState([]);
   const [menuList, setMenuList] = useState([]);
+  const [adminId, setAdminId] = useState(0);
 
   useEffect(() => {
     if (categoryList.length > 0) {

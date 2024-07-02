@@ -5,7 +5,7 @@ import * as s from "./style";
 import { searchOptionRequest } from "../../../apis/api/menuManagentApi";
 import { useEffect, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
-import { getSoloMenuRequest } from "../../../apis/api/user";
+import { getCompanyNameRequest, getSoloMenuRequest } from "../../../apis/api/user";
 import { useRecoilState } from "recoil";
 import { ShoppingCartState } from "../../../atoms/ShoppingCartAtom";
 
@@ -16,25 +16,26 @@ function MenuDetails() {
   const [searchParams] = useSearchParams();
   const menuId = searchParams.get("menuId");
   const categoryId = searchParams.get("categoryId");
+  const adminId = searchParams.get("adminId");
   const navigate = useNavigate();
   const [selectedMenu, setSelectedMenu] = useState(null);
   const [cart, setCart] = useRecoilState(ShoppingCartState);
+  const [companyName, setCompanyName] = useState("");
 
   const soloMenuQuery = useQuery(
-    ["soloMenuQuery", adminInfo.adminId, categoryId],
+    ["soloMenuQuery", adminId, categoryId],
     () =>
       getSoloMenuRequest({
-        adminId: adminInfo.adminId,
+        adminId: adminId,
         menuCategoryId: categoryId,
-        menuId: menuId
+        menuId: menuId,
       }),
     {
-      enabled: !!adminInfo.adminId && !!categoryId && !!menuId,
+      enabled: !!adminId && !!categoryId && !!menuId,
       retry: 0,
       refetchOnWindowFocus: false,
       onSuccess: (response) => {
         setSelectedMenu(response.data);
-        console.log(response.data)
       },
       onError: (error) => {
         console.log(error);
@@ -46,11 +47,11 @@ function MenuDetails() {
     ["searchOptionQuery"],
     () =>
       searchOptionRequest({
-        adminId: adminInfo.adminId,
+        adminId: adminId,
         menuId: menuId,
       }),
     {
-      enabled: !!adminInfo.adminId && !!menuId,
+      enabled: !!adminId && !!menuId,
       retry: 0,
       refetchOnWindowFocus: false,
       onSuccess: (response) => {
@@ -62,9 +63,29 @@ function MenuDetails() {
     }
   );
 
+      const getCompanyNameQuery = useQuery(
+        ["getCompanyNameQuery"],
+        () =>
+          getCompanyNameRequest({
+            adminId: adminId,
+          }),
+        {
+          enabled: !!adminId,
+          retry: 0,
+          refetchOnWindowFocus: false,
+          onSuccess: (response) => {
+            setCompanyName(response.data);
+            console.log(response.data);
+          },
+          onError: (error) => {
+            console.log(error);
+          },
+        }
+      );
+
   useEffect(() => {
-    console.log(selectedOptions);
-  }, [selectedOptions]);
+    console.log(adminId);
+  }, [adminId]);
 
   useEffect(() => {
     if (!searchOptionQuery.isLoading && !searchOptionQuery.isFetching) {
@@ -97,12 +118,12 @@ function MenuDetails() {
       ...prevCart,
       { menu: selectedMenu, options: selectedOptions },
     ]);
-    navigate(`/user/shopping`);
+    navigate(`/user/shopping?adminId=${adminId}`);
   };
 
   return (
     <div css={s.layout}>
-      <div>{adminInfo?.companyName}</div>
+      <div>{companyName?.companyName}</div>
       <div>
         {selectedMenu !== null ? (
           <img src={selectedMenu.menuImgUrl} alt="메뉴 이미지" />

@@ -1,21 +1,26 @@
 /** @jsxImportSource @emotion/react */
 import * as s from "./style";
 import useUserApis from "../../../hooks/useUserApis";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useRecoilState } from "recoil";
-import { useMutation } from "react-query";
+import { useMutation, useQuery } from "react-query";
 import { sendMenu } from "../../../apis/api/order";
 import {
   ShoppingCartState,
   TotalPriceState,
 } from "../../../atoms/ShoppingCartAtom";
+import { useSearchParams } from "react-router-dom";
+import { getCompanyNameRequest } from "../../../apis/api/user";
 import { FaRegTrashCan, FaPlus, FaMinus } from "react-icons/fa6";
 import Image from "../../../assets/img/장바구니2.png";
 
 function ShoppingBasketPage(props) {
   const { adminInfo } = useUserApis();
+  const [searchParams] = useSearchParams();
+  const adminId = searchParams.get("adminId");
   const [cart, setCart] = useRecoilState(ShoppingCartState);
   const [totalPrice, setTotalPrice] = useRecoilState(TotalPriceState);
+  const [companyName, setCompanyName] = useState("");
 
   const handleDeleteFromCart = (index) => {
     setCart((prevCart) => prevCart.filter((_, i) => i !== index));
@@ -52,6 +57,28 @@ function ShoppingBasketPage(props) {
     onError: (Error) => {
       console.log("주문실패");
       console.log(Error);
+    }
+  });
+
+    const getCompanyNameQuery = useQuery(
+      ["getCompanyNameQuery"],
+      () =>
+        getCompanyNameRequest({
+          adminId: adminId,
+        }),
+      {
+        enabled: !!adminId,
+        retry: 0,
+        refetchOnWindowFocus: false,
+        onSuccess: (response) => {
+          setCompanyName(response.data);
+          console.log(response.data);
+        },
+        onError: (error) => {
+          console.log(error);
+        },
+      }
+    );
     },
   });
 
@@ -73,7 +100,19 @@ function ShoppingBasketPage(props) {
 
   return (
     <div css={s.layout}>
-      <h1>{adminInfo?.companyName}</h1>
+      <div>{companyName?.companyName}</div>
+      {cart.map((item, index) => (
+        <div key={index}>
+          <img src={item.menu.menuImgUrl} alt="메뉴 이미지" />
+          <h2>{item.menu.menuName}</h2>
+          <p>가격: {item.menu.menuPrice}</p>
+          <div>
+            {item.options.map((opt, idx) => (
+              <div key={idx}>
+                <p>
+                  {opt.optionName} ( + {opt.optionPrice} )
+                </p>
+      <h1>{companyName?.companyName}</h1>
       <div css={s.container}>
         {cart.length === 0 ? (
           <div css={s.noItem}>
@@ -126,7 +165,6 @@ function ShoppingBasketPage(props) {
           <h2>총 가격 {totalPrice} 원</h2>
           <button onClick={() => SEEsendMenus.mutate(cart)}>주문하기</button>
         </div>
-      </div>
     </div>
   );
 }

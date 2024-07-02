@@ -21,10 +21,12 @@ function App() {
         </AdminRootLayout> */}
 
         <UserRootLayout>
-          <UserRootContainer>
+          <RootHeader />
+          {/* <UserRootContainer> */}
+            <UserRoute />
+          {/* </UserRootContainer> */}
             <RootHeader />
             <UserRoute />
-          </UserRootContainer>
         </UserRootLayout>
       </BackgroundLayout>
     </>
