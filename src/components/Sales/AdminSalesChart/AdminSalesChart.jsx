@@ -1,5 +1,5 @@
 /** @jsxImportSource @emotion/react */
-import React from "react";
+import * as s from "./style";
 import ReactApexChart from "react-apexcharts";
 import { useEffect, useState } from "react";
 import numeral from "numeral";
@@ -146,9 +146,9 @@ const AdminSalesChart = ({
   ]);
 
   return (
-    <div id="chart">
+    <div id="chart" >
       {sales.length === 0 ? (
-        <div>데이터가 존재하지 않습니다.</div>
+        <div css={s.dataLayout}>데이터가 존재하지 않습니다.</div>
       ) : (
         <ReactApexChart
           options={options}

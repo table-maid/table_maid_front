@@ -5,15 +5,16 @@ import UserMainPage from "../pages/UserPage/UserMainPage/UserMainPage";
 import ShoppingBasketPage from "../pages/UserPage/ShoppingBasketPage/ShoppingBasketPage";
 
 function UserRoute() {
-    return (
-        <>
-            <Routes>
-                <Route path="/*" element={<UserMainPage />} />
-                <Route path="/user/details" element={<MenuDetails />} />
-                <Route path="/user/shopping" element={<ShoppingBasketPage />} />
-            </Routes>
-        </>
-    );
+
+  return (
+    <>
+      <Routes>
+        <Route path="/user/main/:companyNumber/:tableNumber" element={<UserMainPage />} />
+        <Route path="/user/details" element={<MenuDetails />} />
+        <Route path="/user/shopping" element={<ShoppingBasketPage />} />
+      </Routes>
+    </>
+  );
 }
 
 export default UserRoute;
