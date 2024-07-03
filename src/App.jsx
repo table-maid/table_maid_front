@@ -13,6 +13,7 @@ function App() {
   return (
     <>
       <BackgroundLayout>
+    
         {/* <AdminRootLayout>
          <AdminRootContainer>
          <AdminRoute />
@@ -26,6 +27,7 @@ function App() {
             <UserRoute />
           </UserRootContainer>
         </UserRootLayout>
+
       </BackgroundLayout>
     </>
   );
