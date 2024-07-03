@@ -1,6 +1,5 @@
 /** @jsxImportSource @emotion/react */
 import * as s from "./style";
-import useUserApis from "../../../hooks/useUserApis";
 import { useEffect, useState } from "react";
 import { useRecoilState } from "recoil";
 import { useMutation, useQuery } from "react-query";
@@ -15,7 +14,6 @@ import { FaRegTrashCan, FaPlus, FaMinus } from "react-icons/fa6";
 import Image from "../../../assets/img/장바구니2.png";
 
 function ShoppingBasketPage(props) {
-  const { adminInfo } = useUserApis();
   const [searchParams] = useSearchParams();
   const adminId = searchParams.get("adminId");
   const [cart, setCart] = useRecoilState(ShoppingCartState);
@@ -44,9 +42,6 @@ function ShoppingBasketPage(props) {
     );
   };
 
-  console.log(cart);
-
-  // SEE로 get요청 보내기
   const SEEsendMenus = useMutation({
     mutationKey: "SEEsendMenus",
     mutationFn: sendMenu,
@@ -57,37 +52,36 @@ function ShoppingBasketPage(props) {
     onError: (Error) => {
       console.log("주문실패");
       console.log(Error);
-    }
-  });
-
-    const getCompanyNameQuery = useQuery(
-      ["getCompanyNameQuery"],
-      () =>
-        getCompanyNameRequest({
-          adminId: adminId,
-        }),
-      {
-        enabled: !!adminId,
-        retry: 0,
-        refetchOnWindowFocus: false,
-        onSuccess: (response) => {
-          setCompanyName(response.data);
-          console.log(response.data);
-        },
-        onError: (error) => {
-          console.log(error);
-        },
-      }
-    );
     },
   });
+
+  const getCompanyNameQuery = useQuery(
+    ["getCompanyNameQuery"],
+    () =>
+      getCompanyNameRequest({
+        adminId: adminId,
+      }),
+    {
+      enabled: !!adminId,
+      retry: 0,
+      refetchOnWindowFocus: false,
+      onSuccess: (response) => {
+        setCompanyName(response.data);
+        console.log(response.data);
+      },
+      onError: (error) => {
+        console.log(error);
+      },
+    }
+  );
 
   useEffect(() => {
     const calculateTotalPrice = () => {
       return cart.reduce((total, item) => {
         const itemTotal =
           (item.menu.menuPrice +
-            item.options.reduce((acc, opt) => acc + opt.optionPrice, 0)) * (item.quantity || 1);
+            item.options.reduce((acc, opt) => acc + opt.optionPrice, 0)) *
+          (item.quantity || 1);
         return total + itemTotal;
       }, 0);
     };
@@ -100,18 +94,6 @@ function ShoppingBasketPage(props) {
 
   return (
     <div css={s.layout}>
-      <div>{companyName?.companyName}</div>
-      {cart.map((item, index) => (
-        <div key={index}>
-          <img src={item.menu.menuImgUrl} alt="메뉴 이미지" />
-          <h2>{item.menu.menuName}</h2>
-          <p>가격: {item.menu.menuPrice}</p>
-          <div>
-            {item.options.map((opt, idx) => (
-              <div key={idx}>
-                <p>
-                  {opt.optionName} ( + {opt.optionPrice} )
-                </p>
       <h1>{companyName?.companyName}</h1>
       <div css={s.container}>
         {cart.length === 0 ? (
@@ -160,11 +142,12 @@ function ShoppingBasketPage(props) {
             ))}
           </div>
         )}
+      </div>
 
-        <div css={s.bottom}>
-          <h2>총 가격 {totalPrice} 원</h2>
-          <button onClick={() => SEEsendMenus.mutate(cart)}>주문하기</button>
-        </div>
+      <div css={s.bottom}>
+        <h2>총 가격 {totalPrice} 원</h2>
+        <button onClick={() => SEEsendMenus.mutate(cart)}>주문하기</button>
+      </div>
     </div>
   );
 }

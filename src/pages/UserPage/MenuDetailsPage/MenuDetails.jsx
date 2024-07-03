@@ -1,6 +1,5 @@
 /** @jsxImportSource @emotion/react */
 import { useQuery } from "react-query";
-import useUserApis from "../../../hooks/useUserApis";
 import * as s from "./style";
 import { searchOptionRequest } from "../../../apis/api/menuManagentApi";
 import { useEffect, useState } from "react";
@@ -10,7 +9,6 @@ import { useRecoilState } from "recoil";
 import { ShoppingCartState } from "../../../atoms/ShoppingCartAtom";
 
 function MenuDetails() {
-  const { adminInfo } = useUserApis();
   const [optionList, setOptionList] = useState([]);
   const [selectedOptions, setSelectedOptions] = useState([]);
   const [searchParams] = useSearchParams();
