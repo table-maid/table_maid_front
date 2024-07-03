@@ -84,7 +84,7 @@ export const selectedCategory = css`
   transition: background-color 0.3s ease;
 `;
 
-export const categor = css`
+export const category = css`
   flex: 0 0 auto;
   box-sizing: border-box;
   padding: 10px 20px;
