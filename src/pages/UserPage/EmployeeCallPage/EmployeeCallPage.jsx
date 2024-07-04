@@ -4,7 +4,8 @@ import * as s from "./style";
 import { useNavigate } from "react-router-dom";
 import { ShoppingCartState } from "../../../atoms/ShoppingCartAtom";
 import { useState } from "react";
-import { FaPlus, FaMinus, FaRegTrashAlt } from "react-icons/fa";
+import { FaPlus, FaMinus } from "react-icons/fa";
+import { IoClose } from "react-icons/io5";
 
 function EmployeeCallPage(props) {
   const navigate = useNavigate();
@@ -92,15 +93,12 @@ function EmployeeCallPage(props) {
           </button>
         </div>
       </div>
-      <div css={s.buttonBox}>
-        <button onClick={handleShoppingClick}>장바구니에 담기</button>
-      </div>
       <h3 css={s.itemTitle}>선택된 아이템</h3>
       <div css={s.selectedItemsBox}>
         {selectedItems.map((item, index) => (
           <div key={index} css={s.selectedItem}>
             <h3>{item.menu.menuName}</h3>
-            <div>
+            <div css={s.count}>
               <button onClick={() => handleDecreaseQuantity(index)}>
                 <FaMinus />
               </button>
@@ -108,12 +106,15 @@ function EmployeeCallPage(props) {
               <button onClick={() => handleIncreaseQuantity(index)}>
                 <FaPlus />
               </button>
-              <button onClick={() => handleRemoveItem(index)}>
-                <FaRegTrashAlt />
-              </button>
             </div>
+              <button onClick={() => handleRemoveItem(index)} css={s.close}>
+              <IoClose size={25}/>
+              </button>
           </div>
         ))}
+      </div>
+      <div css={s.buttonBox}>
+        <button onClick={handleShoppingClick}>호출하기</button>
       </div>
     </div>
   );

@@ -1,10 +1,18 @@
-import { css } from "@emotion/react";
+import { css, keyframes } from "@emotion/react";
+
+const fadeOut = keyframes`
+  0% {
+    background-color: #187cff;
+  }
+  100% {
+    background-color: transparent;
+  }
+`;
 
 export const layout = css`
   box-sizing: border-box;
   position: relative;
   margin: 60px auto;
-  /* padding: 10px; */
   width: 410px;
   height: 660px;
   background-color: #fff;
@@ -24,33 +32,31 @@ export const itemBox = css`
   height: 30%;
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 20px; /* 항목 간의 간격을 설정합니다 */
-  /* align-items: center; */
-  /* justify-content: space-around; */
-`;
-
-export const img = css`
-  box-sizing: border-box;
-  width: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 10px;
-  background-color: #f5f5f5;
-
-  & img {
-    width: 100%;
-    height: 200px;
-    object-fit: cover;
-    border-radius: 20px;
-  }
+  gap: 20px;
 `;
 
 export const item = css`
+  position: relative;
   width: 100px;
   height: 100px;
   border-radius: 10px;
   border: 1px solid #dbdbdb;
+
+  :hover {
+    background-color: #d3d3d3;
+  }
+
+  :active::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border-radius: 10px;
+    background-color: #187cff;
+    animation: ${fadeOut} 0.5s ease-out;
+  }
 `;
 
 export const countBox = css`
@@ -63,8 +69,8 @@ export const countBox = css`
     font-weight: 700;
   }
 `;
+
 export const count = css`
-  /* background-color: aqua; */
   box-sizing: border-box;
   width: 35%;
   height: 45px;
@@ -108,24 +114,36 @@ export const buttonBox = css`
     font-weight: 300;
   }
 `;
+
 export const selectedItemsBox = css`
   width: 100%;
   height: 27%;
-  background-color: aqua;
   overflow: scroll;
   -ms-overflow-style: none;
   scrollbar-width: none;
   display: flex;
   flex-direction: column;
+  align-items: center;
 `;
+
 export const itemTitle = css`
   font-size: 25px;
-  margin-top: 0;
+  margin: 10px 0 10px 25px;
 `;
 
 export const selectedItem = css`
+  width: 100%;
   display: flex;
   flex-direction: row;
   align-items: center;
   justify-content: space-around;
+
+  & h3 {
+    width: 20%;
+  }
+`;
+
+export const close = css`
+  background-color: transparent;
+  border: none;
 `;
