@@ -323,16 +323,7 @@ function PosMainPage() {
       );
     });
   };
-  const handleOrderDetails = () => {
-    if (selectedTableIndices.length !== 1) {
-      alert("하나의 테이블을 선택하세요.");
-      return;
-    }
-    const tableIndex = selectedTableIndices[0];
-    setSelectedTableIndex(tableIndex);
-    setCurrentTableData(tables[tableIndex]);
-    navigate(`/pos/table/detail/${tableIndex + 1}`);
-  };
+
 
   return (
     <div css={s.posLayout}>

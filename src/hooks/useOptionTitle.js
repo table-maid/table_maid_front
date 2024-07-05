@@ -9,8 +9,9 @@ const useOptionTitle = (adminId, menuId, refresh) => {
 
     useEffect(() => {
         const fetchOptionTitle = async () => {
-            const param = { adminId, menuId };
             try {
+                
+                const param = { adminId, menuId };
                 const response = await searchOptionTitleRequest(param);
                 setOptionTitleId(response.data.optionTitlesId);
                 setOptionTitleName(response.data.optionTitleNames);
