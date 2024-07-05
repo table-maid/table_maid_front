@@ -19,8 +19,8 @@ export const layout = css`
 export const container = css`
   box-sizing: border-box;
   width: 97%;
-  height: 98.5%;
-  border-radius: 40px;
+  height: 98%;
+  border-radius: 30px;
 
   background-color: white;
 `;

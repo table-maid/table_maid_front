@@ -1,3 +1,4 @@
+/** @jsxImportSource @emotion/react */
 import { css } from "@emotion/react";
 
 export const layout = css`
@@ -8,21 +9,28 @@ export const layout = css`
 `;
 
 export const header = css`
+  box-sizing: border-box;
+  width: 100%;
+  height: 8%;
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 10px 20px;
-  background-color: #333;
+  text-align: center;
+  border-top-right-radius: 28px;
+  border-top-left-radius: 28px;
+  background-color: #a1a1a1;
   color: white;
+  font-size: 15px;
 `;
 
 export const logo = css`
-  font-size: 18px;
+  font-size: 30px;
   font-weight: bold;
+  margin: 0;
 `;
 
 export const date = css`
-  font-size: 30px;
+  font-size: 23px;
 `;
 
 export const calendarSection = css`
@@ -34,6 +42,8 @@ export const calendar = css`
   width: 70%;
   padding: 20px;
   border-right: 1px solid #ccc;
+  background-color: #fff;
+  border-bottom-left-radius: 30px;
 `;
 
 export const sideSection = css`
@@ -41,37 +51,73 @@ export const sideSection = css`
   padding: 20px;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  justify-content: space-around;
+
+`;
+export const logoBox = css`
+display: flex;
+align-items: center;
+justify-content: center;
+& h1 {
+  font-size: 45px;
+}
 `;
 
 export const inputSection = css`
+  width: 100%;
   display: flex;
   flex-direction: column;
-  margin-bottom: 20px;
+  justify-content: center;
 
   label {
-    font-size: 16px;
-    margin-bottom: 5px;
-  }
-
-  input {
-    padding: 8px;
-    font-size: 16px;
+    font-size: 18px;
     margin-bottom: 10px;
   }
 `;
+
+export const inputContainer = css`
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  input {
+    padding: 11px;
+    font-size: 16px;
+    flex: 1;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+  }
+
+  span {
+    padding: 10px;
+    font-size: 16px;
+  }
+`;
+
+export const inputbox = css``;
 
 export const toggle = css`
   display: flex;
+  align-items: center;
+
+  & span {
+    
+    padding: 10px;
+  }
 `;
 
 export const buttons = css`
+  height: 23%;
   display: flex;
   flex-direction: column;
+  justify-content: space-between;
 
   button {
-    padding: 10px;
+    box-sizing: border-box;
+    padding: 15px;
     margin-bottom: 10px;
+    border-radius: 8px;
     font-size: 16px;
     cursor: pointer;
     border: none;
@@ -95,6 +141,11 @@ export const buttons = css`
     &:nth-of-type(3) {
       background-color: #f44336;
       color: white;
+    }
+    
+    &:disabled {
+      cursor: default; 
+      background-color: #e0e0e0;
     }
   }
 `;
