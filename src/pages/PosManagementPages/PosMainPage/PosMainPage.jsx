@@ -323,7 +323,7 @@ function PosMainPage() {
       );
     });
   };
-  
+
   return (
     <div css={s.posLayout}>
       <div css={s.timeLayout}>
