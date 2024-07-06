@@ -1,7 +1,7 @@
 /** @jsxImportSource @emotion/react */
 import * as s from "./style";
 import { useQuery } from "react-query";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import {
   getSalesRequest,
   getSelectSalesRequest,
@@ -147,6 +147,12 @@ function AdminSalesPage(props) {
     return monthlyData;
   };
 
+  const handleYearChange = useCallback((year) => {
+    setSelectedYear(parseInt(year));
+    setViewType("year");
+    setActiveButton("year");
+  }, []);
+
   useEffect(() => {
     if (viewType === "year") {
       const filteredYearData = sales.filter((sale) => sale.year === parseInt(selectedYear));
@@ -247,12 +253,6 @@ function AdminSalesPage(props) {
       setTotalCount(sales.reduce((acc, sale) => acc + (sale.count || 0), 0));
       setDataKey("totalSales");
     }
-  };
-
-  const handleYearChange = (year) => {
-    setSelectedYear(parseInt(year));
-    setViewType("year");
-    setActiveButton("year");
   };
 
   const handleSearchClick = () => {
