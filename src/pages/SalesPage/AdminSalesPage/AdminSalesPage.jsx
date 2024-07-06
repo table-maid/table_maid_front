@@ -172,6 +172,8 @@ function AdminSalesPage(props) {
   }, [selectedYear, sales, viewType]);
 
   useEffect(() => {
+    if (!searchClicked) return;
+
     let data = [];
     let totals = { totalSales: 0, totalCount: 0 };
 
@@ -213,6 +215,8 @@ function AdminSalesPage(props) {
       setChartData(data);
       console.log('Chart Data:', data);
     }
+
+    setSearchClicked(false);
   }, [
     viewType,
     oneWeekTotals,
@@ -221,25 +225,10 @@ function AdminSalesPage(props) {
     lastMonthData,
     filteredSalesData,
     sales,
+    searchClicked, // 검색이 클릭되었을 때만 이 useEffect를 실행
   ]);
 
-  useEffect(() => {
-    if (searchClicked) {
-      const { totalSales, totalCount, filteredData } = customTotalDay(
-        startDate,
-        endDate
-      );
-      const monthlyData = aggregateMonthlyData(filteredData);
-      setFilteredSalesData(filteredData);
-      setTotalSales(totalSales);
-      setTotalCount(totalCount);
-      setChartData(monthlyData);
-      setDataKey("totalSales");
-      setSearchClicked(false);
-    }
-  }, [searchClicked, startDate, endDate, customTotalDay]);
-
-  const handleViewTypeChange = (type) => {
+  const handleViewTypeChange = useCallback((type) => {
     const now = new Date();
     if ((type === "week" || type === "month") && now.getFullYear() !== selectedYear) {
       alert("지난 7일 및 저번달 데이터는 현재 연도에만 사용할 수 있습니다.");
@@ -252,14 +241,16 @@ function AdminSalesPage(props) {
       setTotalSales(sales.reduce((acc, sale) => acc + (sale.totalSales || 0), 0));
       setTotalCount(sales.reduce((acc, sale) => acc + (sale.count || 0), 0));
       setDataKey("totalSales");
+    } else {
+      setSearchClicked(true); // 뷰 타입이 변경될 때마다 데이터를 다시 가져오도록 설정
     }
-  };
+  }, [sales, selectedYear]);
 
-  const handleSearchClick = () => {
+  const handleSearchClick = useCallback(() => {
     setSearchClicked(true);
     setActiveButton("search");
     setViewType("custom");
-  };
+  }, []);
 
   const isDisabled = startDate > endDate;
 
@@ -354,13 +345,13 @@ function AdminSalesPage(props) {
                 ref={totalListRef}
                 className={totalListInView ? "animate" : "hide"}
               >
-                  <SalesListContainer
-                    viewType={viewType}
-                    oneWeekData={oneWeekData}
-                    lastMonthData={lastMonthData}
-                    filteredSalesData={filteredSalesData}
-                    sales={sales}
-                  />
+                <SalesListContainer
+                  viewType={viewType}
+                  oneWeekData={oneWeekData}
+                  lastMonthData={lastMonthData}
+                  filteredSalesData={filteredSalesData}
+                  sales={sales}
+                />
               </div>
             </div>
           </div>

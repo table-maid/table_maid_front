@@ -21,9 +21,9 @@ const AdminSalesChart = ({
 
   useEffect(() => {
     if (!sales || sales.length === 0) {
-      // 데이터가 없을 경우 기본 상태로 설정
       setSeries([]);
-      setOptions({
+      setOptions((prevOptions) => ({
+        ...prevOptions,
         chart: {
           height: height,
           width: width,
@@ -79,7 +79,7 @@ const AdminSalesChart = ({
         dataLabels: {
           enabled: false,
         },
-      });
+      }));
       return;
     }
 
@@ -95,15 +95,12 @@ const AdminSalesChart = ({
       });
     };
 
-    const categories = sales.map((data) =>
-      getDateLabel(data[monthKey], data[dayKey])
-    );
+    const categories = sales.map((data) => getDateLabel(data[monthKey], data[dayKey]));
 
     const seriesData = sales.map((data) => data[dataKey]);
 
     let yMax;
     if (Math.max(...seriesData) === Math.min(...seriesData)) {
-      // 모든 값이 동일한 경우 막대그래프로 표시
       setSeries([
         {
           name: keyName,
@@ -127,11 +124,7 @@ const AdminSalesChart = ({
       chart: {
         height: height,
         width: width,
-        type:
-          seriesData.length === 1 &&
-          Math.max(...seriesData) === Math.min(...seriesData)
-            ? "bar"
-            : "line",
+        type: seriesData.length === 1 && Math.max(...seriesData) === Math.min(...seriesData) ? "bar" : "line",
         zoom: {
           enabled: false,
         },
@@ -195,18 +188,7 @@ const AdminSalesChart = ({
         enabled: false,
       },
     });
-  }, [
-    sales,
-    monthKey,
-    dayKey,
-    keyName,
-    dataKey,
-    viewType,
-    lineColor,
-    height,
-    width,
-    smooth,
-  ]);
+  }, [sales, monthKey, dayKey, keyName, dataKey, viewType, lineColor, height, width, smooth]);
 
   return (
     <div id="chart">
