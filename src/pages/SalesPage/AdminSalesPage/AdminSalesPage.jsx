@@ -91,8 +91,34 @@ function AdminSalesPage(props) {
       totals = oneWeekTotals;
       setDataKey("dayTotalSales");
     } else if (viewType === "month") {
-      data = lastMonthData;
-      totals = lastMonthTotals;
+      const now = new Date();
+      const firstDayOfMonth = new Date(now.getFullYear(), now.getMonth() - 1, 1);
+      const lastDayOfMonth = new Date(now.getFullYear(), now.getMonth(), 0);
+
+      const daysInMonth = [];
+      for (let day = firstDayOfMonth; day <= lastDayOfMonth; day.setDate(day.getDate() + 1)) {
+        daysInMonth.push(new Date(day));
+      }
+
+      const dataMap = lastMonthData.reduce((acc, sale) => {
+        const saleDate = new Date(sale.year, sale.month - 1, sale.day).toISOString().split("T")[0];
+        acc[saleDate] = sale;
+        return acc;
+      }, {});
+
+      data = daysInMonth.map(day => {
+        const dateKey = day.toISOString().split("T")[0];
+        if (dataMap[dateKey]) {
+          return dataMap[dateKey];
+        } else {
+          return { year: day.getFullYear(), month: day.getMonth() + 1, day: day.getDate(), dayTotalSales: 0, count: 0 };
+        }
+      });
+
+      totals = {
+        totalSales: data.reduce((acc, sale) => acc + sale.dayTotalSales, 0),
+        totalCount: data.reduce((acc, sale) => acc + sale.count, 0),
+      };
       setDataKey("dayTotalSales");
     } else if (viewType === "custom") {
       data = filteredSalesData;
