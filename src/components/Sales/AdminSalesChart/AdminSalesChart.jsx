@@ -86,12 +86,12 @@ const AdminSalesChart = ({
     const getDateLabel = (monthNumber, dayNumber) => {
       const date = new Date();
       date.setMonth(monthNumber - 1);
-      if (viewType !== "all" && dayNumber !== null && dayNumber !== undefined) {
+      if ((viewType !== "all" && viewType !== "year" && viewType !== "custom") && dayNumber !== null && dayNumber !== undefined) {
         date.setDate(dayNumber);
       }
       return date.toLocaleString("en-US", {
         month: "short",
-        day: viewType !== "all" ? "numeric" : undefined,
+        day: (viewType === "year" || viewType === "custom") ? undefined : "numeric",
       });
     };
 

@@ -185,7 +185,7 @@ function AdminSalesPage(props) {
     setActiveButton(type);
 
     if (type === "week" || type === "month") {
-      setSearchClicked(true); // 뷰 타입이 변경될 때마다 데이터를 다시 가져오도록 설정
+      setSearchClicked(true);
     } else if (type === "all") {
       setChartData(sales || []);
       setTotalSales(sales.reduce((acc, sale) => acc + (sale.totalSales || 0), 0));
