@@ -13,8 +13,9 @@ export const layout = css`
   box-sizing: border-box;
   position: relative;
   margin: 60px auto;
+  margin-bottom: 0;
   width: 410px;
-  height: 660px;
+  height: 90%;
   background-color: #fff;
 `;
 
@@ -92,10 +93,9 @@ export const count = css`
 `;
 
 export const buttonBox = css`
-  position: fixed;
-  height: 80px;
-  bottom: 220px;
-  width: 410px;
+  position: sticky; 
+  width: 100%;
+  bottom: -8px; 
   background-color: #fff;
   display: flex;
   flex-direction: column;
