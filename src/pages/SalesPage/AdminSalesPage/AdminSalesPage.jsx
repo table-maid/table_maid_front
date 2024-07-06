@@ -234,6 +234,11 @@ function AdminSalesPage(props) {
   }, [searchClicked, startDate, endDate, customTotalDay]);
 
   const handleViewTypeChange = (type) => {
+    const now = new Date();
+    if ((type === "week" || type === "month") && now.getFullYear() !== selectedYear) {
+      alert("지난 7일 및 저번달 데이터는 현재 연도에만 사용할 수 있습니다.");
+      return;
+    }
     setViewType(type);
     setActiveButton(type);
     if (type === "all") {
@@ -349,9 +354,6 @@ function AdminSalesPage(props) {
                 ref={totalListRef}
                 className={totalListInView ? "animate" : "hide"}
               >
-                {viewType === "year" && chartData.length === 0 ? (
-                  <div>데이터가 없습니다.</div>
-                ) : (
                   <SalesListContainer
                     viewType={viewType}
                     oneWeekData={oneWeekData}
@@ -359,7 +361,6 @@ function AdminSalesPage(props) {
                     filteredSalesData={filteredSalesData}
                     sales={sales}
                   />
-                )}
               </div>
             </div>
           </div>
