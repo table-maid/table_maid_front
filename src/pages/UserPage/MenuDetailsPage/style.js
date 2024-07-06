@@ -4,18 +4,19 @@ export const layout = css`
   box-sizing: border-box;
   position: relative;
   margin: 40px auto;
-  /* padding: 10px; */
   width: 390px;
   height: 93%;
   overflow: scroll;
   -ms-overflow-style: none;
   scrollbar-width: none;
   background-color: #fff;
+  display: flex;
+  flex-direction: column;
 `;
 
 export const container = css`
   padding: 20px;
-  height: 85%;
+  flex-grow: 1;
 `;
 
 export const img = css`
@@ -36,7 +37,6 @@ export const img = css`
 `;
 
 export const menuList = css`
-  /* background-color: aqua; */
   width: 100%;
   height: 130px;
   display: flex;
@@ -50,34 +50,34 @@ export const menuList = css`
 `;
 
 export const price = css`
-  /* background-color: aqua; */
   width: 100%;
   height: 40%;
   display: flex;
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
+
   & h2 {
     margin: 0;
   }
 `;
+
 export const optionBox = css`
-  /* background-color: aqua; */
   width: 100%;
   height: auto;
 `;
 
 export const optionName = css`
-& input {
+  & input {
     border: 1px solid #dbdbdb;
     margin-right: 20px;
     transform: scale(2);
     border-radius: 5px;
-}
+  }
 
-& h3 {
+  & h3 {
     font-weight: 300;
-}
+  }
 `;
 
 export const countBox = css`
@@ -90,8 +90,8 @@ export const countBox = css`
     font-weight: 700;
   }
 `;
+
 export const count = css`
-  /* background-color: aqua; */
   box-sizing: border-box;
   width: 35%;
   height: 45px;
@@ -113,15 +113,16 @@ export const count = css`
 `;
 
 export const buttonBox = css`
-   position: relative;
   width: 100%;
-
+  padding: 15px 0;
   background-color: #fff;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: flex-end;
+  justify-content: center;
   border-radius: 10px;
+  position: sticky; /* position을 sticky로 설정 */
+  bottom: 0; /* 화면 하단에 고정 */
 
   & button {
     box-sizing: border-box;
