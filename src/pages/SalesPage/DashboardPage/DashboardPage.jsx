@@ -103,7 +103,6 @@ function DashboardPage(props) {
   }, [oneWeekData]);
 
   return (
-    <AdminPageLayout>
       <div css={s.saleLayout}>
         <div css={s.saleContainer}>
           <div css={s.saleGraphContainer}>
@@ -188,7 +187,6 @@ function DashboardPage(props) {
           </div>
         </div>
       </div>
-    </AdminPageLayout>
   );
 }
 

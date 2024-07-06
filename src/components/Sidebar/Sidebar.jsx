@@ -24,7 +24,7 @@ function Sidebar() {
   };
 
   const handleHomeButtonClick = () => {
-    navigate("/sales/home");
+    navigate("/main");
   };
 
   return (

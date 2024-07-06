@@ -224,7 +224,6 @@ function AdminSalesPage(props) {
       : "";
 
   return (
-    <AdminPageLayout>
       <div css={s.layout}>
         <div
           css={s.header}
@@ -313,7 +312,6 @@ function AdminSalesPage(props) {
           </div>
         </div>
       </div>
-    </AdminPageLayout>
   );
 }
 

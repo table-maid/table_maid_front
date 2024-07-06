@@ -55,7 +55,6 @@ function MenuListPage(props) {
   };
 
   return (
-    <AdminPageLayout>
       <div css={s.layout}>
         <div css={s.header}>
           <div css={s.title}>메뉴 매출 조회</div>
@@ -94,7 +93,6 @@ function MenuListPage(props) {
           </div>
         </div>
       </div>
-    </AdminPageLayout>
   );
 }
 

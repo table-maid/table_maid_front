@@ -142,7 +142,6 @@ function AdminMainPage(props) {
   };
 
   return (
-    <AdminPageLayout>
       <div css={s.layout}>
         <div css={s.header}>
           <div css={s.date}>
@@ -214,7 +213,6 @@ function AdminMainPage(props) {
           </div>
         </div>
       </div>
-    </AdminPageLayout>
   );
 }
 
