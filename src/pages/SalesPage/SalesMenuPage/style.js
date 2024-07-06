@@ -1,6 +1,7 @@
 import { css } from "@emotion/react";
 
 export const buttonContainer = css`
+position: relative;
   width: 100%;
   height: 100%;
   display: flex;
@@ -10,10 +11,10 @@ export const buttonContainer = css`
 `;
 
 export const backButton = css`
-  position: fixed;
+  position: absolute;
   transform: translateY(-50%);
-  top: 80px;
-  left: 135px;
+  top: -5%;
+  right: -4%;
   cursor: pointer;
   background-color: transparent;
   border: none;

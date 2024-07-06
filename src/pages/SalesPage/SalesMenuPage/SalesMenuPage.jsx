@@ -8,7 +8,7 @@ import AdminSalesChart from "../../../components/Sales/AdminSalesChart/AdminSale
 import SalesModal from "../../../components/Sales/SalesModal/SalesModal";
 import { adminIdState } from "../../../atoms/AdminIdStateAtom";
 import { useRecoilState } from "recoil";
-import { IoChevronBack } from "react-icons/io5";
+import { IoClose } from "react-icons/io5";
 
 function MenuSalesPage(props) {
   const [adminId] = useRecoilState(adminIdState);
@@ -74,7 +74,7 @@ function MenuSalesPage(props) {
   return (
     <SalesModal>
       <div>
-        <button onClick={() => navigate('/sales/menu')} css={s.backButton} ><IoChevronBack size={"50"}/></button>
+        <button onClick={() => navigate('/sales/menu')} css={s.backButton} ><IoClose size={"50"}/></button>
         <div css={s.buttonContainer}>
           <div css={s.ChoiceContainer}>
             <button css={s.button} onClick={() => handleViewChange("monthly")}>
