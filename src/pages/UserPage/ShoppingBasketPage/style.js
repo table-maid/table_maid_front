@@ -42,6 +42,7 @@ export const menuBox = css`
   box-sizing: border-box;
   width: 100%;
   border: 1px solid #dbdbdb;
+  margin-bottom: 10px;
   border-radius: 10px;
 `;
 
@@ -160,6 +161,10 @@ export const bottom = css`
   align-items: center;
   justify-content: flex-end;
 
+  & h2 {
+    margin-top: 10px;
+  }
+
   & button {
     box-sizing: border-box;
     background-color: #187cff;
@@ -169,6 +174,6 @@ export const bottom = css`
     color: white;
     font-size: 15px;
     font-weight: 300;
-    margin-bottom: 20px;
+    margin-bottom: 10px;
   }
 `;
