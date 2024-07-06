@@ -17,11 +17,11 @@ export const layout = (isShow) => css`
 
 export const openButton = (isButtonVisible) => css`
   box-sizing: border-box;
-  position: fixed;
+  position: absolute;
   border: none;
-  transform: translateY(-50%);
-  top: 75px;
-  left: 140px;
+  transform: translateY(-50%, -50%);
+  top: 20px;
+  left: 110%;
   padding: 0;
   background-color: transparent;
   cursor: pointer;
