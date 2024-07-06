@@ -16,6 +16,7 @@ import useAnimateView from "../../../hooks/useAnimateAtom";
 import SalesButtons from "../../../components/Sales/SalesButtons/SalesButtons";
 import DateRangePicker from "../../../components/Sales/DatePicker/DateRangePicker";
 import SalesListContainer from "../../../components/Sales/SalesListContainer/SalesListContainer";
+import { useSalesUtils } from "../../../hooks/useSalesUtils";
 
 function AdminSalesPage(props) {
   const [adminId] = useRecoilState(adminIdState);
@@ -48,6 +49,8 @@ function AdminSalesPage(props) {
     lastMonthTotals,
   } = useSalesData(selectSalesData);
 
+  const { fillMissingDays, aggregateMonthlyData, aggregateMonthlyDataForYear } = useSalesUtils();
+
   useEffect(() => {
     setViewType("all");
   }, []);
@@ -57,15 +60,11 @@ function AdminSalesPage(props) {
     onSuccess: (response) => {
       const salesData = response.data;
       setSales(salesData);
-      const uniqueYears = [
-        ...new Set(salesData.map((sale) => sale.year)),
-      ];
+      const uniqueYears = [...new Set(salesData.map((sale) => sale.year))];
       setYears(uniqueYears);
       if (viewType === "all") {
         setChartData(salesData);
-        setTotalSales(
-          salesData.reduce((acc, sale) => acc + sale.totalSales, 0)
-        );
+        setTotalSales(salesData.reduce((acc, sale) => acc + sale.totalSales, 0));
         setTotalCount(salesData.reduce((acc, sale) => acc + sale.count, 0));
         setDataKey("totalSales");
       }
@@ -89,64 +88,6 @@ function AdminSalesPage(props) {
     }
   );
 
-  const fillMissingDays = (startDate, endDate, salesData) => {
-    const daysInRange = [];
-    for (let day = new Date(startDate); day <= endDate; day.setDate(day.getDate() + 1)) {
-      daysInRange.push(new Date(day));
-    }
-
-    const dataMap = salesData.reduce((acc, sale) => {
-      const saleDate = new Date(sale.year, sale.month - 1, sale.day).toISOString().split("T")[0];
-      acc[saleDate] = sale;
-      return acc;
-    }, {});
-
-    const filledData = daysInRange.map(day => {
-      const dateKey = day.toISOString().split("T")[0];
-      if (dataMap[dateKey]) {
-        return dataMap[dateKey];
-      } else {
-        return { year: day.getFullYear(), month: day.getMonth() + 1, day: day.getDate(), dayTotalSales: 0, count: 0 };
-      }
-    });
-
-    return filledData;
-  };
-
-  const aggregateMonthlyData = (salesData) => {
-    const monthlyData = {};
-
-    salesData.forEach((sale) => {
-      if (!sale) return;
-      const monthKey = `${sale.year}-${String(sale.month).padStart(2, '0')}`;
-      if (!monthlyData[monthKey]) {
-        monthlyData[monthKey] = { year: sale.year, month: sale.month, totalSales: 0, count: 0 };
-      }
-      monthlyData[monthKey].totalSales += sale.totalSales || sale.dayTotalSales || 0;
-      monthlyData[monthKey].count += sale.count || 0;
-    });
-
-    return Object.values(monthlyData);
-  };
-
-  const aggregateMonthlyDataForYear = (salesData, year) => {
-    const monthlyData = Array.from({ length: 12 }, (_, i) => ({
-      year,
-      month: i + 1,
-      totalSales: 0,
-      count: 0,
-    }));
-
-    salesData.forEach((sale) => {
-      if (!sale || sale.year !== year) return;
-      const monthIndex = sale.month - 1;
-      monthlyData[monthIndex].totalSales += sale.totalSales || sale.dayTotalSales || 0;
-      monthlyData[monthIndex].count += sale.count || 0;
-    });
-
-    return monthlyData;
-  };
-
   const handleYearChange = useCallback((year) => {
     setSelectedYear(parseInt(year));
     setViewType("year");
@@ -156,7 +97,6 @@ function AdminSalesPage(props) {
   useEffect(() => {
     if (viewType === "year") {
       const filteredYearData = sales.filter((sale) => sale.year === parseInt(selectedYear));
-      console.log(`Selected Year: ${selectedYear}`, filteredYearData);
       const data = aggregateMonthlyDataForYear(filteredYearData, parseInt(selectedYear));
       const totals = {
         totalSales: data.reduce((acc, sale) => acc + sale.totalSales, 0),
@@ -167,9 +107,8 @@ function AdminSalesPage(props) {
       setTotalSales(totals.totalSales);
       setTotalCount(totals.totalCount);
       setChartData(data);
-      console.log('Aggregated Monthly Data:', data);
     }
-  }, [selectedYear, sales, viewType]);
+  }, [selectedYear, sales, viewType, aggregateMonthlyDataForYear]);
 
   useEffect(() => {
     if (!searchClicked) return;
@@ -219,7 +158,6 @@ function AdminSalesPage(props) {
       setTotalSales(totals.totalSales);
       setTotalCount(totals.totalCount);
       setChartData(data);
-      console.log('Chart Data:', data);
     }
 
     setSearchClicked(false);
@@ -232,6 +170,9 @@ function AdminSalesPage(props) {
     filteredSalesData,
     sales,
     searchClicked, // 검색이 클릭되었을 때만 이 useEffect를 실행
+    fillMissingDays,
+    aggregateMonthlyData,
+    customTotalDay,
   ]);
 
   const handleViewTypeChange = useCallback((type) => {
