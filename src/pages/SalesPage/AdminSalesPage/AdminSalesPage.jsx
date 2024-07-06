@@ -181,6 +181,10 @@ function AdminSalesPage(props) {
       data = oneWeekData || [];
       totals = oneWeekTotals || { totalSales: 0, totalCount: 0 };
       setDataKey("dayTotalSales");
+      if (oneWeekData.length > 0) {
+        setStartDate(new Date(oneWeekData[0].year, oneWeekData[0].month - 1, oneWeekData[0].day));
+        setEndDate(new Date(oneWeekData[oneWeekData.length - 1].year, oneWeekData[oneWeekData.length - 1].month - 1, oneWeekData[oneWeekData.length - 1].day));
+      }
     } else if (viewType === "month") {
       const now = new Date();
       const firstDayOfLastMonth = new Date(now.getFullYear(), now.getMonth() - 1, 1);
@@ -193,6 +197,8 @@ function AdminSalesPage(props) {
         totalCount: data.reduce((acc, sale) => acc + sale.count, 0),
       };
       setDataKey("dayTotalSales");
+      setStartDate(firstDayOfLastMonth);
+      setEndDate(lastDayOfLastMonth);
     } else if (viewType === "custom") {
       const { totalSales, totalCount, filteredData } = customTotalDay(startDate, endDate);
       const monthlyData = aggregateMonthlyData(filteredData);
@@ -236,13 +242,14 @@ function AdminSalesPage(props) {
     }
     setViewType(type);
     setActiveButton(type);
-    if (type === "all") {
+
+    if (type === "week" || type === "month") {
+      setSearchClicked(true); // 뷰 타입이 변경될 때마다 데이터를 다시 가져오도록 설정
+    } else if (type === "all") {
       setChartData(sales || []);
       setTotalSales(sales.reduce((acc, sale) => acc + (sale.totalSales || 0), 0));
       setTotalCount(sales.reduce((acc, sale) => acc + (sale.count || 0), 0));
       setDataKey("totalSales");
-    } else {
-      setSearchClicked(true); // 뷰 타입이 변경될 때마다 데이터를 다시 가져오도록 설정
     }
   }, [sales, selectedYear]);
 
