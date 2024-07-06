@@ -5,7 +5,7 @@ export const layout = css`
   position: relative;
   padding: 30px 20px 20px 20px;
   width: 100%;
-  height: 100%;
+  height: 92%;
   border-bottom-left-radius: 30px;
   border-bottom-right-radius: 30px;
   overflow: scroll;
