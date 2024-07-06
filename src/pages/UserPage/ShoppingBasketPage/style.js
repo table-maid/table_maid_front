@@ -4,25 +4,26 @@ export const layout = css`
   box-sizing: border-box;
   position: relative;
   margin: 40px auto;
-  margin-bottom: 0;
   padding: 10px;
   width: 390px;
-  height: 93%;
+  height: 94%;
   overflow: scroll;
   -ms-overflow-style: none;
   scrollbar-width: none;
   background-color: #fff;
+  display: flex;
+  flex-direction: column;
 `;
 
 export const container = css`
-  /* background-color: aqua; */
   width: 100%;
-  height: 85%;
+  height: 90%;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   position: relative;
 `;
+
 export const noItem = css`
   background-color: transparent;
   width: 100%;
@@ -36,16 +37,15 @@ export const noItem = css`
     padding-top: 30px;
   }
 `;
+
 export const menuBox = css`
   box-sizing: border-box;
-  /* background-color: aqua; */
   width: 100%;
   border: 1px solid #dbdbdb;
   border-radius: 10px;
 `;
 
 export const menuList = css`
-  /* background-color: aqua; */
   width: 100%;
   height: 120px;
   display: flex;
@@ -69,7 +69,6 @@ export const menuItem = css`
   display: flex;
   flex-direction: column;
   justify-content: center;
-  /* background-color: orange; */
   margin: 20px 0 0 20px;
 
   & h2 {
@@ -87,11 +86,11 @@ export const button = css`
   align-items: center;
   justify-content: flex-start;
 `;
+
 export const option = css`
   display: flex;
   flex-direction: column;
   width: 90%;
-  /* background-color: aqua; */
   margin-left: 18px;
 
   & p {
@@ -106,7 +105,6 @@ export const Xbutton = css`
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
-  /* background-color: aqua; */
 
   & button {
     background-color: transparent;
@@ -122,14 +120,14 @@ export const countBox = css`
   flex-direction: row;
   align-items: center;
   justify-content: end;
-
 `;
+
 export const optionChange = css`
   background-color: transparent;
   padding: 10px 20px;
-border: 1px solid #dbdbdb;
-margin-right: 10px;
-border-radius: 8px;
+  border: 1px solid #dbdbdb;
+  margin-right: 10px;
+  border-radius: 8px;
 `;
 
 export const count = css`
@@ -153,15 +151,14 @@ export const count = css`
 `;
 
 export const bottom = css`
-  position: relative;
+  position: sticky; 
+  bottom: -8px; 
   width: 100%;
-
   background-color: #fff;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: flex-end;
-  transform: translateX(-50%, -50%);
 
   & button {
     box-sizing: border-box;
@@ -172,5 +169,6 @@ export const bottom = css`
     color: white;
     font-size: 15px;
     font-weight: 300;
+    margin-bottom: 20px;
   }
 `;
