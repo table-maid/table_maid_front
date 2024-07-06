@@ -1,23 +1,24 @@
 /** @jsxImportSource @emotion/react */
+import React, { useState } from 'react';
 import { registerOption } from "../../../apis/api/menuManagentApi";
 import useInsertOptionTitle from "../../../hooks/useInsertOptionTitle";
 import useOptionTitle from "../../../hooks/useOptionTitle";
 import * as s from "./style";
-
-import React, { useState } from 'react';
+import { IoIosArrowDown } from "react-icons/io";
 
 function OptionRegisterModal({
     optionModal,
     closeModal,
     options,
-    menuId
+    menuId,
+    menuName
 }) {
     const [adminId, setAdminId] = useState(1);
     const [optionName, setOptionName] = useState();
     const [optionPrice, setOptionPrice] = useState();
 
     const [optionTitle, setOptionTitle] = useState("");
-    const [optionSelectTitleId, setOptionSlectTitleId] = useState();
+    const [optionSelectTitleId, setOptionSlectTitleId] = useState(); 
     const { insertOptionTitle, Optionerror, refresh } = useInsertOptionTitle();
     const { optionTitleId, optionTitleName, error } = useOptionTitle(adminId, menuId, refresh);
 
@@ -32,7 +33,7 @@ function OptionRegisterModal({
 
     const handleOptionName = (e) => {
         setOptionName(e.target.value)
-    }
+    } 
     
     const handleOptionPrice = (e) => {
         setOptionPrice(e.target.value)
@@ -43,10 +44,11 @@ function OptionRegisterModal({
             const params = {
                 adminId: adminId,
                 menuId: menuId,
-                titleId: optionSelectTitleId,
+                optionTitleId: optionSelectTitleId,
                 optionName: optionName,
                 optionPrice: optionPrice
             };
+            console.log(params)
             await registerOption(params);
             alert("옵션 이름 추가가 완료되었습니다.");
             window.location.reload();
@@ -57,45 +59,43 @@ function OptionRegisterModal({
 
     return (
         <div css={s.optionModal}>
-            <div>
+            <div css={s.modalHeader}>
+                <h2>옵션 등록</h2>
+                <button className="closeButton" onClick={closeModal}>x</button>
+            </div>
+            <div css={s.modalContent}>
                 <div>
-                    옵션 타이틀 추가
+                    <h2>
+                        {menuName}
+                    </h2>
                 </div>
-                <input onChange={handleOptionTitleName} type="text" name="" id="" />
-                <button onClick={() => insertOptionTitle(adminId, menuId, optionTitle)}>추가</button>
                 <div>
-                    옵션 내용 추가
+                    <label>옵션 타이틀 추가</label>
+                    <input onChange={handleOptionTitleName} type="text" />
+                    <button onClick={() => insertOptionTitle(adminId, menuId, optionTitle)}>추가</button>
                 </div>
-                <div>
-                    <select value={optionsData.optionTitleId} onChange={(e) => setOptionSlectTitleId(Number(e.target.value))}> 
+                <div css={s.selectWrapper}>
+                    <label>옵션 내용 추가</label>
+                    <select value={optionSelectTitleId} onChange={(e) => setOptionSlectTitleId(Number(e.target.value))}> 
                         <option value="0">타이틀 선택</option>
                         {optionsData.map(optionItem => (
                             <option key={optionItem.optionTitleId} value={optionItem.optionTitleId} data-name={optionItem.titleNames}>{optionItem.titleNames}</option>
                         ))}
                     </select>
+                    <IoIosArrowDown className="select-arrow" />
                 </div>
                 <div>
-                    <input onChange={handleOptionName} type="text"/> 이름
+                    <label>옵션 이름</label>
+                    <input onChange={handleOptionName} type="text"/> 
                 </div>
                 <div>
-                    <input onChange={handleOptionPrice} type="text"/> 가격
+                    <label>옵션 가격</label>
+                    <input onChange={handleOptionPrice} type="text"/> 
                 </div>
-                <div><button onClick={insertOption}>추가</button></div>
-                <div>
-                    {options?.map((optionItem, index) => (
-                        <div key={index}>
-                            <h3>{optionItem.titleName}</h3>
-                            <div>
-                                {optionItem.optionNames.map((name, idx) => (
-                                    <div key={idx}>
-                                        {name} + {optionItem.optionPrices[idx]}원
-                                    </div>
-                                ))}
-                            </div>
-                        </div>
-                    ))}
-                </div>
-                <div onClick={closeModal}>x</div>
+            </div>
+            <div css={s.modalFooter}>
+                <button onClick={insertOption}>추가</button>
+                <button onClick={closeModal}>취소</button>
             </div>
         </div>
     );

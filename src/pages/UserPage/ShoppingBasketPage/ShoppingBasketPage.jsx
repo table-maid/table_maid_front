@@ -3,23 +3,31 @@ import { useEffect, useState } from "react";
 import OptionRegisterModal from "../../../components/Menu/OptionSelectModal/OptionSelectModal";
 import * as s from "./style";
 import useUserApis from "../../../hooks/useUserApis";
+import { useEffect, useState } from "react";
 import { useRecoilState } from "recoil";
+import { useMutation, useQuery } from "react-query";
+import { sendMenu } from "../../../apis/api/order";
 import {
   ShoppingCartState,
   TotalPriceState,
 } from "../../../atoms/ShoppingCartAtom";
-import { useMutation } from "react-query";
-import { sendMenu } from "../../../apis/api/order";
+import { useSearchParams } from "react-router-dom";
+import { getCompanyNameRequest } from "../../../apis/api/user";
 import { FaRegTrashCan, FaPlus, FaMinus } from "react-icons/fa6";
 import Image from "../../../assets/img/장바구니2.png";
 import { IoClose } from "react-icons/io5";
 
 function ShoppingBasketPage(props) {
-  const { adminInfo } = useUserApis();
+  const [searchParams] = useSearchParams();
+  const adminId = searchParams.get("adminId");
   const [cart, setCart] = useRecoilState(ShoppingCartState);
   const [totalPrice, setTotalPrice] = useRecoilState(TotalPriceState);
+
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedItemIndex, setSelectedItemIndex] = useState(null);
+
+  const [companyName, setCompanyName] = useState("");
+
 
   const handleDeleteFromCart = (index) => {
     setCart((prevCart) => prevCart.filter((_, i) => i !== index));
@@ -77,8 +85,6 @@ function ShoppingBasketPage(props) {
     );
   };
 
-  console.log(cart);
-
   const SEEsendMenus = useMutation({
     mutationKey: "SEEsendMenus",
     mutationFn: sendMenu,
@@ -92,6 +98,26 @@ function ShoppingBasketPage(props) {
     },
   });
 
+  const getCompanyNameQuery = useQuery(
+    ["getCompanyNameQuery"],
+    () =>
+      getCompanyNameRequest({
+        adminId: adminId,
+      }),
+    {
+      enabled: !!adminId,
+      retry: 0,
+      refetchOnWindowFocus: false,
+      onSuccess: (response) => {
+        setCompanyName(response.data);
+        console.log(response.data);
+      },
+      onError: (error) => {
+        console.log(error);
+      },
+    }
+  );
+
   useEffect(() => {
     const calculateTotalPrice = () => {
       return cart.reduce((total, item) => {
@@ -99,6 +125,8 @@ function ShoppingBasketPage(props) {
           (item.menu.menuPrice +
             item.options.reduce((acc, opt) => acc + opt.optionPrice, 0)) *
           (item.count || 1); // 수량 반영
+
+          (item.quantity || 1);
         return total + itemTotal;
       }, 0);
     };
@@ -111,7 +139,7 @@ function ShoppingBasketPage(props) {
 
   return (
     <div css={s.layout}>
-      <h1>{adminInfo?.companyName}</h1>
+      <h1>{companyName?.companyName}</h1>
       <div css={s.container}>
         {cart.length === 0 ? (
           <div css={s.noItem}>
@@ -167,7 +195,6 @@ function ShoppingBasketPage(props) {
             ))}
           </div>
         )}
-        
                 <div css={s.bottom}>
                   <h2>총 가격 {totalPrice} 원</h2>
                   <button onClick={() => SEEsendMenus.mutate(cart)}>주문하기</button>
@@ -181,6 +208,13 @@ function ShoppingBasketPage(props) {
           onApply={handleApplyOptions}
         />
       )}
+      </div>
+
+      <div css={s.bottom}>
+        <h2>총 가격 {totalPrice} 원</h2>
+        <button onClick={() => SEEsendMenus.mutate(cart)}>주문하기</button>
+      </div>
+
     </div>
   );
 }

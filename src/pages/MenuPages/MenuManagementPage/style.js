@@ -2,37 +2,142 @@ import { css } from "@emotion/react";
 
 export const layout = css`
     display: flex;
-    margin: 0 auto;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    
+`
+export const container = css`
+    width: 100%;
+    height: 90%;
+    margin: 20px;
+    padding: 20px;
+    background-color: white;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    border: 1px solid black;
+    border-radius: 8px;
+    button {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 10px 15px;
+        font-size: 16px;
+        font-weight: bold;
+        color: #fff;
+        background-color: #007bff;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: background-color 0.3s, transform 0.3s;
+        
+        &:hover {
+            background-color: #0056b3;
+            transform: scale(1.05);
+        }
+
+        &:focus {
+            outline: none;
+            box-shadow: 0 0 0 4px rgba(0, 123, 255, 0.5);
+        }
+
+        &:disabled {
+            background-color: #cccccc;
+            cursor: not-allowed;
+        }
+
+        svg {
+            margin-right: 5px;
+        }
+    }
+`
+
+export const view = css`
+    display: flex;
+    width: 100%;
+    justify-content: center;
+    align-items: center;
+`;
+export const title = css`
+    display: flex;
+    width: 100%;
+    justify-content: flex-start;
+    align-items: center;
+`;
+
+export const managementLayout = css`
+
+    display: flex;
     width: 90%;
-    height: 100%;
+    gap: 20px;
+
+`;
+
+export const selectedCategoryStyle = css`
+    background-color: #d0d0d0;
+    border-radius: 6px;
+
+`;
+
+export const contentBox = css`
+    display: flex;
+    justify-content: space-between;
+    box-sizing: border-box;
+    border: 1px solid #dbdbdb;
+    border-radius: 6px;
+    padding: 5px;
+    margin-bottom: 10px;
+    font-size: 16px;
+    font-weight: 600;
+`;
+
+
+export const selectedMenuStyle = css`
+    background-color: #d0d0d0; 
+    border-radius: 6px;
 `;
 
 export const categoryLayout = css`
-    width: 300px;
+    width: 250px;
+    padding: 10px;
     height: 600px;
-    border: 1px solid black;
+    background-color: #ffffff;
+    border: 1px solid #e0e0e0;
+    border-radius: 5px;
+    overflow: auto;
+    box-shadow: inset 0 1px 3px rgba(0,0,0,0.1);
 `;
 
 export const menuLayout = css`
-    margin-left: 20px;
-    width: 400px;
+    width: 650px;
     height: 600px;
-    border: 1px solid black;
+    padding: 10px;
+    background-color: #ffffff;
+    border: 1px solid #e0e0e0;
+    border-radius: 5px;
     overflow: auto;
-    h3 {
-        margin: 18px 0px 18px 0px;
+    box-shadow: inset 0 1px 3px rgba(0,0,0,0.1);
+    input:checkbox {
+        display: none;
     }
 `;
 
 export const optionLayout = css`
-    margin-left: 20px;
-    width: 300px;
-    height: 600px;
-    border: 1px solid black;
+    width: 250px;
+    padding: 10px;
+    background-color: #ffffff;
+    border: 1px solid #e0e0e0;
+    border-radius: 5px;
+    box-shadow: inset 0 1px 3px rgba(0,0,0,0.1);
+    
+`;
+
+export const hiddenCheckbox = css`
+    display: none;
 `;
 
 export const price = css`
-    margin-right: 20px;
+    font-weight: bold;
+    color: #333;
 `;
 
 export const menuModal = css`

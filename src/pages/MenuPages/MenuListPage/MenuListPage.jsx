@@ -7,6 +7,7 @@ import useInsertMenu from "../../../hooks/useInsertMenu";
 import useCategory from "../../../hooks/useCategory";
 import { useNavigate } from "react-router-dom";
 import AdminPageLayout from "../../../components/AdminPageLayout/AdminPageLayout";
+import { IoIosArrowDown } from "react-icons/io";
 
 function MenuListPage(props) {
   const adminId = 1;
@@ -19,7 +20,7 @@ function MenuListPage(props) {
   const [inputState, setInputState] = useState();
   const [menuState, setMenuState] = useState(0);
   const [recommendMenu, setRecommendMenu] = useState(0);
-  const { categories, error: categoriesError } = useCategory(adminId);
+  const { categories, error: categoriesError } = useCategory(adminId, 0);
   const { menuName, menuPrice, setMenuName, setMenuPrice, insertMenu } =
     useInsertMenu(categories, adminId, recommend);
   const [selectedMenuIds, setSelectedMenuIds] = useState([]);
@@ -112,56 +113,57 @@ function MenuListPage(props) {
   };
 
   return (
-      <div css={s.layout}>
-        {menuModal === true ? (
-          <MenuRegisterModal
-            categories={categories}
-            menuCategoryId={menuCategoryId}
-            setCategoryId={setCategoryId}
-            setMenuName={setMenuName}
-            setMenuPrice={setMenuPrice}
-            insertMenu={insertMenu}
-            categoryName={
-              categories.find((cat) => cat.menuCategoryId === menuCategoryId)
-                ?.menuCategoryName || ""
-            }
-            recommend={recommend}
-            handleRecommendChange={handleRecommendChange}
-            setMenuModal={setMenuModal}
-          />
-        ) : (
-          <></>
-        )}
-        <div>
-          <div css={s.filterLayout}>
-            <div style={{ display: "flex" }}>
-              <h1>매장단품 메뉴관리</h1>
-              <button onClick={getMenuList} type="button">
-                검색
-              </button>
-              <button onClick={initializeState} type="reset">
-                초기화
-              </button>
-              <button type="button" onClick={openMenuModal}>
-                등록
-              </button>
-              <button onClick={deleteMenu} type="button">
-                삭제
-              </button>
+    <div css={s.layout}>
+      {menuModal === true ? (
+        <MenuRegisterModal
+          categories={categories}
+          menuCategoryId={menuCategoryId}
+          setCategoryId={setCategoryId}
+          setMenuName={setMenuName}
+          setMenuPrice={setMenuPrice}
+          insertMenu={insertMenu}
+          categoryName={
+            categories.find((cat) => cat.menuCategoryId === menuCategoryId)
+              ?.menuCategoryName || ""
+          }
+          recommend={recommend}
+          handleRecommendChange={handleRecommendChange}
+          setMenuModal={setMenuModal}
+        />
+      ) : (
+        <></>
+      )}
+      <div>
+        <div css={s.filterLayout}>
+          <h1>매장단품 메뉴관리</h1>
+          <div css={s.filterActions}>
+            <button onClick={getMenuList} type="button">
+              검색
+            </button>
+            <button onClick={initializeState} type="reset">
+              초기화
+            </button>
+            <button type="button" onClick={openMenuModal}>
+              등록
+            </button>
+            <button onClick={deleteMenu} type="button">
+              삭제
+            </button>
+          </div>
+          <div css={s.filterInputs}>
+            <div>
+              <label htmlFor="storeName">매장명</label>
+              <input
+                type="text"
+                id="storeName"
+                name="storeName"
+                value={"테스트 매장"}
+                disabled
+              />
             </div>
             <div>
-              <div style={{ display: "flex" }}>
-                <div name="storeName">매장명</div>
-                <input
-                  type="text"
-                  id="storeName"
-                  name="storeName"
-                  value={"테스트 매장"}
-                  disabled
-                />
-              </div>
-              <div style={{ display: "flex" }}>
-                <label htmlFor="saleState">판매 상태</label>
+              <label htmlFor="saleState">판매 상태</label>
+              <div css={s.selectWrapper}>
                 <select
                   value={menuState}
                   onChange={(e) => setMenuState(e.target.value)}
@@ -172,24 +174,29 @@ function MenuListPage(props) {
                   <option value="1">판매 중</option>
                   <option value="2">매진</option>
                 </select>
+                <IoIosArrowDown className="select-arrow" />
               </div>
-              <div style={{ display: "flex" }}>
-                <label htmlFor="saleState">추천</label>
+            </div>
+            <div>
+              <label htmlFor="recommendMenu">추천</label>
+              <div css={s.selectWrapper}>
                 <select
                   value={recommendMenu}
                   onChange={(e) => setRecommendMenu(e.target.value)}
-                  id="saleState"
-                  name="saleState"
+                  id="recommendMenu"
+                  name="recommendMenu"
                 >
                   <option value="0">전체</option>
                   <option value="1">일반 메뉴</option>
                   <option value="2">추천 메뉴</option>
                 </select>
+                <IoIosArrowDown className="select-arrow" />
               </div>
-              <div style={{ display: "flex" }}>
-                <label htmlFor="menuType">카테고리 분류</label>
+            </div>
+            <div>
+              <label htmlFor="categories">카테고리 분류</label>
+              <div css={s.selectWrapper}>
                 <select
-                  style={{ border: "1px solid black", marginRight: "10px" }}
                   name="categories"
                   id="categories"
                   value={menuCategoryId}
@@ -206,9 +213,12 @@ function MenuListPage(props) {
                     </option>
                   ))}
                 </select>
+                <IoIosArrowDown className="select-arrow" />
               </div>
-              <div>
-                <label htmlFor="menuType">검색어</label>
+            </div>
+            <div>
+              <label htmlFor="menuType">검색어</label>
+              <label css={s.selectWrapper}>
                 <select
                   onChange={(e) => setInputState(e.target.value)}
                   id="menuType"
@@ -217,51 +227,52 @@ function MenuListPage(props) {
                   <option value="1">메뉴코드</option>
                   <option value="2">메뉴이름</option>
                 </select>
-                <input
-                  value={inputState === "1" ? menuCode : searchMenuName}
-                  type="text"
-                  onChange={
-                    inputState === "1"
-                      ? handleSearchMenuCode
-                      : handleSearchMenuName
-                  }
-                />
+                <IoIosArrowDown className="select-arrow" />
+              </label>
+              <input
+                value={inputState === "1" ? menuCode : searchMenuName}
+                type="text"
+                onChange={
+                  inputState === "1"
+                    ? handleSearchMenuCode
+                    : handleSearchMenuName
+                }
+              />
+              <div>
+                ※ 메뉴명 클릭 시 메뉴 상세페이지로 이동합니다.
               </div>
             </div>
           </div>
+        </div>
+        <div css={s.menu}>
           <div css={s.menuListLayout}>
             <table css={s.tableLayout}>
               <thead>
                 <tr>
-                  <th>선택</th>
-                  <th>메뉴id</th>
-                  <th>브랜드</th>
-                  <th>메뉴코드</th>
-                  <th>메뉴명</th>
-                  <th>판매가</th>
-                  <th>추천</th>
-                  <th>판매상태</th>
-                  <th>카테고리</th>
+                  <th style={{ width: '5%' }} >선택</th>
+                  <th style={{ width: '5%' }}>브랜드</th>
+                  <th style={{ width: '5%' }}>메뉴코드</th>
+                  <th style={{ width: '15%' }}>메뉴명</th>
+                  <th style={{ width: '7%' }}>판매가</th>
+                  <th style={{ width: '5%' }}>추천</th>
+                  <th style={{ width: '5%' }}>판매상태</th>
+                  <th style={{ width: '5%' }}>카테고리</th>
                 </tr>
               </thead>
               <tbody>
                 {menuList?.map((menu) => (
                   <tr key={menu.menuId}>
-                    <td>
+                    <td onClick={() => handleCheckboxChange(menu.menuId)}>
                       <input
                         type="checkbox"
                         name="menuCheck"
-                        id="menuCheck"
+                        id={`menuCheck-${menu.menuId}`}
+                        checked={selectedMenuIds.includes(menu.menuId)}
                         onChange={() => handleCheckboxChange(menu.menuId)}
                       />
                     </td>
-                    <td>{menu.menuId}</td>
-                    <td>{menu.companyName}</td>
-                    <td
-                      onClick={() =>
-                        navigate(`/menu/management/detail/${menu.menuId}`)
-                      }
-                    >
+                    <td onClick={() => handleCheckboxChange(menu.menuId)}>{menu.companyName}</td>
+                    <td onClick={() => handleCheckboxChange(menu.menuId)}>
                       {menu.menuCode}
                     </td>
                     <td
@@ -271,10 +282,10 @@ function MenuListPage(props) {
                     >
                       {menu.menuName}
                     </td>
-                    <td>{menu.menuPrice}</td>
-                    <td>{menu.recommendMenu !== 1 ? "추천" : "일반"}</td>
-                    <td>{menu.menuState === 1 ? "판매 중" : "매진"}</td>
-                    <td>{menu.menuCategoryName}</td>
+                    <td onClick={() => handleCheckboxChange(menu.menuId)}>{menu.menuPrice}원</td>
+                    <td onClick={() => handleCheckboxChange(menu.menuId)}>{menu.recommendMenu !== 1 ? "추천" : "일반"}</td>
+                    <td onClick={() => handleCheckboxChange(menu.menuId)}>{menu.menuState === 1 ? "판매 중" : "매진"}</td>
+                    <td onClick={() => handleCheckboxChange(menu.menuId)}>{menu.menuCategoryName}</td>
                   </tr>
                 ))}
               </tbody>
@@ -282,6 +293,7 @@ function MenuListPage(props) {
           </div>
         </div>
       </div>
+    </div>
   );
 }
 
