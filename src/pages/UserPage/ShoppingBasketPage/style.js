@@ -4,9 +4,10 @@ export const layout = css`
   box-sizing: border-box;
   position: relative;
   margin: 40px auto;
+  margin-bottom: 0;
   padding: 10px;
   width: 390px;
-  height: 83%;
+  height: 93%;
   overflow: scroll;
   -ms-overflow-style: none;
   scrollbar-width: none;
@@ -16,7 +17,7 @@ export const layout = css`
 export const container = css`
   /* background-color: aqua; */
   width: 100%;
-  height: auto;
+  height: 85%;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -152,9 +153,9 @@ export const count = css`
 `;
 
 export const bottom = css`
-  position: fixed;
-  height: 110px;
-  bottom: 220px;
+  position: relative;
+  width: 100%;
+
   background-color: #fff;
   display: flex;
   flex-direction: column;
@@ -167,7 +168,7 @@ export const bottom = css`
     background-color: #187cff;
     border: 1px solid #187cff;
     border-radius: 10px;
-    padding: 15px 155px;
+    padding: 15px 150px;
     color: white;
     font-size: 15px;
     font-weight: 300;

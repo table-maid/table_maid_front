@@ -62,6 +62,6 @@ export const container = css`
   box-sizing: border-box;
   position: relative;
   width: 100%;
-  height: 735px;
+  height: 100%;
   /* background-color: #bdbaba; */
 `;
