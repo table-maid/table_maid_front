@@ -12,6 +12,8 @@ const SalesListContainer = ({ viewType, oneWeekData, lastMonthData, filteredSale
         <SalesList salesData={lastMonthData} viewType={viewType} />
       ) : viewType === "custom" && filteredSalesData.length > 0 ? (
         <SalesList salesData={filteredSalesData} />
+      ) : viewType === "year" && filteredSalesData.length > 0 ? (
+        <SalesList salesData={filteredSalesData} viewType={viewType} />
       ) : viewType === "all" && sales.length > 0 ? (
         <SalesList salesData={sales} viewType={viewType} />
       ) : (
