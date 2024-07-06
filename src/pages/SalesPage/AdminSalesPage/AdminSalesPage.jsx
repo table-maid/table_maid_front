@@ -1,7 +1,7 @@
 /** @jsxImportSource @emotion/react */
 import * as s from "./style";
 import { useQuery } from "react-query";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import {
   getSalesRequest,
   getSelectSalesRequest,
@@ -16,6 +16,7 @@ import useAnimateView from "../../../hooks/useAnimateAtom";
 import SalesButtons from "../../../components/Sales/SalesButtons/SalesButtons";
 import DateRangePicker from "../../../components/Sales/DatePicker/DateRangePicker";
 import SalesListContainer from "../../../components/Sales/SalesListContainer/SalesListContainer";
+import { useSalesUtils } from "../../../hooks/useSalesUtils";
 
 function AdminSalesPage(props) {
   const [adminId] = useRecoilState(adminIdState);
@@ -31,6 +32,8 @@ function AdminSalesPage(props) {
   const [dataKey, setDataKey] = useState("totalSales");
   const [chartData, setChartData] = useState([]);
   const [activeButton, setActiveButton] = useState("all");
+  const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());
+  const [years, setYears] = useState([]);
 
   const [headerRef, headerInView] = useAnimateView();
   const [chartRef, chartInView] = useAnimateView();
@@ -46,6 +49,8 @@ function AdminSalesPage(props) {
     lastMonthTotals,
   } = useSalesData(selectSalesData);
 
+  const { fillMissingDays, aggregateMonthlyData, aggregateMonthlyDataForYear } = useSalesUtils();
+
   useEffect(() => {
     setViewType("all");
   }, []);
@@ -53,13 +58,14 @@ function AdminSalesPage(props) {
   const salesQuery = useQuery(["salesQuery"], () => getSalesRequest(adminId), {
     retry: 0,
     onSuccess: (response) => {
-      setSales(response.data);
+      const salesData = response.data;
+      setSales(salesData);
+      const uniqueYears = [...new Set(salesData.map((sale) => sale.year))];
+      setYears(uniqueYears);
       if (viewType === "all") {
-        setChartData(response.data);
-        setTotalSales(
-          response.data.reduce((acc, sale) => acc + sale.totalSales, 0)
-        );
-        setTotalCount(response.data.reduce((acc, sale) => acc + sale.count, 0));
+        setChartData(salesData);
+        setTotalSales(salesData.reduce((acc, sale) => acc + sale.totalSales, 0));
+        setTotalCount(salesData.reduce((acc, sale) => acc + sale.count, 0));
         setDataKey("totalSales");
       }
     },
@@ -82,43 +88,79 @@ function AdminSalesPage(props) {
     }
   );
 
+  const handleYearChange = useCallback((year) => {
+    setSelectedYear(parseInt(year));
+    setViewType("year");
+    setActiveButton("year");
+  }, []);
+
   useEffect(() => {
+    if (viewType === "year") {
+      const filteredYearData = sales.filter((sale) => sale.year === parseInt(selectedYear));
+      const data = aggregateMonthlyDataForYear(filteredYearData, parseInt(selectedYear));
+      const totals = {
+        totalSales: data.reduce((acc, sale) => acc + sale.totalSales, 0),
+        totalCount: data.reduce((acc, sale) => acc + sale.count, 0),
+      };
+      setFilteredSalesData(filteredYearData); // 연도별 데이터 설정
+      setDataKey("totalSales");
+      setTotalSales(totals.totalSales);
+      setTotalCount(totals.totalCount);
+      setChartData(data);
+    }
+  }, [selectedYear, sales, viewType, aggregateMonthlyDataForYear]);
+
+  useEffect(() => {
+    if (!searchClicked) return;
+
     let data = [];
     let totals = { totalSales: 0, totalCount: 0 };
 
     if (viewType === "week") {
-      data = oneWeekData;
-      totals = oneWeekTotals;
+      data = oneWeekData || [];
+      totals = oneWeekTotals || { totalSales: 0, totalCount: 0 };
       setDataKey("dayTotalSales");
+      if (oneWeekData.length > 0) {
+        setStartDate(new Date(oneWeekData[0].year, oneWeekData[0].month - 1, oneWeekData[0].day));
+        setEndDate(new Date(oneWeekData[oneWeekData.length - 1].year, oneWeekData[oneWeekData.length - 1].month - 1, oneWeekData[oneWeekData.length - 1].day));
+      }
     } else if (viewType === "month") {
-      data = lastMonthData;
-      totals = lastMonthTotals;
-      setDataKey("dayTotalSales");
-    } else if (viewType === "custom") {
-      data = filteredSalesData;
+      const now = new Date();
+      const firstDayOfLastMonth = new Date(now.getFullYear(), now.getMonth() - 1, 1);
+      const lastDayOfLastMonth = new Date(now.getFullYear(), now.getMonth(), 0);
+      const dailyData = fillMissingDays(firstDayOfLastMonth, lastDayOfLastMonth, lastMonthData);
+      data = dailyData;
+
       totals = {
-        totalSales: filteredSalesData.reduce(
-          (acc, sale) => acc + sale.dayTotalSales,
-          0
-        ),
-        totalCount: filteredSalesData.reduce(
-          (acc, sale) => acc + sale.count,
-          0
-        ),
+        totalSales: data.reduce((acc, sale) => acc + sale.dayTotalSales, 0),
+        totalCount: data.reduce((acc, sale) => acc + sale.count, 0),
       };
       setDataKey("dayTotalSales");
+      setStartDate(firstDayOfLastMonth);
+      setEndDate(lastDayOfLastMonth);
+    } else if (viewType === "custom") {
+      const { totalSales, totalCount, filteredData } = customTotalDay(startDate, endDate);
+      const monthlyData = aggregateMonthlyData(filteredData);
+      data = monthlyData;
+      totals = { totalSales, totalCount };
+      setFilteredSalesData(filteredData);
+      setDataKey("totalSales");
     } else if (viewType === "all") {
-      data = sales;
+      data = sales || [];
       totals = {
-        totalSales: sales.reduce((acc, sale) => acc + sale.totalSales, 0),
-        totalCount: sales.reduce((acc, sale) => acc + sale.count, 0),
+        totalSales: data.reduce((acc, sale) => acc + (sale.totalSales || 0), 0),
+        totalCount: data.reduce((acc, sale) => acc + (sale.count || 0), 0),
       };
       setDataKey("totalSales");
     }
 
-    setTotalSales(totals.totalSales);
-    setTotalCount(totals.totalCount);
-    setChartData(data);
+    if (viewType !== "year") {
+      setTotalSales(totals.totalSales);
+      setTotalCount(totals.totalCount);
+      setChartData(data);
+    }
+
+    setSearchClicked(false);
   }, [
     viewType,
     oneWeekTotals,
@@ -127,39 +169,44 @@ function AdminSalesPage(props) {
     lastMonthData,
     filteredSalesData,
     sales,
+    searchClicked, // 검색이 클릭되었을 때만 이 useEffect를 실행
+    fillMissingDays,
+    aggregateMonthlyData,
+    customTotalDay,
   ]);
 
-  useEffect(() => {
-    if (searchClicked) {
-      const { totalSales, totalCount, filteredData } = customTotalDay(
-        startDate,
-        endDate
-      );
-      setFilteredSalesData(filteredData);
-      setTotalSales(totalSales);
-      setTotalCount(totalCount);
-      setChartData(filteredData);
-      setDataKey("dayTotalSales");
-      setSearchClicked(false);
+  const handleViewTypeChange = useCallback((type) => {
+    const now = new Date();
+    if ((type === "week" || type === "month") && now.getFullYear() !== selectedYear) {
+      alert("지난 7일 및 저번달 데이터는 현재 연도에만 사용할 수 있습니다.");
+      return;
     }
-  }, [searchClicked, startDate, endDate, customTotalDay]);
-
-  const handleViewTypeChange = (type) => {
     setViewType(type);
     setActiveButton(type);
-    if (type === "all") {
-      setChartData(sales);
-      setTotalSales(sales.reduce((acc, sale) => acc + sale.totalSales, 0));
-      setTotalCount(sales.reduce((acc, sale) => acc + sale.count, 0));
+
+    if (type === "week" || type === "month") {
+      setSearchClicked(true);
+    } else if (type === "all") {
+      setChartData(sales || []);
+      setTotalSales(sales.reduce((acc, sale) => acc + (sale.totalSales || 0), 0));
+      setTotalCount(sales.reduce((acc, sale) => acc + (sale.count || 0), 0));
       setDataKey("totalSales");
     }
-  };
 
-  const handleSearchClick = () => {
+    if (type === "week") {
+      const end = new Date();
+      const start = new Date();
+      start.setDate(end.getDate() - 7);
+      setStartDate(start);
+      setEndDate(end);
+    }
+  }, [sales, selectedYear]);
+
+  const handleSearchClick = useCallback(() => {
     setSearchClicked(true);
     setActiveButton("search");
     setViewType("custom");
-  };
+  }, []);
 
   const isDisabled = startDate > endDate;
 
@@ -170,6 +217,8 @@ function AdminSalesPage(props) {
       ? "지난 7일"
       : viewType === "month"
       ? "저번달"
+      : viewType === "year"
+      ? `${selectedYear}년`
       : viewType === "custom"
       ? "조회"
       : "";
@@ -214,6 +263,9 @@ function AdminSalesPage(props) {
               <SalesButtons
                 handleViewTypeChange={handleViewTypeChange}
                 activeButton={activeButton}
+                handleYearChange={handleYearChange}
+                selectedYear={selectedYear}
+                years={years}
               />
               <DateRangePicker
                 startDate={startDate}

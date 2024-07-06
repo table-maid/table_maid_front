@@ -42,18 +42,18 @@ function AdminMainPage(props) {
   useEffect(() => {
     const today = new Date().toISOString().split("T")[0];
     const storedDate = localStorage.getItem("date");
-    if (storedDate !== today) { //  하루 지나면 초기화
+    if (storedDate !== today) { // 하루 지나면 초기화
       setReadyMoney(0);
       setDepositMoney(0);
       localStorage.setItem("readyMoney", 0);
       localStorage.setItem("depositMoney", 0);
       localStorage.setItem("date", today);
     } else {
-      // 하루 안지나면 값 복원
+      // 하루 안 지나면 값 복원
       const storedReadyMoney = localStorage.getItem("readyMoney");
       const storedDepositMoney = localStorage.getItem("depositMoney");
-      if (storedReadyMoney) setReadyMoney(storedReadyMoney);
-      if (storedDepositMoney) setDepositMoney(storedDepositMoney);
+      if (storedReadyMoney) setReadyMoney(parseInt(storedReadyMoney, 10));
+      if (storedDepositMoney) setDepositMoney(parseInt(storedDepositMoney, 10));
     }
   }, []);
 
@@ -78,17 +78,20 @@ function AdminMainPage(props) {
         // 개점 상태로 변경되었을 때 값 복원
         const storedReadyMoney = localStorage.getItem("readyMoney");
         const storedDepositMoney = localStorage.getItem("depositMoney");
-        if (storedReadyMoney) setReadyMoney(storedReadyMoney);
-        if (storedDepositMoney) setDepositMoney(storedDepositMoney);
+        if (storedReadyMoney) setReadyMoney(parseInt(storedReadyMoney, 10));
+        if (storedDepositMoney) setDepositMoney(parseInt(storedDepositMoney, 10));
       }
     }
   };
 
   const handleMoneyChange = (item) => (e) => {
-    // console.log(e.target);
-    const value = e.target.value || 0;
-    item(value);
+    const value = e.target.value.replace(/,/g, '');
+    item(parseInt(value, 10) || 0);
     localStorage.setItem(e.target.name, value);
+  };
+
+  const formatNumberWithCommas = (number) => {
+    return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
   };
 
   const convertToEvents = (sales) => {
@@ -169,7 +172,7 @@ function AdminMainPage(props) {
                 <input
                   type="text"
                   name="readyMoney"
-                  value={readyMoney}
+                  value={formatNumberWithCommas(readyMoney)}
                   onChange={handleMoneyChange(setReadyMoney)}
                   disabled={!isOff}
                 />
@@ -182,7 +185,7 @@ function AdminMainPage(props) {
                 <input
                   type="text"
                   name="depositMoney"
-                  value={depositMoney}
+                  value={formatNumberWithCommas(depositMoney)}
                   onChange={handleMoneyChange(setDepositMoney)}
                   disabled={!isOff}
                 />
@@ -205,8 +208,8 @@ function AdminMainPage(props) {
             </div>
             <div css={s.buttons}>
               <button onClick={handleHoleClick} disabled={!isOff}>영업화면</button>
-              <button onClick={handleSalesClick} disabled={!isOff}>관리하기</button>
-              <button onClick={handleLogoutClick} disabled={!isOff}>로그아웃</button>
+              <button onClick={handleSalesClick}>관리하기</button>
+              <button onClick={handleLogoutClick}>로그아웃</button>
             </div>
           </div>
         </div>

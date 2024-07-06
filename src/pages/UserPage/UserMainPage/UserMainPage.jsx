@@ -45,6 +45,9 @@ function UserMainPage() {
     }
   };
 
+  const handleEmployeeCallClick = () => {
+    navigate(`/user/call`);
+  };
   const companyNumberUseQuery = useQuery(
     ["companyNumberUseQuery", companyNumber],
     () =>
@@ -105,7 +108,7 @@ function UserMainPage() {
       },
     }
   );
-
+  
   useEffect(() => {
     const categoryBox = categoryBoxRef.current;
 
@@ -130,7 +133,7 @@ function UserMainPage() {
   return (
     <div css={s.layout}>
       <div css={s.buttonBox}>
-        <button css={s.button}>직원호출</button>
+        <button css={s.button} onClick={handleEmployeeCallClick}>직원호출</button>
         <button css={s.button}>주문내역</button>
       </div>
       <div css={s.storeName}>{numberBasket?.companyName}</div>

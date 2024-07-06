@@ -1,5 +1,8 @@
 /** @jsxImportSource @emotion/react */
+import { useEffect, useState } from "react";
+import OptionRegisterModal from "../../../components/Menu/OptionSelectModal/OptionSelectModal";
 import * as s from "./style";
+import useUserApis from "../../../hooks/useUserApis";
 import { useEffect, useState } from "react";
 import { useRecoilState } from "recoil";
 import { useMutation, useQuery } from "react-query";
@@ -12,13 +15,19 @@ import { useSearchParams } from "react-router-dom";
 import { getCompanyNameRequest } from "../../../apis/api/user";
 import { FaRegTrashCan, FaPlus, FaMinus } from "react-icons/fa6";
 import Image from "../../../assets/img/장바구니2.png";
+import { IoClose } from "react-icons/io5";
 
 function ShoppingBasketPage(props) {
   const [searchParams] = useSearchParams();
   const adminId = searchParams.get("adminId");
   const [cart, setCart] = useRecoilState(ShoppingCartState);
   const [totalPrice, setTotalPrice] = useRecoilState(TotalPriceState);
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedItemIndex, setSelectedItemIndex] = useState(null);
+
   const [companyName, setCompanyName] = useState("");
+
 
   const handleDeleteFromCart = (index) => {
     setCart((prevCart) => prevCart.filter((_, i) => i !== index));
@@ -27,7 +36,7 @@ function ShoppingBasketPage(props) {
   const handleIncreaseQuantity = (index) => {
     setCart((prevCart) =>
       prevCart.map((item, i) =>
-        i === index ? { ...item, quantity: (item.quantity || 1) + 1 } : item
+        i === index ? { ...item, count: (item.count || 1) + 1 } : item
       )
     );
   };
@@ -36,7 +45,41 @@ function ShoppingBasketPage(props) {
     setCart((prevCart) =>
       prevCart.map((item, i) =>
         i === index
-          ? { ...item, quantity: item.quantity > 1 ? item.quantity - 1 : 1 }
+          ? { ...item, count: item.count > 1 ? item.count - 1 : 1 }
+          : item
+      )
+    );
+  };
+
+  const handleOptionChange = (index) => {
+    setSelectedItemIndex(index);
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+    setSelectedItemIndex(null);
+  };
+
+  const handleApplyOptions = (options) => {
+    setCart((prevCart) =>
+      prevCart.map((item, i) =>
+        i === selectedItemIndex
+          ? { ...item, options: [...item.options, ...options] }
+          : item
+      )
+    );
+    closeModal();
+  };
+
+  const handleRemoveOption = (itemIndex, optionIndex) => {
+    setCart((prevCart) =>
+      prevCart.map((item, i) =>
+        i === itemIndex
+          ? {
+              ...item,
+              options: item.options.filter((_, idx) => idx !== optionIndex),
+            }
           : item
       )
     );
@@ -81,6 +124,8 @@ function ShoppingBasketPage(props) {
         const itemTotal =
           (item.menu.menuPrice +
             item.options.reduce((acc, opt) => acc + opt.optionPrice, 0)) *
+          (item.count || 1); // 수량 반영
+
           (item.quantity || 1);
         return total + itemTotal;
       }, 0);
@@ -108,22 +153,30 @@ function ShoppingBasketPage(props) {
                 <div css={s.menuList}>
                   <div css={s.menuItem}>
                     <h2>{item.menu.menuName}</h2>
-                    <p>가격: {item.menu.menuPrice}</p>
+                    <p>{item.menu.menuPrice} 원</p>
                   </div>
-                  <img src={item.menu.menuImgUrl} alt="메뉴 이미지" />
-                  <div>
-                    {item.options.map((opt, idx) => (
-                      <div key={idx}>
-                        <p>
-                          {opt.optionName} ( + {opt.optionPrice} )
-                        </p>
-                      </div>
-                    ))}
-                  </div>
+                  <img src={item.menu.menuImgUrl} alt="" />
+                </div>
+                <div css={s.option}>
+                  {item.options.map((opt, idx) => (
+                    <div key={idx} css={s.Xbutton}>
+                      <p>
+                        {opt.optionName} ( + {opt.optionPrice} )
+                      </p>
+                      <button onClick={() => handleRemoveOption(index, idx)}>
+                        <IoClose size={23} />
+                      </button>
+                    </div>
+                  ))}
                 </div>
                 <div css={s.countBox}>
+                  {item.options.length > 0 && (
+                    <button onClick={() => handleOptionChange(index)} css={s.optionChange}>
+                      옵션 변경
+                    </button>
+                  )}
                   <div css={s.count}>
-                    {item.quantity > 1 ? (
+                    {item.count > 1 ? (
                       <button onClick={() => handleDecreaseQuantity(index)}>
                         <FaMinus />
                       </button>
@@ -132,7 +185,7 @@ function ShoppingBasketPage(props) {
                         <FaRegTrashCan size={20} />
                       </button>
                     )}
-                    <p>{item.quantity || 1}</p>
+                    <p>{item.count || 1}</p>
                     <button onClick={() => handleIncreaseQuantity(index)}>
                       <FaPlus />
                     </button>
@@ -142,12 +195,26 @@ function ShoppingBasketPage(props) {
             ))}
           </div>
         )}
+                <div css={s.bottom}>
+                  <h2>총 가격 {totalPrice} 원</h2>
+                  <button onClick={() => SEEsendMenus.mutate(cart)}>주문하기</button>
+                </div>
+              </div>
+
+      {isModalOpen && selectedItemIndex !== null && (
+        <OptionRegisterModal
+          closeModal={closeModal}
+          menuId={cart[selectedItemIndex].menu.menuId}
+          onApply={handleApplyOptions}
+        />
+      )}
       </div>
 
       <div css={s.bottom}>
         <h2>총 가격 {totalPrice} 원</h2>
         <button onClick={() => SEEsendMenus.mutate(cart)}>주문하기</button>
       </div>
+
     </div>
   );
 }

@@ -19,13 +19,13 @@ function SalesList({ salesData, viewType }) {
   return (
     <div css={s.listContainer}>
       <div css={s.askTitle}>
-        <li>거래 일자</li>
+        <li>{viewType === 'all' || viewType === 'year' ? '연도/월' : '거래 일자'}</li>
         <li>주문 수</li>
         <li>매출 금액</li>
       </div>
       {paginatedData.map((item) => (
         <ul key={item.salesId} css={s.list}>
-          {viewType === 'all' ? (
+          {viewType === 'all' || viewType === 'year' ? (
             <li>
               {item.year} 년 {item.month} 월
             </li>
@@ -35,10 +35,10 @@ function SalesList({ salesData, viewType }) {
             </li>
           )}
           <li>{item.count} 건</li>
-          <li>{viewType === 'all' ? item.totalSales : item.dayTotalSales} 원</li>
+          <li>{viewType === 'all' || viewType === 'year' ? item.totalSales : item.dayTotalSales} 원</li>
         </ul>
       ))}
-      {salesData.length > (viewType === 'limited' ? 4 : 10) && pageCount > 1 && (
+      {salesData.length > itemCount && pageCount > 1 && (
         <ReactPaginate
           previousLabel={currentPage > 0 ? <MdKeyboardArrowLeft /> : null}
           nextLabel={<MdKeyboardArrowRight />}
