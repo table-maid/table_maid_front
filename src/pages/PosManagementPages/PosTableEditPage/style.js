@@ -26,12 +26,12 @@ export const tableContainer = (count) => css`
   justify-items: center;
 `;
 
-export const tableButton = css`
+export const tableButton = (boolean) => css`
   padding: 0;
   box-sizing: border-box;
   width: 100%;
   height: 100%;
-  border: 1px solid #c7c7c7;
+  border: ${boolean ? "1px solid red":"1px solid #c7c7c7"};
   display: flex;
   flex-direction: column;
   align-items: center;
