@@ -14,12 +14,75 @@ const AdminSalesChart = ({
   lineColor = "#79ceff",
   height = "380px",
   width = "100%",
-  smooth = false, 
+  smooth = false,
 }) => {
   const [options, setOptions] = useState({});
   const [series, setSeries] = useState([]);
 
   useEffect(() => {
+    if (!sales || sales.length === 0) {
+      // 데이터가 없을 경우 기본 상태로 설정
+      setSeries([]);
+      setOptions({
+        chart: {
+          height: height,
+          width: width,
+          type: "line",
+          zoom: {
+            enabled: false,
+          },
+          toolbar: { show: false },
+        },
+        title: {
+          text: keyName,
+          align: "center",
+          style: {
+            fontSize: "20px",
+          },
+        },
+        xaxis: {
+          categories: [],
+        },
+        yaxis: [
+          {
+            min: 0,
+            labels: {
+              formatter: (val) => numeral(val).format("0a"),
+              style: {
+                fontSize: "18px",
+              },
+            },
+          },
+        ],
+        tooltip: {
+          shared: true,
+          intersect: false,
+          y: {
+            formatter: (val) => numeral(val).format("0,0a"),
+          },
+        },
+        legend: {
+          position: "top",
+          horizontalAlign: "right",
+          floating: true,
+        },
+        fill: {
+          type: "gradient",
+          gradient: { gradientToColors: ["#79ceff"], stops: [0, 100] },
+        },
+        colors: [lineColor],
+        plotOptions: {
+          bar: {
+            columnWidth: "5%",
+          },
+        },
+        dataLabels: {
+          enabled: false,
+        },
+      });
+      return;
+    }
+
     const getDateLabel = (monthNumber, dayNumber) => {
       const date = new Date();
       date.setMonth(monthNumber - 1);
@@ -146,7 +209,7 @@ const AdminSalesChart = ({
   ]);
 
   return (
-    <div id="chart" >
+    <div id="chart">
       {sales.length === 0 ? (
         <div css={s.dataLayout}>데이터가 존재하지 않습니다.</div>
       ) : (

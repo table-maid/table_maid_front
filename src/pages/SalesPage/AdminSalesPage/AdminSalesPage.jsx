@@ -82,30 +82,6 @@ function AdminSalesPage(props) {
     }
   );
 
-  const fillMissingDates = (startDate, endDate, salesData, key) => {
-    const dateRange = [];
-    for (let day = new Date(startDate); day <= endDate; day.setDate(day.getDate() + 1)) {
-      dateRange.push(new Date(day));
-    }
-
-    const dataMap = salesData.reduce((acc, sale) => {
-      const saleDate = new Date(sale.year, sale.month - 1, sale.day).toISOString().split("T")[0];
-      acc[saleDate] = sale;
-      return acc;
-    }, {});
-
-    const filledData = dateRange.map(day => {
-      const dateKey = day.toISOString().split("T")[0];
-      if (dataMap[dateKey]) {
-        return dataMap[dateKey];
-      } else {
-        return { year: day.getFullYear(), month: day.getMonth() + 1, day: day.getDate(), [key]: 0, count: 0 };
-      }
-    });
-
-    return filledData;
-  };
-
   useEffect(() => {
     let data = [];
     let totals = { totalSales: 0, totalCount: 0 };
@@ -118,7 +94,26 @@ function AdminSalesPage(props) {
       const now = new Date();
       const firstDayOfMonth = new Date(now.getFullYear(), now.getMonth() - 1, 1);
       const lastDayOfMonth = new Date(now.getFullYear(), now.getMonth(), 0);
-      data = fillMissingDates(firstDayOfMonth, lastDayOfMonth, lastMonthData, "dayTotalSales");
+
+      const daysInMonth = [];
+      for (let day = firstDayOfMonth; day <= lastDayOfMonth; day.setDate(day.getDate() + 1)) {
+        daysInMonth.push(new Date(day));
+      }
+
+      const dataMap = lastMonthData.reduce((acc, sale) => {
+        const saleDate = new Date(sale.year, sale.month - 1, sale.day).toISOString().split("T")[0];
+        acc[saleDate] = sale;
+        return acc;
+      }, {});
+
+      data = daysInMonth.map(day => {
+        const dateKey = day.toISOString().split("T")[0];
+        if (dataMap[dateKey]) {
+          return dataMap[dateKey];
+        } else {
+          return { year: day.getFullYear(), month: day.getMonth() + 1, day: day.getDate(), dayTotalSales: 0, count: 0 };
+        }
+      });
 
       totals = {
         totalSales: data.reduce((acc, sale) => acc + sale.dayTotalSales, 0),
@@ -126,10 +121,16 @@ function AdminSalesPage(props) {
       };
       setDataKey("dayTotalSales");
     } else if (viewType === "custom") {
-      data = fillMissingDates(startDate, endDate, filteredSalesData, "dayTotalSales");
+      data = filteredSalesData;
       totals = {
-        totalSales: data.reduce((acc, sale) => acc + sale.dayTotalSales, 0),
-        totalCount: data.reduce((acc, sale) => acc + sale.count, 0),
+        totalSales: filteredSalesData.reduce(
+          (acc, sale) => acc + sale.dayTotalSales,
+          0
+        ),
+        totalCount: filteredSalesData.reduce(
+          (acc, sale) => acc + sale.count,
+          0
+        ),
       };
       setDataKey("dayTotalSales");
     } else if (viewType === "all") {
@@ -152,8 +153,6 @@ function AdminSalesPage(props) {
     lastMonthData,
     filteredSalesData,
     sales,
-    startDate,
-    endDate,
   ]);
 
   useEffect(() => {
@@ -162,11 +161,10 @@ function AdminSalesPage(props) {
         startDate,
         endDate
       );
-      const filledData = fillMissingDates(startDate, endDate, filteredData, "dayTotalSales");
-      setFilteredSalesData(filledData);
+      setFilteredSalesData(filteredData);
       setTotalSales(totalSales);
       setTotalCount(totalCount);
-      setChartData(filledData);
+      setChartData(filteredData);
       setDataKey("dayTotalSales");
       setSearchClicked(false);
     }
