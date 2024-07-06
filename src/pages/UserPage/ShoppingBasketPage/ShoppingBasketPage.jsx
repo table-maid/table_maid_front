@@ -167,12 +167,12 @@ function ShoppingBasketPage(props) {
             ))}
           </div>
         )}
-
-        <div css={s.bottom}>
-          <h2>총 가격 {totalPrice} 원</h2>
-          <button onClick={() => SEEsendMenus.mutate(cart)}>주문하기</button>
-        </div>
-      </div>
+        
+                <div css={s.bottom}>
+                  <h2>총 가격 {totalPrice} 원</h2>
+                  <button onClick={() => SEEsendMenus.mutate(cart)}>주문하기</button>
+                </div>
+              </div>
 
       {isModalOpen && selectedItemIndex !== null && (
         <OptionRegisterModal
