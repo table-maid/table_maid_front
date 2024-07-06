@@ -148,6 +148,24 @@ function AdminSalesPage(props) {
   };
 
   useEffect(() => {
+    if (viewType === "year") {
+      const filteredYearData = sales.filter((sale) => sale.year === parseInt(selectedYear));
+      console.log(`Selected Year: ${selectedYear}`, filteredYearData);
+      const data = aggregateMonthlyDataForYear(filteredYearData, parseInt(selectedYear));
+      const totals = {
+        totalSales: data.reduce((acc, sale) => acc + sale.totalSales, 0),
+        totalCount: data.reduce((acc, sale) => acc + sale.count, 0),
+      };
+      setFilteredSalesData(filteredYearData); // 연도별 데이터 설정
+      setDataKey("totalSales");
+      setTotalSales(totals.totalSales);
+      setTotalCount(totals.totalCount);
+      setChartData(data);
+      console.log('Aggregated Monthly Data:', data);
+    }
+  }, [selectedYear, sales, viewType]);
+
+  useEffect(() => {
     let data = [];
     let totals = { totalSales: 0, totalCount: 0 };
 
@@ -167,15 +185,6 @@ function AdminSalesPage(props) {
         totalCount: data.reduce((acc, sale) => acc + sale.count, 0),
       };
       setDataKey("dayTotalSales");
-    } else if (viewType === "year") {
-      const filteredYearData = sales.filter((sale) => sale.year === parseInt(selectedYear));
-      data = aggregateMonthlyDataForYear(filteredYearData, parseInt(selectedYear));
-      totals = {
-        totalSales: data.reduce((acc, sale) => acc + sale.totalSales, 0),
-        totalCount: data.reduce((acc, sale) => acc + sale.count, 0),
-      };
-      setFilteredSalesData(filteredYearData);
-      setDataKey("totalSales");
     } else if (viewType === "custom") {
       const { totalSales, totalCount, filteredData } = customTotalDay(startDate, endDate);
       const monthlyData = aggregateMonthlyData(filteredData);
@@ -192,9 +201,12 @@ function AdminSalesPage(props) {
       setDataKey("totalSales");
     }
 
-    setTotalSales(totals.totalSales);
-    setTotalCount(totals.totalCount);
-    setChartData(data);
+    if (viewType !== "year") {
+      setTotalSales(totals.totalSales);
+      setTotalCount(totals.totalCount);
+      setChartData(data);
+      console.log('Chart Data:', data);
+    }
   }, [
     viewType,
     oneWeekTotals,
@@ -203,7 +215,6 @@ function AdminSalesPage(props) {
     lastMonthData,
     filteredSalesData,
     sales,
-    selectedYear,
   ]);
 
   useEffect(() => {
@@ -234,7 +245,7 @@ function AdminSalesPage(props) {
   };
 
   const handleYearChange = (year) => {
-    setSelectedYear(year);
+    setSelectedYear(parseInt(year));
     setViewType("year");
     setActiveButton("year");
   };
@@ -338,7 +349,7 @@ function AdminSalesPage(props) {
                 ref={totalListRef}
                 className={totalListInView ? "animate" : "hide"}
               >
-                {viewType === "year" && filteredSalesData.length === 0 ? (
+                {viewType === "year" && chartData.length === 0 ? (
                   <div>데이터가 없습니다.</div>
                 ) : (
                   <SalesListContainer
