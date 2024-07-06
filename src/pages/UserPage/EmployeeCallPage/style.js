@@ -22,7 +22,7 @@ export const layout = css`
 export const container = css`
   width: 85%;
   height: 50%;
-  padding: 30px;
+  padding: 30px 30px 20px 30px;
   display: flex;
   flex-direction: row;
   justify-content: center;
