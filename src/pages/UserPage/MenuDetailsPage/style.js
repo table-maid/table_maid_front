@@ -5,8 +5,8 @@ export const layout = css`
   position: relative;
   margin: 40px auto;
   /* padding: 10px; */
-  width: 410px;
-  height: 660px;
+  width: 390px;
+  height: 93%;
   overflow: scroll;
   -ms-overflow-style: none;
   scrollbar-width: none;
@@ -15,6 +15,7 @@ export const layout = css`
 
 export const container = css`
   padding: 20px;
+  height: 85%;
 `;
 
 export const img = css`
@@ -112,10 +113,9 @@ export const count = css`
 `;
 
 export const buttonBox = css`
-  position: fixed;
-  height: 80px;
-  bottom: 220px;
-  width: 410px;
+   position: relative;
+  width: 100%;
+
   background-color: #fff;
   display: flex;
   flex-direction: column;
