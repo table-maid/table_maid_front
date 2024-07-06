@@ -8,6 +8,7 @@ import { getCompanyNameRequest, getSoloMenuRequest } from "../../../apis/api/use
 import { useRecoilState } from "recoil";
 import { ShoppingCartState } from "../../../atoms/ShoppingCartAtom";
 import { FaPlus, FaMinus } from "react-icons/fa6";
+import useUserApis from "../../../hooks/useUserApis";
 
 function MenuDetails() {
   const [optionList, setOptionList] = useState([]);
@@ -19,7 +20,7 @@ function MenuDetails() {
   const navigate = useNavigate();
   const [selectedMenu, setSelectedMenu] = useState(null);
   const [cart, setCart] = useRecoilState(ShoppingCartState);
-
+   const { adminInfo } = useUserApis();
   const [count, setCount] = useState(1);
 
   const [companyName, setCompanyName] = useState("");
