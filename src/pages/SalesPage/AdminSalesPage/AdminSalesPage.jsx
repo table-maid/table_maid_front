@@ -192,6 +192,14 @@ function AdminSalesPage(props) {
       setTotalCount(sales.reduce((acc, sale) => acc + (sale.count || 0), 0));
       setDataKey("totalSales");
     }
+
+    if (type === "week") {
+      const end = new Date();
+      const start = new Date();
+      start.setDate(end.getDate() - 7);
+      setStartDate(start);
+      setEndDate(end);
+    }
   }, [sales, selectedYear]);
 
   const handleSearchClick = useCallback(() => {
