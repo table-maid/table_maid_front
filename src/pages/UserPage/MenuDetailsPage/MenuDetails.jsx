@@ -137,7 +137,7 @@ function MenuDetails() {
   return (
     <div css={s.layout}>
       <div css={s.container}>
-        <h1>{adminInfo?.companyName}</h1>
+        {/* <h1>{adminInfo?.companyName}</h1> */}
         <div css={s.img}>
           {selectedMenu !== null ? (
             <img src={selectedMenu.menuImgUrl} alt="" />

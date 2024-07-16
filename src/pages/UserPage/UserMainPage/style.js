@@ -3,16 +3,23 @@ import { css } from "@emotion/react";
 export const layout = css`
   box-sizing: border-box;
   position: relative;
-  padding: 30px 20px 20px 20px;
+  padding: 10px 20px 20px 20px;
   width: 100%;
-  height: 92%;
+  height: 100%;
   border-bottom-left-radius: 30px;
   border-bottom-right-radius: 30px;
   overflow: scroll;
   -ms-overflow-style: none;
   scrollbar-width: none;
   background-color: #fff;
-  margin-top: 50px;
+`;
+
+export const container = css`
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 `;
 
 export const buttonBox = css`
