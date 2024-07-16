@@ -8,7 +8,7 @@ function CategoryRegisterModal({companyName, setCategoryModal}) {
     useCategoryInsert(adminId);
 
     return (
-        <div>
+        <div css={s.backdrop}>
             <div css={s.menuModal}>
             <div css={s.modalHeader}>
                 <h2>메뉴 등록</h2>

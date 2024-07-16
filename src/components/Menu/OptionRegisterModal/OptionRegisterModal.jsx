@@ -58,6 +58,8 @@ function OptionRegisterModal({
     };
 
     return (
+        <div css={s.backdrop}>
+
         <div css={s.optionModal}>
             <div css={s.modalHeader}>
                 <h2>옵션 등록</h2>
@@ -97,6 +99,7 @@ function OptionRegisterModal({
                 <button onClick={insertOption}>추가</button>
                 <button onClick={closeModal}>취소</button>
             </div>
+        </div>
         </div>
     );
 }

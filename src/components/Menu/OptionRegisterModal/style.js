@@ -49,6 +49,19 @@ export const optionModal = css`
     }
 `;
 
+export const backdrop = css`
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.6); /* 어두운 배경 색상과 투명도 조정 */
+  z-index: 998; /* 모달보다 낮은 z-index 설정 */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+
 export const modalHeader = css`
     display: flex;
     justify-content: space-between;
