@@ -31,7 +31,7 @@ export const container = css`
 export const noItem = css`
   background-color: transparent;
   width: 100%;
-  height: 400px;
+  height: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;

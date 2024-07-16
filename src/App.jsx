@@ -13,8 +13,8 @@ function App() {
   return (
     <>
       <BackgroundLayout>
-    
-        {/* <AdminRootLayout>
+{/*     
+        <AdminRootLayout>
          <AdminRootContainer>
          <AdminRoute />
          <MenuRoute />

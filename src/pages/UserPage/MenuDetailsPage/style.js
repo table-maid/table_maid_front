@@ -3,8 +3,8 @@ import { css } from "@emotion/react";
 export const layout = css`
   box-sizing: border-box;
   position: relative;
-  width: 95%;
-  height: 100%;
+  width: 90%;
+  height: auto;
   overflow: scroll;
   -ms-overflow-style: none;
   scrollbar-width: none;
@@ -14,7 +14,7 @@ export const layout = css`
 `;
 
 export const container = css`
-  padding: 0 10px;
+  padding: 20px 10px 0 10px;
   flex-grow: 1;
 `;
 
@@ -128,7 +128,7 @@ export const buttonBox = css`
     background-color: #187cff;
     border: 1px solid #187cff;
     border-radius: 10px;
-    padding: 15px 145px;
+    padding: 15px 130px;
     color: white;
     font-size: 15px;
     font-weight: 300;
