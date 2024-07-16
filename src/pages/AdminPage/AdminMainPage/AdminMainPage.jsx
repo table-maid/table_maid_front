@@ -154,7 +154,6 @@ function AdminMainPage(props) {
               height={670}
               locale={"ko"}
               selectable="true"
-              navLinks="true"
               dayMaxEventRows={true}
               plugins={[dayGridPlugin, interactionPlugin]}
               initialView="dayGridMonth"
