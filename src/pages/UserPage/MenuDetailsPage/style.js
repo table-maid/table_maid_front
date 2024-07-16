@@ -4,7 +4,7 @@ export const layout = css`
   box-sizing: border-box;
   position: relative;
   width: 90%;
-  height: auto;
+  height: 100%;
   overflow: scroll;
   -ms-overflow-style: none;
   scrollbar-width: none;
