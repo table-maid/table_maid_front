@@ -3,9 +3,8 @@ import { css } from "@emotion/react";
 export const layout = css`
   box-sizing: border-box;
   position: relative;
-  margin: 40px auto;
-  width: 390px;
-  height: 93%;
+  width: 95%;
+  height: 100%;
   overflow: scroll;
   -ms-overflow-style: none;
   scrollbar-width: none;
@@ -15,7 +14,7 @@ export const layout = css`
 `;
 
 export const container = css`
-  padding: 20px;
+  padding: 0 10px;
   flex-grow: 1;
 `;
 

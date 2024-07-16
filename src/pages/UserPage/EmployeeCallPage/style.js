@@ -12,7 +12,6 @@ const fadeOut = keyframes`
 export const layout = css`
   box-sizing: border-box;
   position: relative;
-  margin: 60px auto;
   margin-bottom: 0;
   width: 410px;
   height: 90%;
@@ -95,7 +94,7 @@ export const count = css`
 export const buttonBox = css`
   position: sticky; 
   width: 100%;
-  bottom: -8px; 
+  margin-top: 15px;
   background-color: #fff;
   display: flex;
   flex-direction: column;
@@ -108,7 +107,7 @@ export const buttonBox = css`
     background-color: #187cff;
     border: 1px solid #187cff;
     border-radius: 10px;
-    padding: 15px 145px;
+    padding: 15px 150px;
     color: white;
     font-size: 15px;
     font-weight: 300;

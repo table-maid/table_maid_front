@@ -3,7 +3,7 @@ import { css } from "@emotion/react";
 export const layout = css`
   box-sizing: border-box;
   position: relative;
-  margin: 40px auto;
+  /* margin: 40px auto; */
   padding: 10px;
   width: 390px;
   height: 94%;
@@ -13,6 +13,10 @@ export const layout = css`
   background-color: #fff;
   display: flex;
   flex-direction: column;
+
+& h1 {
+  margin-top: 0;
+}
 `;
 
 export const container = css`
@@ -153,8 +157,10 @@ export const count = css`
 
 export const bottom = css`
   position: sticky; 
-  bottom: -8px; 
+  bottom: -10px; 
   width: 100%;
+  height: 100%;
+  
   background-color: #fff;
   display: flex;
   flex-direction: column;
