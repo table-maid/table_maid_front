@@ -39,6 +39,8 @@ function OptionSelectModal({ closeModal, menuId, onApply }) {
   };
 
   return (
+    <div css={s.backdrop}>
+
     <div css={s.layout}>
       <div css={s.optionModal}>
         <div css={s.container}>
@@ -83,6 +85,7 @@ function OptionSelectModal({ closeModal, menuId, onApply }) {
           </button>
         </div>
       </div>
+    </div>
     </div>
   );
 }

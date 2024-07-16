@@ -9,7 +9,9 @@ function MenuRegisterModal({ categories, categoryId, setCategoryId, insertMenu, 
     const [menuPrice, setMenuPrice] = useState();
 
     return (
+            <div css={s.backdrop}>
         <div css={s.menuModal}>
+
             <div css={s.modalHeader}>
                 <h2>메뉴 등록</h2>
                 <button className="closeButton" onClick={() => setMenuModal(0)}>x</button>
@@ -52,6 +54,7 @@ function MenuRegisterModal({ categories, categoryId, setCategoryId, insertMenu, 
             <div css={s.modalFooter}>
                 <button className="buttons" onClick={() => insertMenu(menuName, menuPrice, categoryId, categoryName)}>추가</button>
                 <button className="buttons" onClick={() => setMenuModal(0)}>취소</button>
+            </div>
             </div>
         </div>
     );

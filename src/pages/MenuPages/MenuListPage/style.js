@@ -3,8 +3,9 @@ import { IoIosArrowDown } from "react-icons/io";
 
 export const layout = css`
   display: flex;
+  flex-direction: column;
+  align-items: center;
   justify-content: center;
-  margin: 0 auto;
   width: 100%;
   height: 100%;
 `;
@@ -12,8 +13,8 @@ export const layout = css`
 export const filterLayout = css`
   display: flex;
   flex-direction: column;
-  margin-top: 10px;
-  width: 1100px;
+  margin-bottom: 15px;
+  width: 85%;
   height: auto;
   padding: 20px;
   background-color: #fff;
@@ -134,7 +135,8 @@ export const filterInputs = css`
   }
 `;
 export const menu = css`
-  height: 500px;
+  height: auto;
+  width: 88%;
   background-color: white;
   border-radius: 8px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
@@ -147,21 +149,31 @@ export const menu = css`
 export const menuListLayout = css`
   display: flex;
   width: 100%;
-  max-height: 500px;
+  max-height: 450px;
   overflow: auto;
-  background-color: white;
-  border-top-left-radius: 8px;
-  border-top-right-radius: 8px;
-  border-bottom-left-radius: 3px;
-  border-bottom-right-radius: 3px;
+  background-color: #fff;
+  border-radius: 8px;
+
+  &::-webkit-scrollbar {
+    width: 7px;  
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: #007bff; 
+    border-radius: 10px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background-color: rgba(33, 122, 244, 0.1); /* 스크롤바 뒷 배경 색상 */
+  }
 `;
 
 export const tableLayout = css`
-  width: 1140px;
+  width: 100%;
   overflow: auto;
   table-layout: fixed;
   border-collapse: collapse;
-
+  border-radius: 8px;
 
   th,
   td {

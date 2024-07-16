@@ -133,7 +133,7 @@ function MenuListPage(props) {
       ) : (
         <></>
       )}
-      <div>
+      <div css={s.layout}>
         <div css={s.filterLayout}>
           <h1>매장단품 메뉴관리</h1>
           <div css={s.filterActions}>
