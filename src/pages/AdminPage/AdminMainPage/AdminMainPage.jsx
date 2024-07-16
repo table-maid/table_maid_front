@@ -42,7 +42,8 @@ function AdminMainPage(props) {
   useEffect(() => {
     const today = new Date().toISOString().split("T")[0];
     const storedDate = localStorage.getItem("date");
-    if (storedDate !== today) { // 하루 지나면 초기화
+    if (storedDate !== today) {
+      // 하루 지나면 초기화
       setReadyMoney(0);
       setDepositMoney(0);
       localStorage.setItem("readyMoney", 0);
@@ -79,13 +80,14 @@ function AdminMainPage(props) {
         const storedReadyMoney = localStorage.getItem("readyMoney");
         const storedDepositMoney = localStorage.getItem("depositMoney");
         if (storedReadyMoney) setReadyMoney(parseInt(storedReadyMoney, 10));
-        if (storedDepositMoney) setDepositMoney(parseInt(storedDepositMoney, 10));
+        if (storedDepositMoney)
+          setDepositMoney(parseInt(storedDepositMoney, 10));
       }
     }
   };
 
   const handleMoneyChange = (item) => (e) => {
-    const value = e.target.value.replace(/,/g, '');
+    const value = e.target.value.replace(/,/g, "");
     item(parseInt(value, 10) || 0);
     localStorage.setItem(e.target.name, value);
   };
@@ -141,77 +143,89 @@ function AdminMainPage(props) {
     window.location.replace("/sales/home");
   };
 
+  const getCurrentMonthEnd = () => {
+    const now = new Date();
+    const endOfMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0); 
+    return endOfMonth;
+  };
+
+  
   return (
-      <div css={s.layout}>
-        <div css={s.header}>
-          <div css={s.date}>
-            <CurrentTime />
-          </div>
+    <div css={s.layout}>
+      <div css={s.header}>
+        <div css={s.date}>
+          <CurrentTime />
         </div>
-        <div css={s.calendarSection}>
-          <div css={s.calendar}>
-            <FullCalendar
-              height={670}
-              locale={"ko"}
-              selectable="true"
-              dayMaxEventRows={true}
-              plugins={[dayGridPlugin, interactionPlugin]}
-              initialView="dayGridMonth"
-              events={events}
-            />
+      </div>
+      <div css={s.calendarSection}>
+        <div css={s.calendar}>
+          <FullCalendar
+            height={670}
+            locale={"ko"}
+            selectable={true}
+            dayMaxEventRows={true}
+            plugins={[dayGridPlugin, interactionPlugin]}
+            initialView="dayGridMonth"
+            events={events}
+            validRange={{
+              end: getCurrentMonthEnd(),
+            }}
+          />
+        </div>
+        <div css={s.sideSection}>
+          <div css={s.logoBox}>
+            <h1 css={s.logo}>𝓣𝓪𝓫𝓵𝓮𝓜𝓪𝓲𝓭</h1>
           </div>
-          <div css={s.sideSection}>
-            <div css={s.logoBox}>
-              <h1 css={s.logo}>𝓣𝓪𝓫𝓵𝓮𝓜𝓪𝓲𝓭</h1>
-            </div>
-            <div css={s.inputSection}>
-              <label>준비금</label>
-              <div css={s.inputContainer}>
-                <input
-                  type="text"
-                  name="readyMoney"
-                  value={formatNumberWithCommas(readyMoney)}
-                  onChange={handleMoneyChange(setReadyMoney)}
-                  disabled={!isOff}
-                />
-                <span>원</span>
-              </div>
-            </div>
-            <div css={s.inputSection}>
-              <label>예치금</label>
-              <div css={s.inputContainer}>
-                <input
-                  type="text"
-                  name="depositMoney"
-                  value={formatNumberWithCommas(depositMoney)}
-                  onChange={handleMoneyChange(setDepositMoney)}
-                  disabled={!isOff}
-                />
-                <span>원</span>
-              </div>
-            </div>
-            <div css={s.toggle}>
-              <span>마감</span>
-              <Switch
-                onChange={toggleSwitch}
-                checked={isOff}
-                offColor="#767577"
-                onColor="#b6b6b6"
-                offHandleColor="#f4f3f4"
-                onHandleColor="#4cb5f9"
-                checkedIcon={false}
-                uncheckedIcon={false}
+          <div css={s.inputSection}>
+            <label>준비금</label>
+            <div css={s.inputContainer}>
+              <input
+                type="text"
+                name="readyMoney"
+                value={formatNumberWithCommas(readyMoney)}
+                onChange={handleMoneyChange(setReadyMoney)}
+                disabled={!isOff}
               />
-              <span>개점</span>
+              <span>원</span>
             </div>
-            <div css={s.buttons}>
-              <button onClick={handleHoleClick} disabled={!isOff}>영업화면</button>
-              <button onClick={handleSalesClick}>관리하기</button>
-              <button onClick={handleLogoutClick}>로그아웃</button>
+          </div>
+          <div css={s.inputSection}>
+            <label>예치금</label>
+            <div css={s.inputContainer}>
+              <input
+                type="text"
+                name="depositMoney"
+                value={formatNumberWithCommas(depositMoney)}
+                onChange={handleMoneyChange(setDepositMoney)}
+                disabled={!isOff}
+              />
+              <span>원</span>
             </div>
+          </div>
+          <div css={s.toggle}>
+            <span>마감</span>
+            <Switch
+              onChange={toggleSwitch}
+              checked={isOff}
+              offColor="#767577"
+              onColor="#b6b6b6"
+              offHandleColor="#f4f3f4"
+              onHandleColor="#4cb5f9"
+              checkedIcon={false}
+              uncheckedIcon={false}
+            />
+            <span>개점</span>
+          </div>
+          <div css={s.buttons}>
+            <button onClick={handleHoleClick} disabled={!isOff}>
+              영업화면
+            </button>
+            <button onClick={handleSalesClick}>관리하기</button>
+            <button onClick={handleLogoutClick}>로그아웃</button>
           </div>
         </div>
       </div>
+    </div>
   );
 }
 
