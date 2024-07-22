@@ -12,4 +12,4 @@ function OrderRoute(props) {
     );
 }
 
-export default OrderRoute; 
+export default OrderRoute;

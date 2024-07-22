@@ -1,5 +1,5 @@
 /** @jsxImportSource @emotion/react */
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import useOrderDetail from "../../../hooks/useOrderDetail";
 import * as s from "./style";
 import { useEffect, useState } from "react";
@@ -7,12 +7,12 @@ import { addRefundDetail } from "../../../apis/api/order";
 
 function OrderDetailPage(props) {
     const adminId = 1;
-    const {orderNumber} = useParams();
-    const {orderDetail, error: orderDetailError} = useOrderDetail(adminId, orderNumber);
+    const { orderNumber } = useParams();
+    const { orderDetail, error: orderDetailError } = useOrderDetail(adminId, orderNumber);
     const [orderTotalPrice, setOrderTotalPrice] = useState(0);
+    const navigate = useNavigate();
 
     useEffect(() => {
-        console.log(orderDetail)
         if (orderDetail?.menu) {
             const total = orderDetail.menu.reduce((sum, item) => sum + item.menuTotalPrice, 0);
             setOrderTotalPrice(total);
@@ -21,11 +21,15 @@ function OrderDetailPage(props) {
 
     const registerRefundDetail = async () => {
         try {
-            await addRefundDetail(orderDetail)
+            if (window.confirm("환불처리 하시겠습니까?")) {
+                await addRefundDetail(orderDetail);
+                window.alert("환불처리가 완료되었습니다.");
+                navigate("/order/list");
+            }
         } catch (error) {
-            console.error(error)
+            console.error(error);
         }
-    } 
+    };
 
     return (
         <div css={s.layout}>
@@ -50,28 +54,27 @@ function OrderDetailPage(props) {
                                     <tr key={index}>
                                         <td>{m.menuName}</td>
                                         <td>{m.menuCount}</td>
-                                        <td>{m.options && m.options.length > 0 ? m.options.map(option => `${option.optionName} (+${option.optionPrice}원)`).join(", ") : ""}</td>
+                                        <td>
+                                            {m.options && m.options.length > 0
+                                                ? m.options.map(option => `${option.optionName} (+${option.optionPrice}원)`).join(", ")
+                                                : ""}
+                                        </td>
                                         <td>{m.menuTotalPrice}원</td>
                                     </tr>
-                                ))} 
+                                ))}
                             </tbody>
                         </table>
                     </div>
                     <div css={s.totalSection}>
-                        <div css={s.selectLayout}></div>
-                        <div css={s.calculation}>
-                            <div css={s.totalPrice}>
-                                <div>총 금액</div>
-                                <div>{orderTotalPrice}원</div>
-                            </div>
-                            <div css={s.paymentLayout}>
-                                <div>
-                                    <button css={s.paymentButton} onClick={registerRefundDetail}>환불</button>
-                                </div>
-                            </div>
+                        <div css={s.totalPrice}>
+                            <div>총 금액</div>
+                            <div>{orderTotalPrice}원</div>
+                        </div>
+                        <div css={s.paymentLayout}>
+                            <button css={s.paymentButton} onClick={registerRefundDetail}>환불</button>
                         </div>
                     </div>
-                </div> 
+                </div>
             </div>
         </div>
     );

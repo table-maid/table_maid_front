@@ -16,8 +16,8 @@ function App() {
     
         <AdminRootLayout>
          <AdminRootContainer>
-         <AdminRoute />
-         <MenuRoute />
+          <AdminRoute />
+          <MenuRoute />
          </AdminRootContainer>
         </AdminRootLayout>
 

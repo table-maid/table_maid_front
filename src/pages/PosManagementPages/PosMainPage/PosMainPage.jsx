@@ -1,5 +1,5 @@
 /** @jsxImportSource @emotion/react */
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import * as s from "./style";
 import { useNavigate } from "react-router-dom";
 import { useRecoilState } from "recoil";
@@ -38,22 +38,43 @@ function PosMainPage() {
   } = useTableColors(tables);
 
   // SSE 구독 로직
-  // useEffect(() => {
-  //   const eventSource = new EventSource("http://localhost:8080/send/menus/1")
-  //   eventSource.opopen = async () => {
-  //       await console.log("sse opened!");
-  //   }
-
-  //   eventSource.addEventListener("SSEOrder", (event) => {
-  //       console.log("SSEOrder");
-  //       const data = JSON.parse(event.data);
-  //       console.log(data);
-  //   })
-
-  //   return () => {
-  //       eventSource.close()
-  //   }
-  // },[])
+  useEffect(() => {
+    const eventSource = new EventSource("http://localhost:8080/send/menus/1");
+  
+    eventSource.onopen = async () => {
+      await console.log("SSE connection opened!");
+    };
+  
+    eventSource.onerror = (error) => {
+      console.log("SSE error:", error);
+    };
+  
+    eventSource.addEventListener("SSEOrder", (event) => {
+      console.log("SSEOrder event received");
+      const data = JSON.parse(event.data);
+      console.log(data);
+      
+      const tableKey = `table${data[0].tableNumber}`;
+      const existingOrder = localStorage.getItem(tableKey);
+  
+      if (existingOrder) {
+        // 주문이 이미 있으면 기존 메뉴에 새 주문 추가
+        const currentOrders = JSON.parse(existingOrder);
+        const updatedOrders = [...currentOrders, ...data];
+        localStorage.setItem(tableKey, JSON.stringify(updatedOrders));
+        console.log('Updated orders for table:', data[0].tableNumber);
+      } else {
+        // 주문이 없으면 새로운 데이터 저장
+        localStorage.setItem(tableKey, JSON.stringify(data));
+        console.log('New order saved for table:', data[0].tableNumber);
+      }
+    });
+  
+    return () => {
+      eventSource.close();
+      console.log('SSE connection closed');
+    };
+  }, []);
   
 
   const handleClick = async (index) => {

@@ -12,6 +12,21 @@ import { useMutation } from "react-query";
 import { sendMenu } from "../../../apis/api/order";
 import { FaRegTrashCan, FaPlus, FaMinus } from "react-icons/fa6";
 import Image from "../../../assets/img/장바구니2.png";
+
+import { tableNumberState } from "../../../atoms/UserNumberStateAtom";
+
+function ShoppingBasketPage(props) {
+  const [searchParams] = useSearchParams(); 
+  const adminId = searchParams.get("adminId");
+  const [cart, setCart] = useRecoilState(ShoppingCartState);
+  const [totalPrice, setTotalPrice] = useRecoilState(TotalPriceState);
+  const [companyName, setCompanyName] = useState("");
+  
+  useEffect(() => {
+    // handleAddToCart();
+    console.log(cart)
+  }, [])
+
 import { IoClose } from "react-icons/io5";
 
 function ShoppingBasketPage(props) {

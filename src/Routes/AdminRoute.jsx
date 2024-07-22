@@ -10,6 +10,7 @@ import PosManagement from "./PosManagement";
 import OrderRoute from "./OrderRoute";
 import AdminPageLayout from "../components/AdminPageLayout/AdminPageLayout";
 
+
 function AdminRoute(props) {
   const principalQuery = useQuery("principalQuery", getPrincipalRequest, {
     retry: 0,
@@ -33,7 +34,6 @@ function AdminRoute(props) {
           <Route path="/account/edit/password" element={<PasswordEditPage />} />
           <Route path="/pos/*" element={<PosManagement />} />
           <Route path="/order/*" element={<OrderRoute />} />
-
         {/* <Route path="" element={null}/>
                 <Route path="" element={null}/>
                 <Route path="" element={null}/> */}
