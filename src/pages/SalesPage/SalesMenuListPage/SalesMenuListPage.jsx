@@ -18,7 +18,7 @@ function MenuListPage(props) {
   const [menuList, setMenuList] = useState([]);
   const navigate = useNavigate();
   const [categoryId, setCategoryId] = useState(0);
-  const { categories, error: categoriesError } = useCategory(adminId);
+  const { categories, error: categoriesError } = useCategory(adminId, 0);
   const {
     menus,
     error: menusError,

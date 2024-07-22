@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { searchOrderDetail} from "../apis/api/order";
+import { searchOrderDetail } from "../apis/api/order";
 import { useParams } from "react-router-dom";
 
 const useOrderDetail = (adminId, orderNumber) => {

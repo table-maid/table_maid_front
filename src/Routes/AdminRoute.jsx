@@ -8,6 +8,7 @@ import AdminMainPage from '../pages/AdminPage/AdminMainPage/AdminMainPage';
 import PasswordEditPage from '../pages/PasswordEditPage/PasswordEditPage';
 import PosManagement from './PosManagement';
 import OrderRoute from './OrderRoute';
+import MenuRoute from './MenuRoute';
 
 function AdminRoute(props) {
     const principalQuery = useQuery("principalQuery", getPrincipalRequest, {
@@ -33,6 +34,8 @@ function AdminRoute(props) {
 
                 <Route path='/pos/*' element={<PosManagement/>}/>
                 <Route path='/order/*' element={<OrderRoute />}/>
+
+                
                 {/* <Route path="" element={null}/>
                 <Route path="" element={null}/>
                 <Route path="" element={null}/> */}

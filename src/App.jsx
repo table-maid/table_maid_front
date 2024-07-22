@@ -14,12 +14,12 @@ function App() {
     <>
       <BackgroundLayout>
     
-        {/* <AdminRootLayout>
+        <AdminRootLayout>
          <AdminRootContainer>
-         <AdminRoute />
-         <MenuRoute />
+          <AdminRoute />
+          <MenuRoute />
          </AdminRootContainer>
-        </AdminRootLayout> */}
+        </AdminRootLayout>
 
         <UserRootLayout>
           <UserRootContainer>

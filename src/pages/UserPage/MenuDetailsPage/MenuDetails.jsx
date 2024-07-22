@@ -7,6 +7,7 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import { getCompanyNameRequest, getSoloMenuRequest } from "../../../apis/api/user";
 import { useRecoilState } from "recoil";
 import { ShoppingCartState } from "../../../atoms/ShoppingCartAtom";
+import { tableNumberState } from "../../../atoms/UserNumberStateAtom";
 
 function MenuDetails() {
   const [optionList, setOptionList] = useState([]);
@@ -19,8 +20,9 @@ function MenuDetails() {
   const [selectedMenu, setSelectedMenu] = useState(null);
   const [cart, setCart] = useRecoilState(ShoppingCartState);
   const [companyName, setCompanyName] = useState("");
+  const [tableNumber, setTableNumber] = useRecoilState(tableNumberState);
 
-  const soloMenuQuery = useQuery(
+  const soloMenuQuery = useQuery( 
     ["soloMenuQuery", adminId, categoryId],
     () =>
       getSoloMenuRequest({
@@ -114,7 +116,7 @@ function MenuDetails() {
   const handleShoppingClick = () => {
     setCart((prevCart) => [
       ...prevCart,
-      { menu: selectedMenu, options: selectedOptions },
+      { menu: selectedMenu, options: selectedOptions, tableNumber: tableNumber },
     ]);
     navigate(`/user/shopping?adminId=${adminId}`);
   };
