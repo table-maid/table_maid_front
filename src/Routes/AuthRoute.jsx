@@ -29,7 +29,6 @@ function AuthRoute() {
                 <Route path="/agreement" element={<TACPage />} />
                 <Route path='/search/username' element={<SearchUserNamePage/>}/>
                 <Route path='/search/password' element={<SearchPasswordPage/>}/>
-
             </Routes>
         </>
     )

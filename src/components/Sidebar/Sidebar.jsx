@@ -24,7 +24,13 @@ function Sidebar() {
   };
 
   const handleHomeButtonClick = () => {
-    navigate("/sales/home");
+    handleCloseButtonClick();
+    navigate("/main");
+  };
+
+  const handleMenuItemClick = (path) => {
+    navigate(path);
+    handleCloseButtonClick();
   };
 
   return (
@@ -45,22 +51,22 @@ function Sidebar() {
           </button>
           <ul css={s.menuList}>
             <li css={s.menuItem}>
-              <Link to={"/sales/sale"} css={s.link}>
+              <Link to={"/sales/home"} css={s.link} onClick={() => handleMenuItemClick("/sales/sale")}>
                 매출 조회
               </Link>
             </li>
             <li css={s.menuItem}>
-              <Link to={"/sales/menu"} css={s.link}>
+              <Link to={"/sales/menu"} css={s.link} onClick={() => handleMenuItemClick("/sales/menu")}>
                 메뉴 매출 조회
               </Link>
             </li>
             <li css={s.menuItem}>
-              <Link to={"/menu/view"} css={s.link}>
+              <Link to={"/menu/view"} css={s.link} onClick={() => handleMenuItemClick("/menu/view")}>
                 메뉴 관리
               </Link>
             </li>
             <li css={s.menuItem}>
-              <Link to={"/menu/management/list"} css={s.link}>
+              <Link to={"/menu/management/list"} css={s.link} onClick={() => handleMenuItemClick("/menu/management/list")}>
                 매장 단품 메뉴 관리
               </Link>
             </li>

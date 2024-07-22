@@ -8,13 +8,15 @@ import AdminSalesChart from "../../../components/Sales/AdminSalesChart/AdminSale
 import SalesModal from "../../../components/Sales/SalesModal/SalesModal";
 import { adminIdState } from "../../../atoms/AdminIdStateAtom";
 import { useRecoilState } from "recoil";
-import { IoChevronBack } from "react-icons/io5";
+import { IoClose } from "react-icons/io5";
 
 function MenuSalesPage(props) {
   const [adminId] = useRecoilState(adminIdState);
   const [sales, setSales] = useState([]);
   const [viewType, setViewType] = useState("");
   const [dataKey, setDataKey] = useState("menuTotalSales");
+  const [selectedViewType, setSelectedViewType] = useState("");
+  const [selectedDataKey, setSelectedDataKey] = useState("menuTotalSales");
   const { menuId } = useParams();
   const navigate = useNavigate();
 
@@ -33,7 +35,6 @@ function MenuSalesPage(props) {
       retry: 0,
       refetchOnWindowFocus: false,
       onSuccess: (response) => {
-        // console.log(response.data);
         setSales(response.data);
       },
       onError: (error) => {
@@ -44,13 +45,14 @@ function MenuSalesPage(props) {
 
   const handleViewChange = (show) => {
     setViewType(show);
+    setSelectedViewType(show);
   };
 
   const handleDataKeyChange = (key) => {
     setDataKey(key);
+    setSelectedDataKey(key);
   };
 
-  // 월별 데이터 합치기
   const addMonthData = (data) => {
     const addData = data.reduce((acc, curr) => {
       const month = curr.month;
@@ -74,24 +76,33 @@ function MenuSalesPage(props) {
   return (
     <SalesModal>
       <div>
-        <button onClick={() => navigate('/sales/menu')} css={s.backButton} ><IoChevronBack size={"50"}/></button>
+        <button onClick={() => navigate('/sales/menu')} css={s.backButton} ><IoClose size={"50"}/></button>
         <div css={s.buttonContainer}>
           <div css={s.ChoiceContainer}>
-            <button css={s.button} onClick={() => handleViewChange("monthly")}>
+            <button
+              css={s.button(selectedViewType === "monthly")}
+              onClick={() => handleViewChange("monthly")}
+            >
               월별
             </button>
-            <button css={s.button} onClick={() => handleViewChange("daily")}>
+            <button
+              css={s.button(selectedViewType === "daily")}
+              onClick={() => handleViewChange("daily")}
+            >
               일별
             </button>
           </div>
           <div css={s.ChoiceContainer}>
             <button
-              css={s.button}
+              css={s.button(selectedDataKey === "menuTotalSales")}
               onClick={() => handleDataKeyChange("menuTotalSales")}
             >
               총 매출
             </button>
-            <button css={s.button} onClick={() => handleDataKeyChange("count")}>
+            <button
+              css={s.button(selectedDataKey === "count")}
+              onClick={() => handleDataKeyChange("count")}
+            >
               갯수
             </button>
           </div>

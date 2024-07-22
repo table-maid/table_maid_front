@@ -14,33 +14,93 @@ const AdminSalesChart = ({
   lineColor = "#79ceff",
   height = "380px",
   width = "100%",
-  smooth = false, 
+  smooth = false,
 }) => {
   const [options, setOptions] = useState({});
   const [series, setSeries] = useState([]);
 
   useEffect(() => {
+    if (!sales || sales.length === 0) {
+      setSeries([]);
+      setOptions((prevOptions) => ({
+        ...prevOptions,
+        chart: {
+          height: height,
+          width: width,
+          type: "line",
+          zoom: {
+            enabled: false,
+          },
+          toolbar: { show: false },
+        },
+        title: {
+          text: keyName,
+          align: "center",
+          style: {
+            fontSize: "20px",
+          },
+        },
+        xaxis: {
+          categories: [],
+        },
+        yaxis: [
+          {
+            min: 0,
+            labels: {
+              formatter: (val) => numeral(val).format("0a"),
+              style: {
+                fontSize: "18px",
+              },
+            },
+          },
+        ],
+        tooltip: {
+          shared: true,
+          intersect: false,
+          y: {
+            formatter: (val) => numeral(val).format("0,0a"),
+          },
+        },
+        legend: {
+          position: "top",
+          horizontalAlign: "right",
+          floating: true,
+        },
+        fill: {
+          type: "gradient",
+          gradient: { gradientToColors: ["#79ceff"], stops: [0, 100] },
+        },
+        colors: [lineColor],
+        plotOptions: {
+          bar: {
+            columnWidth: "5%",
+          },
+        },
+        dataLabels: {
+          enabled: false,
+        },
+      }));
+      return;
+    }
+
     const getDateLabel = (monthNumber, dayNumber) => {
       const date = new Date();
       date.setMonth(monthNumber - 1);
-      if (viewType !== "all" && dayNumber !== null && dayNumber !== undefined) {
+      if ((viewType !== "all" && viewType !== "year" && viewType !== "custom") && dayNumber !== null && dayNumber !== undefined) {
         date.setDate(dayNumber);
       }
       return date.toLocaleString("en-US", {
         month: "short",
-        day: viewType !== "all" ? "numeric" : undefined,
+        day: (viewType === "year" || viewType === "custom") ? undefined : "numeric",
       });
     };
 
-    const categories = sales.map((data) =>
-      getDateLabel(data[monthKey], data[dayKey])
-    );
+    const categories = sales.map((data) => getDateLabel(data[monthKey], data[dayKey]));
 
     const seriesData = sales.map((data) => data[dataKey]);
 
     let yMax;
     if (Math.max(...seriesData) === Math.min(...seriesData)) {
-      // 모든 값이 동일한 경우 막대그래프로 표시
       setSeries([
         {
           name: keyName,
@@ -64,11 +124,7 @@ const AdminSalesChart = ({
       chart: {
         height: height,
         width: width,
-        type:
-          seriesData.length === 1 &&
-          Math.max(...seriesData) === Math.min(...seriesData)
-            ? "bar"
-            : "line",
+        type: seriesData.length === 1 && Math.max(...seriesData) === Math.min(...seriesData) ? "bar" : "line",
         zoom: {
           enabled: false,
         },
@@ -132,21 +188,10 @@ const AdminSalesChart = ({
         enabled: false,
       },
     });
-  }, [
-    sales,
-    monthKey,
-    dayKey,
-    keyName,
-    dataKey,
-    viewType,
-    lineColor,
-    height,
-    width,
-    smooth,
-  ]);
+  }, [sales, monthKey, dayKey, keyName, dataKey, viewType, lineColor, height, width, smooth]);
 
   return (
-    <div id="chart" >
+    <div id="chart">
       {sales.length === 0 ? (
         <div css={s.dataLayout}>데이터가 존재하지 않습니다.</div>
       ) : (

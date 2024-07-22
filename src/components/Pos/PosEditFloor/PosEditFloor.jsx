@@ -10,7 +10,7 @@ function PosEditFloor({floors, setFloors, setIsOpenFloorEdit}) {
   const addFloor = () => {
     const newTables = [];
     for (let i = 0; i < 9; i++) {
-      newTables.push({id: i + 1, tableName: ""});
+      newTables.push({id: i + 1, tableName: "", checked: false});
     }
 
     setLocalFloors([

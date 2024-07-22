@@ -45,6 +45,9 @@ function UserMainPage() {
     }
   };
 
+  const handleEmployeeCallClick = () => {
+    navigate(`/user/call`);
+  };
   const companyNumberUseQuery = useQuery(
     ["companyNumberUseQuery", companyNumber],
     () =>
@@ -129,42 +132,46 @@ function UserMainPage() {
 
   return (
     <div css={s.layout}>
-      <div css={s.buttonBox}>
-        <button css={s.button}>직원호출</button>
-        <button css={s.button}>주문내역</button>
-      </div>
-      <div css={s.storeName}>{numberBasket?.companyName}</div>
-      <div css={s.categoryBox} ref={categoryBoxRef}>
-        {categoryList.map((category) => (
-          <div
-            key={category.menuCategoryId}
-            onClick={() => handleCategoryClick(category.menuCategoryId)}
-            css={
-              categoryId === category.menuCategoryId
-                ? s.selectedCategory
-                : s.category
-            }
-          >
-            {category.menuCategoryName}
-          </div>
-        ))}
-      </div>
-      <div css={s.listBox}>
-        {menuList.length > 0 &&
-          menuList.map((menu) => (
+        <div css={s.buttonBox}>
+          <button css={s.button} onClick={handleEmployeeCallClick}>
+            직원호출
+          </button>
+          <button css={s.button}>주문내역</button>
+        </div>
+        <div css={s.storeName}>{numberBasket?.companyName}</div>
+        <div css={s.categoryBox} ref={categoryBoxRef}>
+          {categoryList.map((category) => (
             <div
-              key={menu.menuId}
-              css={s.menuList}
-              onClick={() => handleMenuClick(menu.menuId, menu.menuCategoryId)}
+              key={category.menuCategoryId}
+              onClick={() => handleCategoryClick(category.menuCategoryId)}
+              css={
+                categoryId === category.menuCategoryId
+                  ? s.selectedCategory
+                  : s.category
+              }
             >
-              <div css={s.menu}>
-                <h3>{menu.menuName}</h3>
-                <div>{menu.menuPrice} 원</div>
-              </div>
-              <img src={menu.menuImgUrl} alt="" />
+              {category.menuCategoryName}
             </div>
           ))}
-      </div>
+        </div>
+        <div css={s.listBox}>
+          {menuList.length > 0 &&
+            menuList.map((menu) => (
+              <div
+                key={menu.menuId}
+                css={s.menuList}
+                onClick={() =>
+                  handleMenuClick(menu.menuId, menu.menuCategoryId)
+                }
+              >
+                <div css={s.menu}>
+                  <h3>{menu.menuName}</h3>
+                  <div>{menu.menuPrice} 원</div>
+                </div>
+                <img src={menu.menuImgUrl} alt="" />
+              </div>
+            ))}
+        </div>
     </div>
   );
 }
