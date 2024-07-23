@@ -5,7 +5,11 @@ import PropTypes from 'prop-types';
 function PosEditButtonList({ buttons, setTableCount }) {
 
   const selectCount = (label) => {
-    setTableCount(label)
+    if(window.confirm("설정한 테이블 배치 또는 테이블 이름이 초기화 될 수 있습니다. 바꾸시겠습니까?")) {
+      setTableCount(label)
+    } else {
+      return
+    }
   }
 
   return (
