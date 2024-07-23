@@ -5,8 +5,8 @@ import PosEditButtonList from "../../../components/Pos/PosEditButtonList/PosEdit
 import usePosButtonList from "../../../hooks/usePosButtonList";
 import PosEditFloor from "../../../components/Pos/PosEditFloor/PosEditFloor";
 import PosEditTableName from "../../../components/Pos/PosEditTableName/PosEditTableName";
-import { useMutation } from "react-query";
-import { saveFloorTableRequest } from "../../../apis/api/posEdit";
+import { useMutation, useQuery } from "react-query";
+import { saveFloorTableRequest, selectFloorTableRequest } from "../../../apis/api/posEdit";
 import { adminIdState } from "../../../atoms/AdminIdStateAtom";
 import { useRecoilState } from "recoil";
 
@@ -43,7 +43,7 @@ function PosTableEditPage() {
   useEffect(() => {
     const [rows, cols] = tableCountButton.split('X').map(Number);
     setColumns(rows);
-    const newTables = Array(rows * cols).fill().map((_, i) => ({ tableNum: i + 1, tableName: i + 1, checked: false }));
+    const newTables = Array(rows * cols).fill().map((_, i) => ({ tableNum: i + 1, tablesName: i + 1, checked: false }));
     setTables(newTables);
     setFloors(prevFloors => prevFloors.map(floor => 
       floor.floorNum === nowSelectFloor ? { ...floor, tables: newTables } : floor
@@ -68,6 +68,31 @@ function PosTableEditPage() {
       setNowSelectFloor(minFloorNum);
     }
   }, [floors]);
+
+  // Table 조회
+  const editTableQuery = useQuery(
+    ["editTableQuery"],
+    () => selectFloorTableRequest(adminId),
+    {
+      retry: 0,
+      refetchOnWindowFocus: false,
+      onSuccess: (response) => {
+        console.log(response.data);
+        setTables(response.data);
+        // 현재 선택된 층의 테이블을 설정
+        const currentFloor = response.data.find(
+          (floor) => floor.floorNum === nowSelectFloor
+        );
+        if (currentFloor) {
+          setTables(currentFloor.tables);
+          setColumns(getColumns(currentFloor.tables.length));
+        }
+      },
+      onError: (error) => {
+        console.log(error)
+      }
+    }
+  );
 
 
   const handleSelectFloor = (floorNum) => {
@@ -140,10 +165,7 @@ function PosTableEditPage() {
       )
     )
   };
-  console.log(tables);
-  console.log(floors);
 
-  
   const saveFloorTable = useMutation({
     mutationKey: "saveFloorTable",
     mutationFn: saveFloorTableRequest,
@@ -160,6 +182,8 @@ function PosTableEditPage() {
       saveFloorTable.mutate(floors)
     }
   }
+
+  console.log(tables)
   
   return (
     <div css={s.posLayout}>
@@ -176,7 +200,7 @@ function PosTableEditPage() {
             tables.map((table, index) => (
               <div css={s.tableButton(table.checked, table.tableNum)} key={index} onClick={() => handleSelectTable(table.tableNum)}> 
                 <div css={s.tableHeader}>
-                  {table.tableName}  
+                  <div>{table.tablesName}</div>
                 </div> 
               </div>
             ))
@@ -239,24 +263,8 @@ function PosTableEditPage() {
             }
           </div>
        </div>
-
        <button onClick={() => handleSavePosEdit(floors)}>저장하기</button>
-
       </div>
-
-        
-      
-
-
-
-
-
-
-
-
-
-
-
     </div>
   )
 }

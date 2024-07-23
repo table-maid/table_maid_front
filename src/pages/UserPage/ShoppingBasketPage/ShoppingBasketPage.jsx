@@ -12,8 +12,8 @@ import { useMutation } from "react-query";
 import { sendMenu } from "../../../apis/api/order";
 import { FaRegTrashCan, FaPlus, FaMinus } from "react-icons/fa6";
 import Image from "../../../assets/img/장바구니2.png";
-
-import { tableNumberState } from "../../../atoms/UserNumberStateAtom";
+import { IoClose } from "react-icons/io5";
+import { useSearchParams } from "react-router-dom";
 
 function ShoppingBasketPage(props) {
   const [searchParams] = useSearchParams(); 
@@ -26,8 +26,6 @@ function ShoppingBasketPage(props) {
     // handleAddToCart();
     console.log(cart)
   }, [])
-
-import { IoClose } from "react-icons/io5";
 
 function ShoppingBasketPage(props) {
   const { adminInfo } = useUserApis();
@@ -199,5 +197,5 @@ function ShoppingBasketPage(props) {
     </div>
   );
 }
-
+}
 export default ShoppingBasketPage;
