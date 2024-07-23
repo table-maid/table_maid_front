@@ -13,17 +13,15 @@ import { sendMenu } from "../../../apis/api/order";
 import { FaRegTrashCan, FaPlus, FaMinus } from "react-icons/fa6";
 import Image from "../../../assets/img/장바구니2.png";
 import { IoClose } from "react-icons/io5";
-
 import { tableNumberState } from "../../../atoms/UserNumberStateAtom";
-
+import { useSearchParams } from "react-router-dom";
 
 function ShoppingBasketPage(props) {
-
   useEffect(() => {
     // handleAddToCart();
     console.log(cart)
   }, [])
-
+  
   const { adminInfo } = useUserApis();
   const [cart, setCart] = useRecoilState(ShoppingCartState);
   const [totalPrice, setTotalPrice] = useRecoilState(TotalPriceState);
@@ -193,5 +191,5 @@ function ShoppingBasketPage(props) {
     </div>
   );
 }
-
+}
 export default ShoppingBasketPage;
