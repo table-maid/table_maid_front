@@ -22,13 +22,13 @@ function PosMainPage() {
   );
   const [currentTableData, setCurrentTableData] = useRecoilState(
     currentTableDataState
-  ); // 현재 테이블 데이터
-  
+  );
   const [mergeGroups, setMergeGroups] = useRecoilState(mergeGroupsState);
-  const [groupPayment, setGroupPayment] = useRecoilState(groupPaymentState); // 단체결제 상태
+  const [groupPayment, setGroupPayment] = useRecoilState(groupPaymentState);
   const [selectedTableIndices, setSelectedTableIndices] = useState([]);
   const [moveMode, setMoveMode] = useState(false);
-
+  const [orderData, setOrderData] = useState([]); // 메뉴 데이터 상태 추가
+  const [storageUpdate, setStorageUpdate] = useState(false); // 로컬 스토리지 업데이트 상태
 
   const {
     tableColors,
@@ -40,47 +40,71 @@ function PosMainPage() {
   // SSE 구독 로직
   useEffect(() => {
     const eventSource = new EventSource("http://localhost:8080/send/menus/1");
-  
+
     eventSource.onopen = async () => {
-      await console.log("SSE connection opened!");
+      console.log("SSE connection opened!");
     };
-  
+
     eventSource.onerror = (error) => {
-      console.log("SSE error:", error);
+      console.error("SSE error:", error);
     };
-  
+
     eventSource.addEventListener("SSEOrder", (event) => {
-      console.log("SSEOrder event received");
       const data = JSON.parse(event.data);
-      console.log(data);
-      
+      console.log("SSEOrder event received:", data);
+
       const tableKey = `table${data[0].tableNumber}`;
       const existingOrder = localStorage.getItem(tableKey);
-  
+
+      let updatedOrders;
       if (existingOrder) {
-        // 주문이 이미 있으면 기존 메뉴에 새 주문 추가
         const currentOrders = JSON.parse(existingOrder);
-        const updatedOrders = [...currentOrders, ...data];
-        localStorage.setItem(tableKey, JSON.stringify(updatedOrders));
-        console.log('Updated orders for table:', data[0].tableNumber);
+        updatedOrders = [...currentOrders, ...data];
       } else {
-        // 주문이 없으면 새로운 데이터 저장
-        localStorage.setItem(tableKey, JSON.stringify(data));
-        console.log('New order saved for table:', data[0].tableNumber);
+        updatedOrders = data;
       }
+      localStorage.setItem(tableKey, JSON.stringify(updatedOrders));
+
+      // 선택된 테이블에 대한 데이터 변경이 있을 경우 상태 업데이트
+      if (selectedTableIndex + 1 === data[0].tableNumber) {
+        setOrderData(updatedOrders);
+      }
+
+      setStorageUpdate((prev) => !prev); // 로컬 스토리지 업데이트 상태 변경
     });
-  
+
     return () => {
       eventSource.close();
-      console.log('SSE connection closed');
+      console.log("SSE connection closed");
     };
-  }, []);
-  
+  }, [selectedTableIndex]);
+
+  // 로컬 스토리지 변화를 감지하여 상태 업데이트
+  useEffect(() => {
+    const interval = setInterval(() => {
+      if (selectedTableIndex !== null) {
+        loadMenuData(selectedTableIndex);
+      }
+    }, 1000); // 1초마다 로컬 스토리지 확인
+
+    return () => clearInterval(interval);
+  }, [selectedTableIndex, storageUpdate]);
 
   const handleClick = async (index) => {
     setSelectedTableIndex(index);
     setCurrentTableData(tables[index]);
+    loadMenuData(index); // 메뉴 데이터 로드
     navigate(`/pos/table/detail/${index + 1}`);
+  };
+
+  const loadMenuData = (index) => {
+    const tableKey = `table${index + 1}`;
+    const storedData = localStorage.getItem(tableKey);
+    if (storedData) {
+      setOrderData(JSON.parse(storedData));
+    } else {
+      setOrderData([]);
+    }
   };
 
   const handleTableSelect = (index) => {
@@ -330,6 +354,11 @@ function PosMainPage() {
         : "transparent";
       const isSelected = selectedTableIndices.includes(index);
 
+      // 테이블 번호에 맞는 주문 데이터를 로컬 스토리지에서 가져오기
+      const tableKey = `table${index + 1}`;
+      const storedData = localStorage.getItem(tableKey);
+      const orders = storedData ? JSON.parse(storedData) : [];
+
       return (
         <PosTableItem
           key={index}
@@ -340,6 +369,7 @@ function PosMainPage() {
           handleClick={handleClick}
           handleTableSelect={handleTableSelect}
           groupPayment={groupPayment[index]} // 단체결제
+          orders={orders} // 주문 데이터 전달
         />
       );
     });
@@ -348,9 +378,7 @@ function PosMainPage() {
   return (
     <div css={s.posLayout}>
       <div css={s.timeLayout}>
-        <div>
-          <CurrentTime />
-        </div>
+        <CurrentTime />
       </div>
       <div css={s.tableLayout}>
         <div css={s.tableContainer}>{renderTables()}</div>
