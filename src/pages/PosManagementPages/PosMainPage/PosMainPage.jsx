@@ -4,7 +4,6 @@ import * as s from "./style";
 import { useNavigate } from "react-router-dom";
 import { useRecoilState } from "recoil";
 import {
-  tablesState,
   selectedTableIndexState,
   currentTableDataState,
   mergeGroupsState,
@@ -13,10 +12,15 @@ import {
 import CurrentTime from "../../../components/CurrentTime/CurrentTime";
 import { useTableColors } from "../../../hooks/useTableColors";
 import PosTableItem from "../../../components/PosTableItem/PosTableItem";
+import { useQuery } from "react-query";
+import { selectFloorTableRequest } from "../../../apis/api/posEdit";
+import { adminIdState } from "../../../atoms/AdminIdStateAtom";
+import usePosButtonList from "../../../hooks/usePosButtonList";
 
 function PosMainPage() {
+  const [adminId] = useRecoilState(adminIdState);
   const navigate = useNavigate();
-  const [tables, setTables] = useRecoilState(tablesState);
+  const [tables, setTables] = useState([]);
   const [selectedTableIndex, setSelectedTableIndex] = useRecoilState(
     selectedTableIndexState
   );
@@ -29,6 +33,10 @@ function PosMainPage() {
   const [moveMode, setMoveMode] = useState(false);
   const [orderData, setOrderData] = useState([]); // 메뉴 데이터 상태 추가
   const [storageUpdate, setStorageUpdate] = useState(false); // 로컬 스토리지 업데이트 상태
+  const [columns, setColumns] = useState(9);
+  const buttons = usePosButtonList();
+  const [nowSelectFloor, setNowSelectFloor] = useState(1);
+  const [floors, setFloors] = useState([])
 
   const {
     tableColors,
@@ -36,6 +44,31 @@ function PosMainPage() {
     getRandomUniquePastelColor,
     usedColors,
   } = useTableColors(tables);
+
+  const editTableQuery = useQuery(
+    ["editTableQuery"],
+    () => selectFloorTableRequest(adminId),
+    {
+      retry: 0,
+      refetchOnWindowFocus: false,
+      onSuccess: (response) => {
+        console.log(response);
+        const tables = response.data[0]?.tables || [];
+        console.log(tables);
+        setTables(tables);
+        const currentFloor = response.data.find(
+          (floor) => floor.floorNum === nowSelectFloor
+        );
+        if (currentFloor) {
+          setFloors(currentFloor.tables);
+          setColumns(getColumns(currentFloor.tables.length));
+        }
+      },
+      onError: (error) => {
+        console.log(error);
+      }
+    }
+  );
 
   // SSE 구독 로직
   useEffect(() => {
@@ -141,7 +174,7 @@ function PosMainPage() {
     const newTables = [...tables];
     newTables[targetIndex] = {
       ...targetTable,
-      selectedItems: [...sourceTable.selectedItems],
+      selectedItems: sourceTable.selectedItems || [], // selectedItems가 undefined인 경우 빈 배열로 설정
       totalPrice: sourceTable.totalPrice,
     };
     newTables[sourceIndex] = {
@@ -214,7 +247,7 @@ function PosMainPage() {
 
     selectedTableIndices.forEach((index) => {
       const table = tables[index];
-      mergedItems = [...mergedItems, ...table.selectedItems];
+      mergedItems = [...mergedItems, ...(table.selectedItems || [])];
       mergedTotalPrice += table.totalPrice;
 
       newGroupPayment[index] = { color: groupColor, groupId };
@@ -291,7 +324,7 @@ function PosMainPage() {
 
     groupPaymentIndices.forEach((index) => {
       const table = tables[index];
-      mergedItems = [...mergedItems, ...table.selectedItems];
+      mergedItems = [...mergedItems, ...(table.selectedItems || [])];
       mergedTotalPrice += table.totalPrice;
     });
 
@@ -344,25 +377,29 @@ function PosMainPage() {
   };
 
   const renderTables = () => {
+    
     return tables.map((table, index) => {
       const headerColor = mergeGroups[index]
         ? mergeGroups[index].color
         : groupPayment[index]
         ? groupPayment[index].color
-        : table.selectedItems.length > 0
+        : table.selectedItems?.length > 0
         ? tableColors[index]
-        : "transparent";
-      const isSelected = selectedTableIndices.includes(index);
-
-      // 테이블 번호에 맞는 주문 데이터를 로컬 스토리지에서 가져오기
-      const tableKey = `table${index + 1}`;
+        : "transparent"; // table.selectedItems가 undefined인 경우 처리
+        const isSelected = selectedTableIndices.includes(index);
+        
+        // 테이블 번호에 맞는 주문 데이터를 로컬 스토리지에서 가져오기
+        const tableKey = `table${index + 1}`;
       const storedData = localStorage.getItem(tableKey);
       const orders = storedData ? JSON.parse(storedData) : [];
-
+      
       return (
         <PosTableItem
           key={index}
-          table={table}
+          table={{
+            ...table,
+            selectedItems: table.selectedItems || [], // selectedItems가 undefined인 경우 빈 배열로 설정
+          }}
           index={index}
           headerColor={headerColor}
           isSelected={isSelected}
@@ -375,13 +412,33 @@ function PosMainPage() {
     });
   };
 
+  const getColumns = (tableCount) => {
+    for (let buttonCount of buttons) {
+      const [rows, columns] = buttonCount.split('X').map(Number);
+      if (rows * columns === tableCount) {
+        return rows;
+      }
+    }
+    console.warn(`적절한 columns 값을 찾을 수 없습니다. 테이블 수: ${tableCount}`);
+    return Math.ceil(Math.sqrt(tableCount)); // 기본값으로 테이블 수의 제곱근에 가까운 정수를 반환
+  };
+
+  const handleSelectFloor = (floorNum) => {
+    const selectedFloor = floors.find(floor => floor.floorNum === floorNum);
+    if(selectedFloor) {
+      setTables(selectedFloor.tables.map(table => ({ ...table, checked: false})));
+      setColumns(getColumns(selectedFloor.tables.length));
+    }
+    setNowSelectFloor(floorNum);
+  }
+
   return (
     <div css={s.posLayout}>
       <div css={s.timeLayout}>
         <CurrentTime />
       </div>
       <div css={s.tableLayout}>
-        <div css={s.tableContainer}>{renderTables()}</div>
+        <div css={s.tableContainer(columns)}>{renderTables()}</div>
       </div>
       <div css={s.managmentLayout}>
         <div css={s.managmentContainer}>
@@ -399,6 +456,9 @@ function PosMainPage() {
           </button>
           <button css={s.managementButton} onClick={handleGroupPayment}>
             단체결제
+          </button>
+          <button css={s.managementButton} onClick={handleOrderDetails}>
+            주문내역
           </button>
           <button css={s.managementButton} onClick={handleOrderDetails}>
             주문내역

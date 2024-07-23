@@ -20,17 +20,19 @@ export const timeLayout = css`
 
 export const tableLayout = css`
   display: flex;
+  background-color: aqua;
   justify-content: center;
   align-items: center;
   margin-top: 20px;
 `;
 
-export const tableContainer = css`
+export const tableContainer= (count) => css`
   width: 90%;
   height: 600px;
   border-radius: 10px;
+  background-color: orange;
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(${count}, 1fr);
   grid-gap: 10px;
   padding: 10px;
   box-sizing: border-box;
