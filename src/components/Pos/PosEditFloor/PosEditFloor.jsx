@@ -2,7 +2,7 @@ import { useState } from "react";
 
 function PosEditFloor({floors, setFloors, setIsOpenFloorEdit}) {
   const [isOpenAddFloor, setisOpenAddFloor] = useState(false);
-  const [floorNum, setFloorNum] = useState("");
+  const [floorNum, setFloorNum] = useState(0);
   const [floorName, setFloorName] = useState("");
   const [localFloors, setLocalFloors] = useState(floors);
 
@@ -10,13 +10,13 @@ function PosEditFloor({floors, setFloors, setIsOpenFloorEdit}) {
   const addFloor = () => {
     const newTables = [];
     for (let i = 0; i < 9; i++) {
-      newTables.push({id: i + 1, tableName: "", checked: false});
+      newTables.push({tableNum: i + 1, tableName: i + 1, checked: false});
     }
 
     setLocalFloors([
       ...localFloors,
       {
-        floorNum: floorNum,
+        floorNum: parseInt(floorNum),
         floorName: floorName,
         tables: newTables,
       }

@@ -26,12 +26,13 @@ export const tableContainer = (count) => css`
   justify-items: center;
 `;
 
-export const tableButton = (boolean) => css`
+export const tableButton = (checked, id) => css`
   padding: 0;
   box-sizing: border-box;
   width: 100%;
   height: 100%;
-  border: ${boolean ? "1px solid red":"1px solid #c7c7c7"};
+  border: ${checked ? "1px solid red":"1px solid #c7c7c7"};
+  ${id === 444 ? "visibility: hidden;" : ""}
   display: flex;
   flex-direction: column;
   align-items: center;
