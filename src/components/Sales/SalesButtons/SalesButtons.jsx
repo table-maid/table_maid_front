@@ -28,7 +28,7 @@ const SalesButtons = ({
           value={selectedYear}
           css={s.button(activeButton === "year")}
         >
-          {years.map((year) => (
+          {years?.map((year) => (
             <option key={year} value={year}>
               {year}년
             </option>

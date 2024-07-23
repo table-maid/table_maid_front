@@ -10,6 +10,7 @@ const PosTableItem = ({
   handleClick,
   handleTableSelect,
   groupPayment,
+  orders, // 추가된 부분
 }) => {
   const hasItems = table.selectedItems.length > 0;
 
@@ -32,7 +33,7 @@ const PosTableItem = ({
           {groupPayment && <p>단체</p>}
         </div>
         <div css={s.tableDetails}>
-          {table.selectedItems.length === 0 ? (
+          {orders.length === 0 ? (
             <div css={s.buttonBox}>
               <div
                 css={s.button}
@@ -45,11 +46,11 @@ const PosTableItem = ({
               </div>
             </div>
           ) : (
-            table.selectedItems.map((item, itemIndex) => (
+            orders.map((order, itemIndex) => (
               <div css={s.menuBox} key={itemIndex}>
                 <div css={s.menuItem}>
-                  <span>{item.menuName}</span>
-                  <span>{item.menuCount}</span>
+                  <span>{order.menu.menuName}</span>
+                  <span>{order.menu.menuPrice}</span>
                 </div>
               </div>
             ))
