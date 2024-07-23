@@ -392,7 +392,7 @@ function PosMainPage() {
         const tableKey = `table${index + 1}`;
       const storedData = localStorage.getItem(tableKey);
       const orders = storedData ? JSON.parse(storedData) : [];
-      
+
       return (
         <PosTableItem
           key={index}
