@@ -39,6 +39,7 @@ function PosMainPage() {
   const [floors, setFloors] = useState([]);
   const [isOpenFloorList, setIsOpenFloorList] = useState(false);
 
+
   const {
     tableColors,
     updateTableColor,
@@ -400,6 +401,11 @@ function PosMainPage() {
         : "transparent"; 
   
       const isSelected = selectedTableIndices.includes(index);
+
+      // 테이블 번호에 맞는 주문 데이터를 로컬 스토리지에서 가져오기
+      const tableKey = `table${index + 1}`;
+      const storedData = localStorage.getItem(tableKey);
+      const orders = storedData ? JSON.parse(storedData) : [];
 
       return (
         <PosTableItem
