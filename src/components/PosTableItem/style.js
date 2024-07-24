@@ -25,12 +25,12 @@ export const table = css`
   border-radius: 10px;
 `;
 
-export const tableHeader = (hasItems) => css`
+export const tableHeader = (hasItems, headerColor) => css`
   width: 93%;
   display: flex;
   padding: 5px 10px;
   justify-content: space-between;
-  background-color: ${hasItems ? "inherit" : "transparent"};
+  background-color: ${hasItems ? headerColor : "transparent"};
   font-weight: bold;
   border-top-right-radius: 10px;
   border-top-left-radius: 10px;
@@ -39,6 +39,7 @@ export const tableHeader = (hasItems) => css`
     margin: 0;
   }
 `;
+
 
 export const tableNumber = css`
   font-size: 1.2em;

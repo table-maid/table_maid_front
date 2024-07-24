@@ -20,12 +20,13 @@ export const timeLayout = css`
 
 export const tableLayout = css`
   display: flex;
+  width: 100%;
   justify-content: center;
   align-items: center;
   margin-top: 20px;
 `;
 
-export const tableContainer= (count) => css`
+export const tableContainer = (count) => css`
   width: 90%;
   height: 600px;
   border-radius: 10px;

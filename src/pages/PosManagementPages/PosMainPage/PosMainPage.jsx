@@ -36,7 +36,8 @@ function PosMainPage() {
   const [columns, setColumns] = useState(9);
   const buttons = usePosButtonList();
   const [nowSelectFloor, setNowSelectFloor] = useState(1);
-  const [floors, setFloors] = useState([])
+  const [floors, setFloors] = useState([]);
+  const [isOpenFloorList, setIsOpenFloorList] = useState(false);
 
   const {
     tableColors,
@@ -62,6 +63,7 @@ function PosMainPage() {
         if (currentFloor) {
           setFloors(currentFloor.tables);
           setColumns(getColumns(currentFloor.tables.length));
+          console.log(floors);
         }
       },
       onError: (error) => {
@@ -377,28 +379,28 @@ function PosMainPage() {
   };
 
   const renderTables = () => {
-    
     return tables.map((table, index) => {
+      const tableKey = `table${index + 1}`;
+      const storedData = localStorage.getItem(tableKey);
+      const orders = storedData ? JSON.parse(storedData) : [];
+      const selectedItems = orders; // orders를 selectedItems로 사용
+  
       const headerColor = mergeGroups[index]
         ? mergeGroups[index].color
         : groupPayment[index]
         ? groupPayment[index].color
-        : table.selectedItems?.length > 0
+        : selectedItems.length > 0
         ? tableColors[index]
-        : "transparent"; // table.selectedItems가 undefined인 경우 처리
-        const isSelected = selectedTableIndices.includes(index);
-        
-        // 테이블 번호에 맞는 주문 데이터를 로컬 스토리지에서 가져오기
-        const tableKey = `table${index + 1}`;
-      const storedData = localStorage.getItem(tableKey);
-      const orders = storedData ? JSON.parse(storedData) : [];
+        : "transparent"; // selectedItems가 undefined인 경우 처리
+  
+      const isSelected = selectedTableIndices.includes(index);
 
       return (
         <PosTableItem
           key={index}
           table={{
             ...table,
-            selectedItems: table.selectedItems || [], // selectedItems가 undefined인 경우 빈 배열로 설정
+            selectedItems, // 로컬 스토리지에서 가져온 selectedItems 사용
           }}
           index={index}
           headerColor={headerColor}
@@ -457,12 +459,7 @@ function PosMainPage() {
           <button css={s.managementButton} onClick={handleGroupPayment}>
             단체결제
           </button>
-          <button css={s.managementButton} onClick={handleOrderDetails}>
-            주문내역
-          </button>
-          <button css={s.managementButton} onClick={handleOrderDetails}>
-            주문내역
-          </button>
+          
         </div>
       </div>
     </div>
