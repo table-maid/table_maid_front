@@ -468,9 +468,25 @@ function PosMainPage() {
           <button css={s.managementButton} onClick={handleOrderDetails}>
             주문내역
           </button>
-          <button css={s.managementButton} onClick={handleOrderDetails}>
-            층
-          </button>
+          <button onClick={() => setIsOpenFloorList(!isOpenFloorList)} css={s.managementButton}>
+          {floors.find((floor) => floor.floorNum === nowSelectFloor)?.floorName || floors[0].floorName}
+        </button>
+          {/* 생성된 층/구역 List */}
+          <div>
+            {
+            isOpenFloorList 
+            ? 
+              floors.map((floor, index) => (             
+                <div key={index}>
+                  <button onClick={() => handleSelectFloor(floor.floorNum)}>
+                    {floor.floorName}
+                  </button>
+                </div>
+              ))
+            :
+              <></>
+            }
+          </div>
           <button css={s.managementButton} onClick={handlePreferences} >
             환경설정</button>
         </div>
