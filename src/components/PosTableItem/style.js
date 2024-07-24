@@ -3,7 +3,7 @@ import { css } from "@emotion/react";
 export const tableButton = css`
   padding: 0;
   box-sizing: border-box;
-  width: 70%;
+  width: 95%;
   height: 165px;
   border: 1px solid #c7c7c7;
   display: flex;
@@ -25,12 +25,12 @@ export const table = css`
   border-radius: 10px;
 `;
 
-export const tableHeader = (hasItems) => css`
-  width: 93%;
+export const tableHeader = (hasItems, headerColor) => css`
+  width: 100%;
+  height: 25%;
   display: flex;
-  padding: 5px 10px;
   justify-content: space-between;
-  background-color: ${hasItems ? "inherit" : "transparent"};
+  background-color: ${hasItems ? headerColor : "transparent"};
   font-weight: bold;
   border-top-right-radius: 10px;
   border-top-left-radius: 10px;
@@ -42,6 +42,9 @@ export const tableHeader = (hasItems) => css`
 
 export const tableNumber = css`
   font-size: 1.2em;
+  display: flex;
+  align-items: center;
+  padding-left: 10px;
 `;
 
 export const tablePeople = css`
@@ -53,7 +56,6 @@ export const buttonBox = css`
   display: flex;
   align-items: center;
   justify-content: center;
-  padding-bottom: 40px;
 `;
 
 export const button = css`
@@ -61,19 +63,26 @@ export const button = css`
   background-color: transparent;
   border: none;
   pointer-events: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 
   & svg {
     color: #bebebe;
     cursor: pointer;
+    padding-top: 20px;
   }
 `;
 
 export const tableDetails = css`
-  padding: 10px;
-  width: 90%;
+  width: 100%;
+  height: 100%;
   overflow: scroll;
   -ms-overflow-style: none;
   scrollbar-width: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 `;
 
 export const selectedTableHeader = css`
@@ -83,16 +92,23 @@ export const selectedTableHeader = css`
 export const menuBox = css`
   width: 100%;
   display: flex;
-  justify-content: space-between;
+  justify-content: space-around;
+  /* padding-bottom: 5px; */
 `;
 
 export const menuItem = css`
   width: 100%;
   display: flex;
   justify-content: space-between;
+  align-items: center;
+  padding: 0 10px;
 
   & span {
     padding: 5px 0;
+    font-size: 1em; // 기본 글자 크기
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 `;
 
@@ -102,4 +118,3 @@ export const totalPrice = css`
   font-weight: bold;
   text-align: right;
 `;
-

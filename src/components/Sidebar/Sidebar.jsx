@@ -70,6 +70,16 @@ function Sidebar() {
                 매장 단품 메뉴 관리
               </Link>
             </li>
+            <li css={s.menuItem}>
+              <Link to={"/pos/main"} css={s.link} onClick={() => handleMenuItemClick("/pos/main")}>
+                포스 메인화면
+              </Link>
+            </li>
+            <li css={s.menuItem}>
+              <Link to={"/pos/table/edit"} css={s.link} onClick={() => handleMenuItemClick("/pos/table/edit")}>
+                포스 환경설정
+              </Link>
+            </li>
           </ul>
         </div>
       )}

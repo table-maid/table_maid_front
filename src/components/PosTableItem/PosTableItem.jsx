@@ -16,19 +16,18 @@ const PosTableItem = ({
 
   return (
     <div
-      css={[s.tableButton]}
+      css={s.tableButton}
       key={index}
       onClick={() => handleTableSelect(index)}
     >
       <div css={s.table}>
         <div
           css={[
-            s.tableHeader(hasItems),
-            { backgroundColor: headerColor },
+            s.tableHeader(hasItems, headerColor),
             isSelected && s.selectedTableHeader,
           ]}
         >
-          <span css={s.tableNumber}>{index + 1}</span>
+          <span css={s.tableNumber}>{table.tablesName}</span>
           <span css={s.tablePeople}></span>
           {groupPayment && <p>단체</p>}
         </div>

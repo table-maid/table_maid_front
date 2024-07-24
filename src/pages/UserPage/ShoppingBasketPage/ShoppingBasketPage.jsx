@@ -191,5 +191,5 @@ function ShoppingBasketPage(props) {
     </div>
   );
 }
-}
+
 export default ShoppingBasketPage;
