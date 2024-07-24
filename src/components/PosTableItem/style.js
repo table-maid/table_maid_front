@@ -70,7 +70,7 @@ export const button = css`
   & svg {
     color: #bebebe;
     cursor: pointer;
-    padding-bottom: 25px;
+    padding-top: 20px;
   }
 `;
 
@@ -83,7 +83,6 @@ export const tableDetails = css`
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
 `;
 
 export const selectedTableHeader = css`
