@@ -456,10 +456,9 @@ function PosMainPage() {
           <button css={s.managementButton} onClick={handleGroupAssignment}>
             단체지정
           </button>
-          <button css={s.managementButton} onClick={handleGroupPayment}>
-            단체결제
+          <button css={s.managementButton} onClick={handleOrderDetails}>
+            주문내역
           </button>
-          
         </div>
       </div>
     </div>

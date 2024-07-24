@@ -70,6 +70,7 @@ export const button = css`
   & svg {
     color: #bebebe;
     cursor: pointer;
+    padding-bottom: 25px;
   }
 `;
 
