@@ -54,16 +54,17 @@ function PosMainPage() {
       refetchOnWindowFocus: false,
       onSuccess: (response) => {
         console.log(response);
-        const tables = response.data[0]?.tables || [];
-        console.log(tables);
-        setTables(tables);
+        // 선택된 층에 해당하는 테이블 데이터를 가져옴
         const currentFloor = response.data.find(
           (floor) => floor.floorNum === nowSelectFloor
         );
+  
         if (currentFloor) {
-          setFloors(currentFloor.tables);
-          setColumns(getColumns(currentFloor.tables.length));
-          console.log(floors);
+          const tables = currentFloor.tables || [];
+          console.log("Selected floor tables:", tables);
+          setTables(tables); // 선택된 층의 테이블 데이터를 설정
+          setFloors(response.data); // 전체 층 데이터 저장
+          setColumns(getColumns(tables.length));
         }
       },
       onError: (error) => {
@@ -71,6 +72,7 @@ function PosMainPage() {
       }
     }
   );
+  
 
   // SSE 구독 로직
   useEffect(() => {
@@ -176,7 +178,7 @@ function PosMainPage() {
     const newTables = [...tables];
     newTables[targetIndex] = {
       ...targetTable,
-      selectedItems: sourceTable.selectedItems || [], // selectedItems가 undefined인 경우 빈 배열로 설정
+      selectedItems: sourceTable.selectedItems || [], 
       totalPrice: sourceTable.totalPrice,
     };
     newTables[sourceIndex] = {
@@ -387,7 +389,7 @@ function PosMainPage() {
       const tableKey = `table${index + 1}`;
       const storedData = localStorage.getItem(tableKey);
       const orders = storedData ? JSON.parse(storedData) : [];
-      const selectedItems = orders; // orders를 selectedItems로 사용
+      const selectedItems = orders; 
   
       const headerColor = mergeGroups[index]
         ? mergeGroups[index].color
@@ -395,7 +397,7 @@ function PosMainPage() {
         ? groupPayment[index].color
         : selectedItems.length > 0
         ? tableColors[index]
-        : "transparent"; // selectedItems가 undefined인 경우 처리
+        : "transparent"; 
   
       const isSelected = selectedTableIndices.includes(index);
 
@@ -467,9 +469,10 @@ function PosMainPage() {
             주문내역
           </button>
           <button css={s.managementButton} onClick={handleOrderDetails}>
-            주문내역
+            층
           </button>
-          <button css={s.managementButton} onClick={handlePreferences} >환경설정</button>
+          <button css={s.managementButton} onClick={handlePreferences} >
+            환경설정</button>
         </div>
       </div>
     </div>
