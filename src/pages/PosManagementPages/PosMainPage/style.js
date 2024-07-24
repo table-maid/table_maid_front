@@ -159,7 +159,7 @@ export const managmentContainer = css`
 `;
 
 export const managementButton = css`
-  width: 160px;
+  width: 130px;
   height: 80px;
   border-radius: 10px;
   border: 1px solid #c7c7c7;

@@ -378,6 +378,10 @@ function PosMainPage() {
     navigate(`/pos/table/detail/${tableIndex + 1}`);
   };
 
+  const handlePreferences = () => {
+    navigate(`/pos/table/edit`);
+  };
+
   const renderTables = () => {
     return tables.map((table, index) => {
       const tableKey = `table${index + 1}`;
@@ -465,6 +469,7 @@ function PosMainPage() {
           <button css={s.managementButton} onClick={handleOrderDetails}>
             주문내역
           </button>
+          <button css={s.managementButton} onClick={handlePreferences} >환경설정</button>
         </div>
       </div>
     </div>
