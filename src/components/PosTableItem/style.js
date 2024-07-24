@@ -94,7 +94,7 @@ export const menuBox = css`
   width: 100%;
   display: flex;
   justify-content: space-around;
-  padding-bottom: 5px;
+  /* padding-bottom: 5px; */
 `;
 
 export const menuItem = css`
