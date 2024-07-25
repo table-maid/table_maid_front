@@ -11,7 +11,7 @@ import * as s from "./style";
 
 function PosTableDetailPage(props) {
     const adminId = 1;
-    const {tableId} = useParams();
+    const { tableId } = useParams();
     const [categoryPageNum, setCategoryPageNum] = useState(1);
     const [menuPageNum, setMenuPageNum] = useState(1);
     const { categories, error: categoriesError } = useCategory(adminId, categoryPageNum); 
@@ -31,6 +31,7 @@ function PosTableDetailPage(props) {
     const selectedTableIndex = useRecoilValue(selectedTableIndexState);
     const [groupPayment] = useRecoilState(groupPaymentState); // 단체지정 상태
     const navigate = useNavigate();
+    const [menu, setMenu] = useState([]);
 
     const emptyCategoryArray = Array.from({ length: 5 - (categories ? categories.length : 0) }, (_, index) => index);
     const emptyMenuArray = Array.from({ length: 25 - (menus ? menus.length : 0) }, (_, index) => index);
@@ -38,23 +39,17 @@ function PosTableDetailPage(props) {
     const totalCategoryPages = Math.ceil((categories ? categories.length : 0) / 4);
     const totalMenuPages = Math.ceil((menus ? menus.length : 0) / 24);
 
-    useEffect(() => {
-        const eventSource = new EventSource(`http://localhost:8080/send/menus/1`)
-
-        eventSource.opopen = async () => {
-            await console.log("sse opened!");
-        }
-
-        eventSource.addEventListener('SSEOrder', (event) => {
-            const data = JSON.parse(event.data);
-            console.log(data);
-            console.log('SSEOrder');
-        })
-
-        return () => {
-            eventSource.close()
-        }
-    },[])
+    useEffect(() => {  
+        const savedItems = JSON.parse(localStorage.getItem(`table${tableId}`)) || [];  
+        console.log(selectedItems) 
+        console.log(savedItems[0].menu.menuPrice) 
+        setSelectedItems(savedItems.map(item => ({ 
+            menuName: item.menu.menuName,
+            menuCount: 1, // 기본 수량을 1로 설정
+            selectedOptions: item.options || [], // 옵션이 없으면 빈 배열
+            optionTotalPrice: item.menu.menuPrice
+        })));
+    }, [menus]);
 
     useEffect(() => {
         const currentTable = tables[selectedTableIndex] || {};
@@ -225,7 +220,7 @@ function PosTableDetailPage(props) {
                                 </tr>
                             </thead>
                             <tbody>
-                                {selectedItems.map((item, index) => (
+                                {selectedItems?.map((item, index) => (
                                     <tr key={index} onClick={() => handleSelectItem(index)}>
                                         <td>{index + 1}</td>
                                         <td>{item.menuName}</td>

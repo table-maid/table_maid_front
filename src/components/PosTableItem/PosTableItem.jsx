@@ -10,7 +10,7 @@ const PosTableItem = ({
   handleClick,
   handleTableSelect,
   groupPayment,
-  orders, // 추가된 부분
+  orders
 }) => {
   const hasItems = table.selectedItems.length > 0;
 
