@@ -1,14 +1,14 @@
 import React, { useState } from 'react'
 
 function PosEditTableName({selectedTables, updateTableName, setIsOpenTableNameEdit}) {
-  const [tableName, setTableName] = useState(selectedTables.tableName);
+  const [tableName, setTableName] = useState(selectedTables.tablesName);
 
   const handleChange = (e) => {
     setTableName(e.target.value);
   }
 
   const handleSubmit = () => {
-    updateTableName(selectedTables.tableNum, tableName);
+    updateTableName(selectedTables.tablesNum, tableName);
     setIsOpenTableNameEdit(false);
   }
 
