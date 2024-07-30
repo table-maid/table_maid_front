@@ -440,6 +440,10 @@ function PosMainPage() {
     }
     setNowSelectFloor(floorNum);
   }
+  const currentFloor = floors.find(
+    (floor) => floor.floorNum === nowSelectFloor
+  );
+  const floorName = currentFloor ? currentFloor.floorName : "층 선택";
 
   return (
     <div css={s.posLayout}>
@@ -469,9 +473,19 @@ function PosMainPage() {
           <button css={s.managementButton} onClick={handleOrderDetails}>
             주문내역
           </button>
-          <button css={s.managementButton} onClick={handleOrderDetails}>
-            층
+          <button onClick={() => setIsOpenFloorList(!isOpenFloorList)} css={s.managementButton}>
+            {floorName}
           </button>
+          <div>
+            {isOpenFloorList &&
+              floors.map((floor, index) => (
+                <div key={index}>
+                  <button onClick={() => handleSelectFloor(floor.floorNum)} css={s.floorbutton}>
+                    {floor.floorName }
+                  </button>
+                </div>
+              ))}
+          </div>
           
           <button css={s.managementButton} onClick={handlePreferences} >
             환경설정</button>

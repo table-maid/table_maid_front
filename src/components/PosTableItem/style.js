@@ -4,13 +4,14 @@ export const tableButton = css`
   padding: 0;
   box-sizing: border-box;
   width: 95%;
-  height: 165px;
+  height: 100%; 
   border: 1px solid #c7c7c7;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: space-between;
   border-radius: 10px;
+  overflow: hidden; 
 `;
 
 export const table = css`
@@ -23,6 +24,7 @@ export const table = css`
   justify-content: space-between;
   background-color: white;
   border-radius: 10px;
+  overflow: hidden; 
 `;
 
 export const tableHeader = (hasItems, headerColor) => css`
@@ -59,30 +61,29 @@ export const buttonBox = css`
 `;
 
 export const button = css`
-  width: 25%;
+  width: 100%;
+  height: 80%;
   background-color: transparent;
-  border: none;
-  pointer-events: auto;
   display: flex;
   align-items: center;
   justify-content: center;
-
-  & svg {
-    color: #bebebe;
-    cursor: pointer;
-    padding-top: 20px;
-  }
 `;
 
 export const tableDetails = css`
   width: 100%;
-  height: 100%;
+  height: 140px;
   overflow: scroll;
   -ms-overflow-style: none;
   scrollbar-width: none;
   display: flex;
   flex-direction: column;
   align-items: center;
+
+  & svg {
+    color: #bebebe;
+    cursor: pointer;
+    padding-top: 10px;
+  }
 `;
 
 export const selectedTableHeader = css`

@@ -23,9 +23,9 @@ export const timeLayout = css`
 export const tableLayout = css`
   display: flex;
   width: 100%;
+  height: 80%;
   justify-content: center;
   align-items: center;
-  margin-top: 25px;
 `;
 
 export const tableContainer = (count) => css`
@@ -35,7 +35,6 @@ export const tableContainer = (count) => css`
   display: grid;
   grid-template-columns: repeat(${count}, 1fr);
   grid-gap: 10px;
-  
   box-sizing: border-box;
   justify-items: center;
 `;
@@ -43,8 +42,8 @@ export const tableContainer = (count) => css`
 export const tableButton = css`
   padding: 0;
   box-sizing: border-box;
-  width: 70%;
-  height: 165px;
+  width: 100%;
+  height: 100%;
   border: 1px solid #c7c7c7;
   display: flex;
   flex-direction: column;
@@ -161,6 +160,14 @@ export const managmentContainer = css`
 export const managementButton = css`
   width: 130px;
   height: 80px;
+  border-radius: 10px;
+  border: 1px solid #c7c7c7;
+  background-color: white;
+`;
+
+export const floorbutton = css`
+  width: 50px;
+  height: 30px;
   border-radius: 10px;
   border: 1px solid #c7c7c7;
   background-color: white;
