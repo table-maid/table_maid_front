@@ -51,6 +51,11 @@ export const tableNumber = css`
 
 export const tablePeople = css`
   font-size: 1.2em;
+
+  p {
+    font-size: 15px;
+    padding: 5px;
+  }
 `;
 
 export const buttonBox = css`

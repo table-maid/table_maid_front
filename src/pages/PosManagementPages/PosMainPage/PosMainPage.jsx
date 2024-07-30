@@ -483,10 +483,10 @@ function PosMainPage() {
                   </button>
                 </div>
               ))}
+          </div>
           <button css={s.managementButton} onClick={handleOrderDetails}>
             주문내역
           </button>
-          </div>
           
           <button css={s.setting} onClick={handlePreferences} >
           <IoSettingsSharp size={30}/></button>
