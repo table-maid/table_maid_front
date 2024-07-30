@@ -104,8 +104,8 @@
             </a>
         </td>
         <td align="center">
-            <a href="https://github.com/ez0603">
-                <img src="" width="150" height="150" />
+            <a href="https://github.com/leeseongchi">
+                <img src="https://github.com/user-attachments/assets/a6a1f3e8-1c60-4b2b-a745-9ec8689fd5a4" width="150" height="150" />
             </a>
         </td>
         <td align="center">
