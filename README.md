@@ -194,7 +194,7 @@
   - 칸반 보드로 프로젝트 진행 상황을 한 눈에 확인할 수 있어 일정을 관리하기 수월했습니다.
 
 <p align="right" dir="auto">
-<a href="https://github.com/Novel-Ideas/gumeonggage-front">TOP 🔼</a>
+<a href="#top">TOP 🔼</a>
 </p>
     
 <br/>
