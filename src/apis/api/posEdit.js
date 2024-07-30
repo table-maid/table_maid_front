@@ -19,3 +19,7 @@ export const deleteTableRequest = async (data) => {
 export const deleteFloorRequest = async (data) => {
   return await instance.delete("/pos/floor", { data });
 };
+
+export const updateTableRequest = async (data) => {
+  return await instance.put("/pos/floor/table", data);
+};
