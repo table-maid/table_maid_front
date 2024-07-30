@@ -149,7 +149,7 @@ export const managmentLayout = css`
 `;
 
 export const managmentContainer = css`
-  width: 90%;
+  width: 92%;
   height: 100px;
   /* border: 1px solid black; */
   display: flex;
@@ -171,4 +171,12 @@ export const floorbutton = css`
   border-radius: 10px;
   border: 1px solid #c7c7c7;
   background-color: white;
+`;
+
+export const setting = css`
+  width: 30px;
+  height: 30px;
+  border: none;
+  color: #3f3f3f;
+  padding-top: 20px;
 `;
