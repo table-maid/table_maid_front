@@ -20,8 +20,6 @@
 >
 > ## [📄 API 명세서&ERD 설계도](#-api-명세서erd-설계도-1)
 >
-> ## [📋 메뉴 구조도](#-메뉴-구조도-1)
->
 > ## [🖥 화면 구현](#-화면-구현-1)
 >
 > <br/>
@@ -386,46 +384,6 @@
 <img src="https://img.shields.io/badge/Emotion-cb0096?style=for-the-badge&logo=react&logoColor=white">
 </p>
 
-### ⛓️ pom.xml(Back-end)
-
-| 라이브러리                          | 용도                                  |
-| ----------------------------------- | ------------------------------------- |
-| lombok                              | 어노테이션(@)으로 코드 자동 생성      |
-| spring-boot-starter-security        | spring security 적용                  |
-| spring-boot-starter-validation      | 입력 값 검증                          |
-| spring-boot-starter-web             | Spring Web 프로젝트에 필수 라이브러리 |
-| spring-boot-starter-test            | 프로젝트 작동을 테스트하는 역할       |
-| mybatis-spring-boot-starter         | 백엔드에서 MyBatis 문법 적용          |
-| spring-boot-devtools                | 빠른 재시작                           |
-| mysql-connector-java                | DB인 MySQL과 연결                     |
-| jjwt-api / jjwt-impl / jjwt-jackson | JWT(JSON Web Token) 활용              |
-| spring-boot-starter-oauth2-client   | Oauth2 인증                           |
-| spring-boot-starter-aop             | spring aop 적용                       |
-| spring-boot-starter-thymeleaf       | 동적인 화면 생성의 역할               |
-
-### ⛓️ node_modules(Front-end)
-
-| 모듈 이름                                                                   | 용도                                       |
-| --------------------------------------------------------------------------- | ------------------------------------------ |
-| emotion/react, emotion/styled                                               | 리액트 내 css 적용                         |
-| portone/browser-sdk                                                         | QR 코드로 결제 기능 구현                   |
-| react-google-maps/api                                                       | 구글 맵을 불러와 화면에 구현               |
-| testing-library/jest-dom, testing-library/react, testing-library/user-event | 리액트 dom 테스트                          |
-| axios                                                                       | 서버로 요청을 보내 통신                    |
-| firebase                                                                    | 저장된 이미지를 업로드                     |
-| react-dom, react-router-dom                                                 | 주소 요청 발생 시 각 페이지로 이동         |
-| react-icons                                                                 | 리액트 아이콘을 불러와 사용                |
-| react-query                                                                 | 서버 데이터 동기화(fetching, caching) 지원 |
-| react-select                                                                | select 요소를 쉽게 사용                    |
-| react-switch                                                                | 토글 기능 스위치 구현                      |
-| react, react-scripts                                                        | 리액트 라이브러리 적용                     |
-| recharts                                                                    | 가져온 데이터를 차트로 시각화하는 역할     |
-| recoil                                                                      | 전역 상태 관리                             |
-| styled-reset                                                                | 초기 CSS 스타일 재설정                     |
-| sweetalert2                                                                 | 알림창 구현                                |
-| uuid                                                                        | 고유 아이디 값을 생성하는 함수 제공        |
-| web-vitals                                                                  | 사용자의 웹 바이탈 항목 측정               |
-
 <p align="right" dir="auto">
 <a href="#top">TOP 🔼</a>
 </p>
@@ -461,117 +419,6 @@ https://www.notion.so/40991af39a1a4145b7d07f1dd6f6ca8d?v=8a80e6294eeb4d6884ede66
 <br/>
 <br/>
 
-## 🖥 화면 구현
-
-### 🔐 관리자 계정 화면
-
-<div align="center" dir="auto">
-    <img src="https://github.com/Novel-Ideas/gumeonggage-front/assets/106566223/78b652d9-54cc-47e4-86ce-9d6d2d747096" align="center" width="100%"/>
-    <b>로그인 화면</b>
-</div>
-<br/>
-<div align="center" dir="auto">
-    <img src="https://github.com/Novel-Ideas/gumeonggage-front/assets/106566223/0b3f8595-a078-4318-8733-09999dd1c76d" align="center" width="100%"/>
-    <b>로그아웃 화면</b>
-</div>
-<br/>
-<div align="center" dir="auto">
-    <img src="https://github.com/Novel-Ideas/gumeonggage-front/assets/106566223/bb8c4ddd-907d-4176-9d29-3258eae0a5ae" align="center" width="100%"/>
-    <b>회원가입 화면</b>
-</div>
-<br/>
-<div align="center" dir="auto">
-    <img src="https://github.com/Novel-Ideas/gumeonggage-front/assets/106566223/285eeebe-a43f-4415-af11-0eeffb5ce75c" align="center" width="100%"/>
-    <b>OAuth2 카카오 계정통합 화면</b>
-</div>
-
-### 🍔 주문 화면
-
-<div align="center" dir="auto">
-    <img src="https://github.com/Novel-Ideas/gumeonggage-front/assets/106566223/ae645259-b387-4786-8e59-310bc95e28f2" width="100%"/>
-    <b>주문 화면</b>
-</div>
-<br/>
-<div align="center" dir="auto">
-    <img src="https://github.com/Novel-Ideas/gumeonggage-front/assets/106566223/967cca31-340c-4725-acea-287457104b58" width="100%"/>
-    <b>큰글씨 모드 주문 화면</b>
-</div>
-<br/>
-<div align="center" dir="auto">
-    <img src="https://github.com/Novel-Ideas/gumeonggage-front/assets/106566223/c53f6ce1-f9df-4ec2-888f-43db0b6c8e89" width="100%"/>
-    <b>포인트 적립 결제화면</b>
-</div>
-<br/>
-<div align="center" dir="auto">
-    <img src="https://github.com/Novel-Ideas/gumeonggage-front/assets/106566223/b57232fd-74b6-4416-a988-4139407fe249" width="100%"/>
-    <b>포인트 사용 결제화면</b>
-</div>
-<div align="center" dir="auto">
-    <img src="https://github.com/Novel-Ideas/gumeonggage-front/assets/106566223/f2cb1cc8-3f14-4cce-9c2d-34003626bcfb" width="50%" />
-    <br/>
-    <b>카카오페이 결제 화면</b>
-</div>
-
-### 📨 피드백 화면
-
-<div align="center" dir="auto">
-    <img src="https://github.com/Novel-Ideas/gumeonggage-front/assets/106566223/8f228aed-e36a-484e-bf38-1f4c326668f7" width="100%"/>
-    <b>피드백 작성 화면</b>
-</div>
-
-### 🏖 관광지 추천 화면
-
-<div align="center" dir="auto">
-    <img src="https://github.com/Novel-Ideas/gumeonggage-front/assets/106566223/6b81d711-e5bc-4457-8283-5bc337d4cb82" width="100%"/>
-    <b>관광지 추천 리스트 및 지도 화면</b>
-</div>
-
-### 🛠 관리자 화면
-
-<div align="center" dir="auto">
-    <img src="https://github.com/Novel-Ideas/gumeonggage-front/assets/106566223/2bcb3cb7-00da-4bdf-a927-63b7d5eda19c" width="100%"/>
-    <b>관리자 모드 진입 및 메인 화면</b>
-</div>
-</br>
-<div align="center" dir="auto">
-    <img src="https://github.com/Novel-Ideas/gumeonggage-front/assets/106566223/77e261b0-0287-4186-861b-96498588793f" width="100%"/>
-    <b>점포 매출 조회 화면</b>
-</div>
-</br>
-<div align="center" dir="auto">
-    <img src="https://github.com/Novel-Ideas/gumeonggage-front/assets/106566223/d4658ac1-4972-4e03-bc73-a731471fbf78" width="100%"/>
-    <b>결제내역 조회 및 결제 취소화면</b>
-</div>
-</br>
-<div align="center" dir="auto">
-    <img src="https://github.com/Novel-Ideas/gumeonggage-front/assets/106566223/c057c13a-aa9c-4e0e-92de-d01d6dd600cb" width="100%"/>
-    <b>메뉴 추가 화면</b>
-</div>
-</br>
-<div align="center" dir="auto">
-    <img src="https://github.com/Novel-Ideas/gumeonggage-front/assets/106566223/b1c25fb8-1047-4144-ba69-7290033cbfab" width="100%"/>
-    <b>메뉴 수정 화면</b>
-</div>
-</br>
-<div align="center" dir="auto">
-    <img src="https://github.com/Novel-Ideas/gumeonggage-front/assets/106566223/1209a493-57a7-4df5-9060-ee3b42dbf235" width="100%"/>
-    <b>피드백 조회 화면</b>
-</div>
-</br>
-<div align="center" dir="auto">
-    <img src="https://github.com/Novel-Ideas/gumeonggage-front/assets/106566223/39fec679-0c6a-4f78-8925-fdc26cdce27d" width="100%"/>
-    <b>회원조회 및 관리 화면</b>
-</div>
-</br>
-<div align="center" dir="auto">
-    <img src="https://github.com/Novel-Ideas/gumeonggage-front/assets/106566223/9d108c01-c398-4dd3-a518-051d3fced191" width="100%"/>
-    <b>점포 설정 및 점포 이름 변경 화면</b>
-</div>
-</br>
-<div align="center" dir="auto">
-    <img src="https://github.com/Novel-Ideas/gumeonggage-front/assets/106566223/33ab6ec0-4927-4992-b694-367fb6a2ebbf" width="100%"/>
-    <b>점포 로고 변경 화면</b>
-</div>
 
 <p align="right" dir="auto">
 <a href="#top">TOP 🔼</a>
