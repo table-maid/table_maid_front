@@ -32,24 +32,22 @@ function PosTableEditPage() {
       tables: [],
     },
   ]);
+  const [editFloorNum, setEditFloorNum] = useState(null);
+  const [editTable, setEditTable] = useState(null);
 
   // 초기 테이블 설정
-  useEffect(() => {
-    const [rows, cols] = tableCountButton.split("X").map(Number);
-    const newTables = Array(rows * cols)
-      .fill()
-      .map((_, i) => ({
-        tablesNum: i + 1,
-        tablesName: (i + 1).toString(),
-        checked: false,
-      }));
-    setTables(newTables);
-    setFloors((prevFloors) =>
-      prevFloors.map((floor) =>
-        floor.floorNum === 1 ? { ...floor, tables: newTables } : floor
-      )
-    );
-  }, []);
+    useEffect(() => {
+      const currentFloor = floors.find(
+        (floor) => floor.floorNum === nowSelectFloor
+      );
+      if (currentFloor) {
+        const tableCount = currentFloor.tables.length;
+        setTables(
+          currentFloor.tables.map((table) => ({ ...table, checked: false }))
+        );
+        setColumns(getColumns(tableCount));
+      }
+    }, [floors, nowSelectFloor]);
 
   // tableCountButton 변경 시 테이블 갯수 설정
   useEffect(() => {
@@ -181,6 +179,8 @@ function PosTableEditPage() {
       alert("수정할 테이블을 클릭해주세요");
       return;
     }
+    setEditTable(selectedTable);
+    setEditFloorNum(nowSelectFloor);
     setIsOpenTableNameEdit(true);
   };
 
@@ -201,20 +201,16 @@ function PosTableEditPage() {
       return;
     }
     if (window.confirm("삭제하시겠습니까?")) {
-      setTables((prevTables) =>
-        prevTables.filter(
-          (table) => table.tablesNum !== selectedTable.tablesNum
-        )
+      const updatedTables = tables.map((table) =>
+        table.tablesNum === selectedTable.tablesNum
+          ? { ...table, tablesName: "삭제된 테이블입니다" }
+          : table
       );
+      setTables(updatedTables);
       setFloors((prevFloors) =>
         prevFloors.map((floor) =>
           floor.floorNum === nowSelectFloor
-            ? {
-                ...floor,
-                tables: floor.tables.filter(
-                  (table) => table.tablesNum !== selectedTable.tablesNum
-                ),
-              }
+            ? { ...floor, tables: updatedTables }
             : floor
         )
       );
@@ -358,7 +354,8 @@ function PosTableEditPage() {
           <div css={s.floorManagement}>
             {isOpenTableNameEdit && (
               <PosEditTableName
-                selectedTables={tables.find((table) => table.checked)}
+                floorNum={editFloorNum}
+                table={editTable}
                 updateTableName={updateTableName}
                 setIsOpenTableNameEdit={setIsOpenTableNameEdit}
               />
