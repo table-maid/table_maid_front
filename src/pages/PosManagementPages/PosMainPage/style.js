@@ -9,30 +9,33 @@ export const posLayout = css`
 
 export const timeLayout = css`
   width: 100%;
-  height: 5%;
+  height: 8%;
   display: flex;
-  border-top-right-radius: 30px;
-  border-top-left-radius: 30px;
-  border-bottom: 2px solid #5e5e5e;
   justify-content: center;
   align-items: center;
+  border-top-right-radius: 30px;
+  border-top-left-radius: 30px;
+  background-color: #a1a1a1;
+  color: white;
+  font-size: 23px;
 `;
 
 export const tableLayout = css`
   display: flex;
+  width: 100%;
   justify-content: center;
   align-items: center;
-  margin-top: 20px;
+  margin-top: 25px;
 `;
 
-export const tableContainer = css`
+export const tableContainer = (count) => css`
   width: 90%;
   height: 600px;
   border-radius: 10px;
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(${count}, 1fr);
   grid-gap: 10px;
-  padding: 10px;
+  
   box-sizing: border-box;
   justify-items: center;
 `;
@@ -147,17 +150,16 @@ export const managmentLayout = css`
 `;
 
 export const managmentContainer = css`
-  width: 82%;
+  width: 90%;
   height: 100px;
   /* border: 1px solid black; */
   display: flex;
   justify-content: space-around;
-  align-items: center;
-  /* background-color: aqua; */
+  /* align-items: center; */
 `;
 
 export const managementButton = css`
-  width: 160px;
+  width: 130px;
   height: 80px;
   border-radius: 10px;
   border: 1px solid #c7c7c7;
