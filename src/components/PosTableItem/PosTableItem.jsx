@@ -29,8 +29,7 @@ const PosTableItem = ({
           ]}
         >
           <span css={s.tableNumber}>{table.tablesName}</span>
-          <span css={s.tablePeople}></span>
-          {groupPayment && <p>단체</p>}
+          <span css={s.tablePeople}>{groupPayment && <p>단체</p>}</span>
         </div>
         <div css={s.tableDetails}>
           {orders.length === 0 ? (
@@ -57,9 +56,7 @@ const PosTableItem = ({
           )}
         </div>
         {table.totalPrice > 0 && (
-          <div css={s.totalPrice}>
-            {table.totalPrice.toLocaleString()}원
-          </div>
+          <div css={s.totalPrice}>{table.totalPrice.toLocaleString()}원</div>
         )}
       </div>
     </div>
