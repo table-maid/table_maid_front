@@ -94,12 +94,18 @@ function PosMainPage() {
       const tableKey = `table${data[0].tableNumber}`;
       const existingOrder = localStorage.getItem(tableKey);
 
+      // 각 메뉴 항목에 대해 optionTotalPrice 계산
+      const dataWithOptionTotalPrice = data.map(order => {
+        const optionTotalPrice = order.options.reduce((total, option) => total + (option.optionPrice * order.count), 0);
+        return { ...order, optionTotalPrice };
+      });
+
       let updatedOrders;
       if (existingOrder) {
         const currentOrders = JSON.parse(existingOrder);
-        updatedOrders = [...currentOrders, ...data];
+        updatedOrders = [...currentOrders, ...dataWithOptionTotalPrice];
       } else {
-        updatedOrders = data;
+        updatedOrders = dataWithOptionTotalPrice;
       }
       localStorage.setItem(tableKey, JSON.stringify(updatedOrders));
 
@@ -116,6 +122,7 @@ function PosMainPage() {
       console.log("SSE connection closed");
     };
   }, [selectedTableIndex]);
+
 
   // 로컬 스토리지 변화를 감지하여 상태 업데이트
   useEffect(() => {
