@@ -26,18 +26,20 @@ export const tableContainer = (count) => css`
   justify-items: center;
 `;
 
-export const tableButton = (checked, id) => css`
+export const tableButton = (checked, deleted) => css`
   padding: 0;
   box-sizing: border-box;
   width: 100%;
   height: 100%;
-  border: ${checked ? "1px solid red":"1px solid #c7c7c7"};
-  ${id === 444 ? "visibility: hidden;" : ""}
+  border: ${checked ? "1px solid red" : "1px solid #c7c7c7"};
+  background-color: ${deleted ? "#fff" : "transparent"};
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: space-between;
   border-radius: 10px;
+  ${deleted && `color: #ccc;`} // 삭제된 상태일 때 텍스트 색상 조정
+  ${deleted && `text-decoration: line-through;`} // 삭제된 상태일 때 텍스트에 취소선 추가
 `;
 
 export const tableHeader = css`
@@ -68,4 +70,11 @@ export const floorManagement = css`
   position: absolute;
   top: 10px;
   border: 1px solid black;
-`
+`;
+
+export const emptySlot = css`
+  width: 100%;
+  height: 100%;
+  background-color: #fff;
+  border-radius: 10px;
+`;
