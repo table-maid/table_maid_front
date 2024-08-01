@@ -18,9 +18,8 @@ import { useSearchParams } from "react-router-dom";
 
 function ShoppingBasketPage(props) {
   useEffect(() => {
-    // handleAddToCart();
-    console.log(cart)
-  }, [])
+    console.log(cart);
+  }, []);
   
   const { adminInfo } = useUserApis();
   const [cart, setCart] = useRecoilState(ShoppingCartState);
@@ -84,8 +83,6 @@ function ShoppingBasketPage(props) {
     );
   };
 
-  console.log(cart);
-
   const SEEsendMenus = useMutation({
     mutationKey: "SEEsendMenus",
     mutationFn: sendMenu,
@@ -140,7 +137,7 @@ function ShoppingBasketPage(props) {
                   {item.options.map((opt, idx) => (
                     <div key={idx} css={s.Xbutton}>
                       <p>
-                        {opt.optionName} ( + {opt.optionPrice} )
+                        {opt.optionName} ( + {opt.optionPrice} 원)
                       </p>
                       <button onClick={() => handleRemoveOption(index, idx)}>
                         <IoClose size={23} />

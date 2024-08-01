@@ -1,6 +1,7 @@
 /** @jsxImportSource @emotion/react */
 import { FaPlus } from "react-icons/fa";
 import * as s from "./style";
+import { useEffect, useState } from "react";
 
 const PosTableItem = ({
   table,
@@ -50,7 +51,7 @@ const PosTableItem = ({
               <div css={s.menuBox} key={itemIndex}>
                 <div css={s.menuItem}>
                   <span>{order.menu.menuName}</span>
-                  <span>{order.menu.menuPrice}</span>
+                  <span>{order.menu.menuPrice * (order.count) + order.optionTotalPrice}원</span>
                 </div>
               </div>
             ))

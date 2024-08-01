@@ -13,11 +13,11 @@ function PosMenuOptionsModal({
 }) {
   if (!isOpen) return null;
 
-  const handleCheckboxChange = (optionItem, name, price, isChecked) => {
+  const handleCheckboxChange = (optionItem, optionId, optionName, optionPrice, isChecked) => {
     if (isChecked) {
-      setSelectedOptions([...selectedOptions, { optionItem, name, price }]);
+      setSelectedOptions([...selectedOptions, { optionItem, optionId, optionName, optionPrice }]);
     } else {
-      setSelectedOptions(selectedOptions.filter(item => item.name !== name));
+      setSelectedOptions(selectedOptions.filter(item => item.name !== optionName));
     }
   };
 
@@ -60,7 +60,7 @@ function PosMenuOptionsModal({
                   <input
                     type="checkbox"
                     onChange={(e) =>
-                      handleCheckboxChange(optionItem, name, optionItem.optionPrices[idx], e.target.checked)
+                      handleCheckboxChange(optionItem, optionItem.optionId ,name, optionItem.optionPrices[idx], e.target.checked)
                     }
                   />
                 </div>

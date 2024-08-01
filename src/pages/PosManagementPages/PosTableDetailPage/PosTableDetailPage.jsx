@@ -41,17 +41,13 @@ function PosTableDetailPage(props) {
 
     useEffect(() => {  
         const savedItems = JSON.parse(localStorage.getItem(`table${tableId}`)) || [];  
+        console.log(savedItems[0]) 
+        setSelectedItems(savedItems);
         console.log(selectedItems) 
-        console.log(savedItems[0].menu.menuPrice) 
-        setSelectedItems(savedItems.map(item => ({ 
-            menuName: item.menu.menuName,
-            menuCount: 1, // 기본 수량을 1로 설정
-            selectedOptions: item.options || [], // 옵션이 없으면 빈 배열
-            optionTotalPrice: item.menu.menuPrice
-        })));
+ 
     }, [menus]);
 
-    useEffect(() => {
+    useEffect(() => { 
         const currentTable = tables[selectedTableIndex] || {};
         setSelectedItems(currentTable.selectedItems || []);
         setTotalPrice(currentTable.totalPrice || 0);
@@ -89,18 +85,20 @@ function PosTableDetailPage(props) {
         setTables(newTables);
     };
 
-    const handleAddItem = (menuCount, selectedOptions) => {
+    const handleAddItem = (count, options) => {
         const selectedMenu = menus.find(menu => menu.menuId === menuId);
-        const optionTotalPrice = selectedOptions.reduce((total, opt) => total + opt.price, 0);
+        console.log(options)
+        const optionTotalPrice = options.reduce((total, opt) => total + opt.optionPrice, 0);
         const newItem = {
-            menuName: selectedMenu.menuName,
-            menuPrice: selectedMenu.menuPrice,
-            menuCount,
-            selectedOptions,
-            optionTotalPrice
+            menu: selectedMenu,
+            count,
+            options,
+            tableNumber: tableId,
+            optionTotalPrice: optionTotalPrice
         };
         const newSelectedItems = [...selectedItems, newItem];
-        setSelectedItems(newSelectedItems);
+        const tableKey = `table${tableId}`;
+        localStorage.setItem(tableKey, JSON.stringify(newSelectedItems));
 
         const groupId = groupPayment[selectedTableIndex]?.groupId;
         if (groupId) {
@@ -110,6 +108,7 @@ function PosTableDetailPage(props) {
             updatedTables[selectedTableIndex] = { ...updatedTables[selectedTableIndex], selectedItems: newSelectedItems, totalPrice: totalPrice + (selectedMenu.menuPrice + optionTotalPrice) * menuCount };
             setTables(updatedTables);
         }
+        console.log(newSelectedItems)
 
         closeModal();
     };
@@ -125,22 +124,28 @@ function PosTableDetailPage(props) {
     const handleCancelSelected = () => {
         const updatedItems = selectedItems.filter((item, index) => !checkedItems.includes(index));
         setSelectedItems(updatedItems);
-
+    
+        const tableKey = `table${tableId}`;
+        localStorage.setItem(tableKey, JSON.stringify(updatedItems));
+    
         const groupId = groupPayment[selectedTableIndex]?.groupId;
         if (groupId) {
             updateGroupItems(groupId, updatedItems);
         } else {
             const updatedTables = [...tables];
-            updatedTables[selectedTableIndex] = { ...updatedTables[selectedTableIndex], selectedItems: updatedItems, totalPrice: totalPrice };
+            updatedTables[selectedTableIndex] = { ...updatedTables[selectedTableIndex], selectedItems: updatedItems, totalPrice: updatedItems.reduce((sum, item) => sum + (item.menu.menuPrice + item.options.reduce((acc, opt) => acc + opt.optionPrice, 0)) * item.count, 0) };
             setTables(updatedTables);
         }
-
+    
         setCheckedItems([]);
     };
 
     const handleCancelAll = () => {
         setSelectedItems([]);
-
+    
+        const tableKey = `table${tableId}`;
+        localStorage.removeItem(tableKey);
+    
         const groupId = groupPayment[selectedTableIndex]?.groupId;
         if (groupId) {
             updateGroupItems(groupId, []);
@@ -149,48 +154,55 @@ function PosTableDetailPage(props) {
             updatedTables[selectedTableIndex] = { ...updatedTables[selectedTableIndex], selectedItems: [], totalPrice: 0 };
             setTables(updatedTables);
         }
-
+    
         setCheckedItems([]);
     };
 
     const handleIncreaseCount = () => {
         const updatedItems = selectedItems.map((item, index) => {
             if (checkedItems.includes(index)) {
-                return { ...item, menuCount: item.menuCount + 1 };
+                return { ...item, count: item.count + 1 };
             }
             return item;
         });
         setSelectedItems(updatedItems);
-
+    
+        // 로컬 스토리지 업데이트
+        const tableKey = `table${tableId}`;
+        localStorage.setItem(tableKey, JSON.stringify(updatedItems));
+    
         const groupId = groupPayment[selectedTableIndex]?.groupId;
         if (groupId) {
             updateGroupItems(groupId, updatedItems);
         } else {
             const updatedTables = [...tables];
-            updatedTables[selectedTableIndex] = { ...updatedTables[selectedTableIndex], selectedItems: updatedItems, totalPrice: totalPrice };
+            updatedTables[selectedTableIndex] = { ...updatedTables[selectedTableIndex], selectedItems: updatedItems, totalPrice: updatedItems.reduce((sum, item) => sum + (item.menu.menuPrice + item.options.reduce((acc, opt) => acc + opt.optionPrice, 0)) * item.count, 0) };
             setTables(updatedTables);
         }
     };
-
+    
     const handleDecreaseCount = () => {
         const updatedItems = selectedItems.map((item, index) => {
-            if (checkedItems.includes(index) && item.menuCount > 1) {
-                return { ...item, menuCount: item.menuCount - 1 };
+            if (checkedItems.includes(index) && item.count > 1) {
+                return { ...item, count: item.count - 1 };
             }
             return item;
         });
         setSelectedItems(updatedItems);
-
+    
+        // 로컬 스토리지 업데이트
+        const tableKey = `table${tableId}`;
+        localStorage.setItem(tableKey, JSON.stringify(updatedItems));
+    
         const groupId = groupPayment[selectedTableIndex]?.groupId;
         if (groupId) {
             updateGroupItems(groupId, updatedItems);
         } else {
             const updatedTables = [...tables];
-            updatedTables[selectedTableIndex] = { ...updatedTables[selectedTableIndex], selectedItems: updatedItems, totalPrice: totalPrice };
+            updatedTables[selectedTableIndex] = { ...updatedTables[selectedTableIndex], selectedItems: updatedItems, totalPrice: updatedItems.reduce((sum, item) => sum + (item.menu.menuPrice + item.options.reduce((acc, opt) => acc + opt.optionPrice, 0)) * item.count, 0) };
             setTables(updatedTables);
         }
     };
-
     const handleRegisterComplete = () => { // 현재 테이블 상태 업데이트
         const updatedTables = [...tables];
         updatedTables[selectedTableIndex] = { ...updatedTables[selectedTableIndex], selectedItems, totalPrice };
@@ -220,16 +232,16 @@ function PosTableDetailPage(props) {
                                 </tr>
                             </thead>
                             <tbody>
-                                {selectedItems?.map((item, index) => (
-                                    <tr key={index} onClick={() => handleSelectItem(index)}>
-                                        <td>{index + 1}</td>
-                                        <td>{item.menuName}</td>
-                                        <td>{item.menuCount}</td>
-                                        <td>{item.selectedOptions.map(opt => `${opt.name} + ${opt.price.toLocaleString()}원`).join(", ")}</td>
-                                        <td>{((item.menuPrice + item.optionTotalPrice) * item.menuCount).toLocaleString()}원</td>
-                                        <td><input type="checkbox" checked={checkedItems.includes(index)} onChange={(e) => e.stopPropagation()} /></td>
-                                    </tr>
-                                ))}
+                            {selectedItems?.map((item, index) => (
+                                <tr key={index} onClick={() => handleSelectItem(index)}>
+                                    <td>{index + 1}</td>
+                                    <td>{item.menu.menuName}</td>
+                                    <td>{item.count}</td>
+                                    <td>{item.options?.map(opt => `${opt.optionName} + ${opt.optionPrice.toLocaleString()}원`).join(", ")}</td>
+                                    <td>{((item.menu.menuPrice + item.options?.reduce((acc, opt) => acc + opt.optionPrice, 0)) * item.count).toLocaleString()}원</td>
+                                    <td><input type="checkbox" checked={checkedItems.includes(index)} onChange={(e) => e.stopPropagation()} /></td>
+                                </tr>
+                            ))}
                             </tbody>
                         </table>
                     </div>
