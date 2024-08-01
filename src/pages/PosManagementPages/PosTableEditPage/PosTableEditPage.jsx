@@ -9,7 +9,9 @@ import { useMutation, useQuery } from "react-query";
 import {
   deleteTableRequest,
   saveFloorTableRequest,
+  saveTableRequest,
   selectFloorTableRequest,
+  updateTableRequest,
 } from "../../../apis/api/posEdit";
 import { adminIdState } from "../../../atoms/AdminIdStateAtom";
 import { useRecoilState } from "recoil";
@@ -36,18 +38,22 @@ function PosTableEditPage() {
   const [editTable, setEditTable] = useState(null);
 
   // 초기 테이블 설정
-    useEffect(() => {
-      const currentFloor = floors.find(
-        (floor) => floor.floorNum === nowSelectFloor
+  useEffect(() => {
+    const currentFloor = floors.find(
+      (floor) => floor.floorNum === nowSelectFloor
+    );
+    if (currentFloor) {
+      const tableCount = currentFloor.tables.length;
+      setTables(
+        currentFloor.tables.map((table) => ({
+          ...table,
+          checked: false,
+          deleted: false,
+        }))
       );
-      if (currentFloor) {
-        const tableCount = currentFloor.tables.length;
-        setTables(
-          currentFloor.tables.map((table) => ({ ...table, checked: false }))
-        );
-        setColumns(getColumns(tableCount));
-      }
-    }, [floors, nowSelectFloor]);
+      setColumns(getColumns(tableCount));
+    }
+  }, [floors, nowSelectFloor]);
 
   // tableCountButton 변경 시 테이블 갯수 설정
   useEffect(() => {
@@ -104,7 +110,7 @@ function PosTableEditPage() {
         );
         if (currentFloor) {
           setTables(
-            currentFloor.tables.map((table) => ({ ...table, checked: false }))
+            currentFloor.tables.map((table) => ({ ...table, checked: false, deleted: false }))
           );
           setColumns(getColumns(currentFloor.tables.length));
         }
@@ -123,6 +129,7 @@ function PosTableEditPage() {
       );
       setColumns(getColumns(selectedFloor.tables.length));
       setNowSelectFloor(floorNum);
+      editTableQuery.refetch();
     }
   };
 
@@ -194,6 +201,15 @@ function PosTableEditPage() {
     },
   });
 
+  const updateTableMutation = useMutation({
+    mutationKey: "updateTableMutation",
+    mutationFn: updateTableRequest,
+    onSuccess: (response) => {},
+    onError: (error) => {
+      console.log(error);
+    },
+  });
+
   const handleDelete = () => {
     const selectedTable = tables.find((table) => table.checked);
     if (!selectedTable) {
@@ -203,9 +219,10 @@ function PosTableEditPage() {
     if (window.confirm("삭제하시겠습니까?")) {
       const updatedTables = tables.map((table) =>
         table.tablesNum === selectedTable.tablesNum
-          ? { ...table, tablesName: "삭제된 테이블입니다" }
+          ? { ...table, deleted: true }
           : table
       );
+
       setTables(updatedTables);
       setFloors((prevFloors) =>
         prevFloors.map((floor) =>
@@ -214,8 +231,38 @@ function PosTableEditPage() {
             : floor
         )
       );
+      localStorage.setItem("floors", JSON.stringify(floors));
+      updateTableMutation.mutate({
+        adminId: adminId,
+        floorNum: nowSelectFloor,
+        tablesNum: selectedTable.tablesNum,
+        tablesName: "삭제된 테이블입니다",
+      });
     }
   };
+
+  // 컴포넌트 초기화 시 로컬 저장소에서 상태 복원
+  useEffect(() => {
+    const savedFloors = JSON.parse(localStorage.getItem("floors"));
+    if (savedFloors) {
+      setFloors(savedFloors);
+      const currentFloor = savedFloors.find(
+        (floor) => floor.floorNum === nowSelectFloor
+      );
+      if (currentFloor) {
+        setTables(
+          currentFloor.tables.map((table) => ({
+            ...table,
+            checked: false,
+            deleted: false,
+          }))
+        );
+        setColumns(getColumns(currentFloor.tables.length));
+      }
+    } else {
+      // 초기 데이터 로드 (API 호출 등)
+    }
+  }, [nowSelectFloor]);
 
   const saveFloorTableMutation = useMutation({
     mutationKey: "saveFloorTableMutation",
@@ -240,24 +287,41 @@ function PosTableEditPage() {
       })),
     }));
   };
-  
-   const handleAddTable = () => {
-     setTables((prevTables) => {
-       const maxTableNum = Math.max(
-         ...prevTables.map((table) => table.tablesNum),
-         0
-       );
-       const newTable = {
-         adminId: adminId,
-         checked: false,
-         floorNum: nowSelectFloor,
-         tablesId: maxTableNum + 1,
-         tablesName: (maxTableNum + 1).toString(),
-         tablesNum: maxTableNum + 1,
-       };
-       return [...prevTables, newTable];
-     });
-   };
+
+  const saveTableMutation = useMutation({
+    mutationKey: "saveTableMutation",
+    mutationFn: saveTableRequest,
+    onSuccess: (response) => {
+      window.location.replace("/");
+    },
+    onError: (error) => {
+      console.log(error);
+    },
+  });
+
+  const handleAddTable = () => {
+    setTables((prevTables) => {
+      const maxTableNum = Math.max(
+        ...prevTables.map((table) => table.tablesNum),
+        0
+      );
+      const newTable = {
+        adminId: adminId,
+        checked: false,
+        floorNum: nowSelectFloor,
+        tablesId: maxTableNum + 1,
+        tablesName: (maxTableNum + 1).toString(),
+        tablesNum: maxTableNum + 1,
+      };
+      saveTableMutation.mutate({
+        adminId: adminId,
+        floorNum: nowSelectFloor,
+        tablesNum: maxTableNum + 1,
+        tablesName: (maxTableNum + 1).toString(),
+      });
+      return [...prevTables, newTable];
+    });
+  };
 
   const handleSavePosEdit = () => {
     if (window.confirm("층과 테이블 설정을 저장하시겠습니까?")) {
@@ -313,13 +377,17 @@ function PosTableEditPage() {
         <div css={s.tableContainer(columns)}>
           {tables.map((table, index) => (
             <div
-              css={s.tableButton(table.checked, table.tablesNum)}
+              css={s.tableButton(table.checked)}
               key={index}
               onClick={() => handleSelectTable(table.tablesNum)}
             >
-              <div css={s.tableHeader}>
-                <div>{table.tablesName}</div>
-              </div>
+              {!table.deleted ? (
+                <div css={s.tableHeader}>
+                  <div>{table.tablesName}</div>
+                </div>
+              ) : (
+                <div css={s.emptySlot}></div>
+              )}
             </div>
           ))}
         </div>
@@ -328,7 +396,6 @@ function PosTableEditPage() {
       {/* 옵션 */}
       <div css={s.managmentLayout}>
         <div css={s.managmentContainer}>
-          {/* 층/구역 관리 */}
           <button onClick={() => setIsOpenFloorEdit(!isOpenFloorEdit)}>
             층/구역 관리
           </button>
@@ -341,16 +408,11 @@ function PosTableEditPage() {
               />
             )}
           </div>
-          {/* 테이블 추가 */}
-          <div>
-            <button onClick={handleAddTable}>추가</button>
-          </div>
-          {/* 테이블 삭제 */}
-          <div>
-            <button onClick={handleDelete}>삭제</button>
-          </div>
 
+          <button onClick={handleAddTable}>추가</button>
+          <button onClick={handleDelete}>삭제</button>
           <button onClick={handleEdit}>수정</button>
+
           <div css={s.floorManagement}>
             {isOpenTableNameEdit && (
               <PosEditTableName
