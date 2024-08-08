@@ -110,7 +110,11 @@ function PosTableEditPage() {
         );
         if (currentFloor) {
           setTables(
-            currentFloor.tables.map((table) => ({ ...table, checked: false, deleted: false }))
+            currentFloor.tables.map((table) => ({
+              ...table,
+              checked: false,
+              deleted: false,
+            }))
           );
           setColumns(getColumns(currentFloor.tables.length));
         }
@@ -377,8 +381,12 @@ function PosTableEditPage() {
         <div css={s.tableContainer(columns)}>
           {tables.map((table, index) => (
             <div
-              css={s.tableButton(table.checked)}
               key={index}
+              css={s.tableButton(
+                table.checked,
+                table.deleted,
+                table.tablesName
+              )}
               onClick={() => handleSelectTable(table.tablesNum)}
             >
               {!table.deleted ? (

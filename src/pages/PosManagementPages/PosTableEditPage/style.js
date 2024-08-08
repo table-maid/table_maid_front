@@ -26,22 +26,25 @@ export const tableContainer = (count) => css`
   justify-items: center;
 `;
 
-export const tableButton = (checked, deleted) => css`
+export const tableButton = (checked, deleted, tableName) => css`
   padding: 0;
   box-sizing: border-box;
   width: 100%;
   height: 100%;
   border: ${checked ? "1px solid red" : "1px solid #c7c7c7"};
-  background-color: ${deleted ? "#fff" : "transparent"};
+  background-color: ${tableName === "삭제된 테이블입니다"
+    ? "transparent"
+    : "#fff"};
+  visibility: ${tableName === "삭제된 테이블입니다" ? "hidden" : "visible"};
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: space-between;
   border-radius: 10px;
   ${deleted && `color: #ccc;`} // 삭제된 상태일 때 텍스트 색상 조정
-  ${deleted && `text-decoration: line-through;`} // 삭제된 상태일 때 텍스트에 취소선 추가
+  ${deleted &&
+  `text-decoration: line-through;`} // 삭제된 상태일 때 텍스트에 취소선 추가
 `;
-
 export const tableHeader = css`
   width: 100%;
   height: 20%;
