@@ -2,18 +2,22 @@ import { css } from "@emotion/react";
 
 export const buttonLayout = css`
   width: 100%;
-  height: 70px;
+  height: 62px;
   display: flex;
   align-items: center;
-  justify-content: center;
+  border-top-right-radius: 30px;
+  border-top-left-radius: 30px;
+  background-color: #a1a1a1;
 `;
 
 export const buttonContainer = css`
-  width: 75%;
+  width: 80%;
   height: 100%;
   display: flex;
   align-items: center;
   justify-content: space-around;
+  position: relative;
+  left: 5%;
 `;
 
 export const button = css`
