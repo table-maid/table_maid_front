@@ -420,15 +420,15 @@ function PosTableEditPage() {
             수정
           </button>
 
-          <button onClick={() => setIsOpenFloorList(!isOpenFloorList)}>
+          <button onClick={() => setIsOpenFloorList(!isOpenFloorList)} css={s.button}>
             {floorName}
           </button>
           {/* 생성된 층/구역 List */}
           <div>
             {isOpenFloorList &&
               floors.map((floor, index) => (
-                <div key={index}>
-                  <button onClick={() => handleSelectFloor(floor.floorNum)}>
+                <div key={index} css={s.floorButtonBox}>
+                  <button onClick={() => handleSelectFloor(floor.floorNum)} css={s.floorButton}>
                     {floor.floorName}
                   </button>
                 </div>

@@ -65,7 +65,7 @@ export const managmentLayout = css`
 `;
 
 export const managmentContainer = css`
-  width: 95%;
+  width: 93%;
   height: 100%;
   display: flex;
   justify-content: space-around;
@@ -113,6 +113,27 @@ export const emptySlot = css`
   height: 100%;
   background-color: #fff;
   border-radius: 10px;
+`;
+
+export const floorButtonBox = css`
+display: flex;
+gap: 10px;
+padding-bottom: 5px;
+`;
+
+export const floorButton = css`
+box-sizing: border-box;
+background-color: #fff;
+border: 1px solid #dbdbdb;
+border-radius: 5px;
+display: flex;
+gap: 10px;
+padding: 5px 10px;
+cursor: pointer;
+
+:hover {
+  background-color: #dbdbdb;
+}
 `;
 
 export const overlay = css`
