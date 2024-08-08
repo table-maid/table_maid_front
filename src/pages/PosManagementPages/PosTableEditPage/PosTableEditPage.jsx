@@ -404,33 +404,21 @@ function PosTableEditPage() {
       {/* 옵션 */}
       <div css={s.managmentLayout}>
         <div css={s.managmentContainer}>
-          <button onClick={() => setIsOpenFloorEdit(!isOpenFloorEdit)}>
+          <button
+            onClick={() => setIsOpenFloorEdit(!isOpenFloorEdit)}
+            css={s.button}
+          >
             층/구역 관리
           </button>
-          <div css={s.floorManagement}>
-            {isOpenFloorEdit && (
-              <PosEditFloor
-                floors={floors}
-                setFloors={setFloors}
-                setIsOpenFloorEdit={setIsOpenFloorEdit}
-              />
-            )}
-          </div>
-
-          <button onClick={handleAddTable}>추가</button>
-          <button onClick={handleDelete}>삭제</button>
-          <button onClick={handleEdit}>수정</button>
-
-          <div css={s.floorManagement}>
-            {isOpenTableNameEdit && (
-              <PosEditTableName
-                floorNum={editFloorNum}
-                table={editTable}
-                updateTableName={updateTableName}
-                setIsOpenTableNameEdit={setIsOpenTableNameEdit}
-              />
-            )}
-          </div>
+          <button onClick={handleAddTable} css={s.button}>
+            추가
+          </button>
+          <button onClick={handleDelete} css={s.button}>
+            삭제
+          </button>
+          <button onClick={handleEdit} css={s.button}>
+            수정
+          </button>
 
           <button onClick={() => setIsOpenFloorList(!isOpenFloorList)}>
             {floorName}
@@ -446,9 +434,23 @@ function PosTableEditPage() {
                 </div>
               ))}
           </div>
+          <button onClick={handleSavePosEdit} css={s.button}>
+            저장하기
+          </button>
         </div>
-        <button onClick={handleSavePosEdit}>저장하기</button>
       </div>
+
+      {isOpenFloorEdit && (
+        <div css={s.overlay}>
+          <div css={s.floorEditBox}>
+            <PosEditFloor
+              floors={floors}
+              setFloors={setFloors}
+              setIsOpenFloorEdit={setIsOpenFloorEdit}
+            />
+          </div>
+        </div>
+      )}
     </div>
   );
 }
