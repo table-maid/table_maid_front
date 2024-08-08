@@ -110,7 +110,11 @@ function PosTableEditPage() {
         );
         if (currentFloor) {
           setTables(
-            currentFloor.tables.map((table) => ({ ...table, checked: false, deleted: false }))
+            currentFloor.tables.map((table) => ({
+              ...table,
+              checked: false,
+              deleted: false,
+            }))
           );
           setColumns(getColumns(currentFloor.tables.length));
         }
@@ -377,8 +381,12 @@ function PosTableEditPage() {
         <div css={s.tableContainer(columns)}>
           {tables.map((table, index) => (
             <div
-              css={s.tableButton(table.checked)}
               key={index}
+              css={s.tableButton(
+                table.checked,
+                table.deleted,
+                table.tablesName
+              )}
               onClick={() => handleSelectTable(table.tablesNum)}
             >
               {!table.deleted ? (
@@ -396,51 +404,53 @@ function PosTableEditPage() {
       {/* 옵션 */}
       <div css={s.managmentLayout}>
         <div css={s.managmentContainer}>
-          <button onClick={() => setIsOpenFloorEdit(!isOpenFloorEdit)}>
+          <button
+            onClick={() => setIsOpenFloorEdit(!isOpenFloorEdit)}
+            css={s.button}
+          >
             층/구역 관리
           </button>
-          <div css={s.floorManagement}>
-            {isOpenFloorEdit && (
-              <PosEditFloor
-                floors={floors}
-                setFloors={setFloors}
-                setIsOpenFloorEdit={setIsOpenFloorEdit}
-              />
-            )}
-          </div>
+          <button onClick={handleAddTable} css={s.button}>
+            추가
+          </button>
+          <button onClick={handleDelete} css={s.button}>
+            삭제
+          </button>
+          <button onClick={handleEdit} css={s.button}>
+            수정
+          </button>
 
-          <button onClick={handleAddTable}>추가</button>
-          <button onClick={handleDelete}>삭제</button>
-          <button onClick={handleEdit}>수정</button>
-
-          <div css={s.floorManagement}>
-            {isOpenTableNameEdit && (
-              <PosEditTableName
-                floorNum={editFloorNum}
-                table={editTable}
-                updateTableName={updateTableName}
-                setIsOpenTableNameEdit={setIsOpenTableNameEdit}
-              />
-            )}
-          </div>
-
-          <button onClick={() => setIsOpenFloorList(!isOpenFloorList)}>
+          <button onClick={() => setIsOpenFloorList(!isOpenFloorList)} css={s.button}>
             {floorName}
           </button>
           {/* 생성된 층/구역 List */}
           <div>
             {isOpenFloorList &&
               floors.map((floor, index) => (
-                <div key={index}>
-                  <button onClick={() => handleSelectFloor(floor.floorNum)}>
+                <div key={index} css={s.floorButtonBox}>
+                  <button onClick={() => handleSelectFloor(floor.floorNum)} css={s.floorButton}>
                     {floor.floorName}
                   </button>
                 </div>
               ))}
           </div>
+          <button onClick={handleSavePosEdit} css={s.button}>
+            저장하기
+          </button>
         </div>
-        <button onClick={handleSavePosEdit}>저장하기</button>
       </div>
+
+      {isOpenFloorEdit && (
+        <div css={s.overlay}>
+          <div css={s.floorEditBox}>
+            <PosEditFloor
+              floors={floors}
+              setFloors={setFloors}
+              setIsOpenFloorEdit={setIsOpenFloorEdit}
+            />
+          </div>
+        </div>
+      )}
     </div>
   );
 }

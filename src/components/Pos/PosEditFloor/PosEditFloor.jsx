@@ -1,3 +1,5 @@
+/** @jsxImportSource @emotion/react */
+import * as s from "./style";
 import { useState } from "react";
 import { useMutation } from "react-query";
 import { deleteFloorRequest } from "../../../apis/api/posEdit";
@@ -15,7 +17,12 @@ function PosEditFloor({ floors, setFloors, setIsOpenFloorEdit }) {
   const addFloor = () => {
     const newTables = [];
     for (let i = 0; i < 9; i++) {
-      newTables.push({adminId: 1, tableNum: i + 1, tableName: i + 1, checked: false });
+      newTables.push({
+        adminId: 1,
+        tableNum: i + 1,
+        tableName: i + 1,
+        checked: false,
+      });
     }
 
     setLocalFloors([
@@ -66,13 +73,17 @@ function PosEditFloor({ floors, setFloors, setIsOpenFloorEdit }) {
   };
 
   return (
-    <>
+    <div css={s.floorLayout}>
       {/* header */}
-      <div>
-        <h2>층/구역 관리</h2>
-        <button onClick={() => setisOpenAddFloor(!isOpenAddFloor)}>추가</button>
+      <div css={s.floorContainer}>
+        <div css={s.header}>
+          <h2>층/구역 관리</h2>
+          <button onClick={() => setisOpenAddFloor(!isOpenAddFloor)}>
+            추가
+          </button>
+        </div>
         {isOpenAddFloor ? (
-          <div>
+          <div css={s.floorBox}>
             <input
               type="number"
               onChange={(e) => setFloorNum(e.target.value)}
@@ -88,12 +99,12 @@ function PosEditFloor({ floors, setFloors, setIsOpenFloorEdit }) {
       </div>
 
       {/* body */}
-      <div>
+      <div css={s.floorListContainer}>
         <h4>층/구역명</h4>
         {/* 층 list */}
         <div>
           {localFloors.map((floor, index) => (
-            <div key={index}>
+            <div key={index} css={s.floorItem}>
               <div>{floor.floorNum}</div>
               <div>{floor.floorName}</div>
               <button onClick={() => deleteFloor(floor.floorNum)}>삭제</button>
@@ -101,18 +112,17 @@ function PosEditFloor({ floors, setFloors, setIsOpenFloorEdit }) {
           ))}
         </div>
         {/* 순서 button */}
-        <div>
+        <div css={s.buttonContainer}>
           <button>위</button>
           <button>아래</button>
         </div>
       </div>
 
-      {/*  */}
-      <div>
+      <div css={s.buttonBox}>
         <button onClick={handleCancel}>취소</button>
         <button onClick={handleSave}>저장</button>
       </div>
-    </>
+    </div>
   );
 }
 
