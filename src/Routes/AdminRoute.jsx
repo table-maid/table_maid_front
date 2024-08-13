@@ -28,16 +28,12 @@ function AdminRoute(props) {
     <>
       <Routes>
         <Route path="/auth/*" element={<AuthRoute />} />
-          <Route path="/menu/*" element={null} />
-          <Route path="/sales/*" element={<SalesRoute />} />
-          <Route path="/main" element={<AdminMainPage />} />
-          <Route path="/account/edit/password" element={<PasswordEditPage />} />
-          <Route path="/pos/*" element={<PosManagement />} />
-          <Route path="/order/*" element={<OrderRoute />} />
-        {/* <Route path="" element={null}/>
-                <Route path="" element={null}/>
-                <Route path="" element={null}/> */}
-      </Routes>
+        <Route path="/sales/*" element={<SalesRoute />} />
+        <Route path="/main" element={<AdminMainPage />} />
+        <Route path="/account/edit/password" element={<PasswordEditPage />} />
+        <Route path="/pos/*" element={<PosManagement />} />
+        <Route path="/order/*" element={<OrderRoute />} />
+    </Routes>
     </>
   );
 }

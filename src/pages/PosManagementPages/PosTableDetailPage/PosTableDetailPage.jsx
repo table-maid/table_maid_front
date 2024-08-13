@@ -30,8 +30,7 @@ function PosTableDetailPage(props) {
     const [tables, setTables] = useRecoilState(tablesState);
     const selectedTableIndex = useRecoilValue(selectedTableIndexState);
     const [groupPayment] = useRecoilState(groupPaymentState); // 단체지정 상태
-    const navigate = useNavigate();
-    const [menu, setMenu] = useState([]);
+
 
     const emptyCategoryArray = Array.from({ length: 5 - (categories ? categories.length : 0) }, (_, index) => index);
     const emptyMenuArray = Array.from({ length: 25 - (menus ? menus.length : 0) }, (_, index) => index);
@@ -53,11 +52,16 @@ function PosTableDetailPage(props) {
         setTotalPrice(currentTable.totalPrice || 0);
     }, [tables, selectedTableIndex]);
 
-    useEffect(() => {
-        const total = selectedItems.reduce((acc, item) => {
-            return acc + (item.menuPrice + item.optionTotalPrice) * item.menuCount;
+    const calculateTotalPrice = (selectedItems) => {
+        return selectedItems.reduce((acc, item) => {
+            return acc + (item.menu.menuPrice + item.optionTotalPrice) * item.count;
         }, 0);
+    }
+
+    useEffect(() => {
+        const total = calculateTotalPrice(selectedItems);
         setTotalPrice(total);
+        console.log(total);
     }, [selectedItems]);
 
     const openModal = (menuId) => {
@@ -167,7 +171,6 @@ function PosTableDetailPage(props) {
         });
         setSelectedItems(updatedItems);
     
-        // 로컬 스토리지 업데이트
         const tableKey = `table${tableId}`;
         localStorage.setItem(tableKey, JSON.stringify(updatedItems));
     
@@ -190,7 +193,6 @@ function PosTableDetailPage(props) {
         });
         setSelectedItems(updatedItems);
     
-        // 로컬 스토리지 업데이트
         const tableKey = `table${tableId}`;
         localStorage.setItem(tableKey, JSON.stringify(updatedItems));
     
@@ -217,7 +219,6 @@ function PosTableDetailPage(props) {
                 <div css={s.tableSection}>
                     <div css={s.tableHeader}>
                         <div>홀 {tableId}</div>
-                        <div css={s.tableNumber}>👑👑12</div>
                     </div>
                     <div css={s.tableLayout}>
                         <table css={s.table}>
@@ -280,20 +281,21 @@ function PosTableDetailPage(props) {
                             {emptyCategoryArray.map((_, index) => (
                                 <button key={`empty-${index}`} css={s.categoryButton}></button>
                             ))}
-                        </div>
-                        <div>
-                            <button 
-                                onClick={() => setCategoryPageNum(categoryPageNum - 1)} 
-                                disabled={categoryPageNum === 1}
-                            >
-                                &lt;
-                            </button>
-                            <button 
-                                onClick={() => setCategoryPageNum(categoryPageNum + 1)} 
-                                disabled={categories.length < 5}
-                            >
-                                &gt;
-                            </button>
+                            <div>
+                                <button 
+                                    onClick={() => setCategoryPageNum(categoryPageNum - 1)} 
+                                    disabled={categoryPageNum === 1}
+                                >
+                                    &lt;
+                                </button>
+                                <button 
+                                    onClick={() => setCategoryPageNum(categoryPageNum + 1)} 
+                                    disabled={categories.length < 5}
+                                >
+                                    &gt;
+                                </button>
+                            </div>
+                           
                         </div>
                     </div>
                     <div css={s.menuItems}>
@@ -325,7 +327,6 @@ function PosTableDetailPage(props) {
                         </div>
                     </div>
                     <div css={s.bottomButtons}>
-                        <button>👑 인원수</button>
                         <button onClick={handleRegisterComplete}>등록완료</button>
                     </div>
                 </div>

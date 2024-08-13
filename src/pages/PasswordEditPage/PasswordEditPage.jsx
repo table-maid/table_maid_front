@@ -18,7 +18,7 @@ function PasswordEditPage() {
         onSuccess: response => {
             alert("비밀번호를 정상적으로 변경하였습니다.\n다시 로그인 하세요.");
             localStorage.removeItem("AccessToken");
-            window.location.replace("/auth/signin");
+            window.location.replace("/admin/auth/signin");
         },
         onError: error => {
             if(error.response.status === 400) {

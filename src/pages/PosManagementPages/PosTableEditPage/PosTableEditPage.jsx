@@ -296,7 +296,7 @@ function PosTableEditPage() {
     mutationKey: "saveTableMutation",
     mutationFn: saveTableRequest,
     onSuccess: (response) => {
-      window.location.replace("/");
+      window.location.replace("/admin/");
     },
     onError: (error) => {
       console.log(error);

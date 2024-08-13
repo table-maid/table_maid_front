@@ -25,7 +25,7 @@ function Sidebar() {
 
   const handleHomeButtonClick = () => {
     handleCloseButtonClick();
-    navigate("/main");
+    navigate("/admin/main");
   };
 
   const handleMenuItemClick = (path) => {
@@ -51,32 +51,32 @@ function Sidebar() {
           </button>
           <ul css={s.menuList}>
             <li css={s.menuItem}>
-              <Link to={"/sales/home"} css={s.link} onClick={() => handleMenuItemClick("/sales/sale")}>
+              <Link to={"/admin/sales/home"} css={s.link} onClick={() => handleMenuItemClick("/admin/sales/sale")}>
                 매출 조회
               </Link>
             </li>
             <li css={s.menuItem}>
-              <Link to={"/sales/menu"} css={s.link} onClick={() => handleMenuItemClick("/sales/menu")}>
+              <Link to={"/admin/sales/menu"} css={s.link} onClick={() => handleMenuItemClick("/admin/sales/menu")}>
                 메뉴 매출 조회
               </Link>
             </li>
             <li css={s.menuItem}>
-              <Link to={"/menu/view"} css={s.link} onClick={() => handleMenuItemClick("/menu/view")}>
+              <Link to={"/admin/menu/view"} css={s.link} onClick={() => handleMenuItemClick("/admin/menu/view")}>
                 메뉴 관리
               </Link>
             </li>
             <li css={s.menuItem}>
-              <Link to={"/menu/management/list"} css={s.link} onClick={() => handleMenuItemClick("/menu/management/list")}>
+              <Link to={"/admin/menu/management/list"} css={s.link} onClick={() => handleMenuItemClick("/admin/menu/management/list")}>
                 매장 단품 메뉴 관리
               </Link>
             </li>
             <li css={s.menuItem}>
-              <Link to={"/pos/main"} css={s.link} onClick={() => handleMenuItemClick("/pos/main")}>
+              <Link to={"/admin/pos/main"} css={s.link} onClick={() => handleMenuItemClick("/admin/pos/main")}>
                 포스 메인화면
               </Link>
             </li>
             <li css={s.menuItem}>
-              <Link to={"/pos/table/edit"} css={s.link} onClick={() => handleMenuItemClick("/pos/table/edit")}>
+              <Link to={"/admin/pos/table/edit"} css={s.link} onClick={() => handleMenuItemClick("/admin/pos/table/edit")}>
                 포스 환경설정
               </Link>
             </li>

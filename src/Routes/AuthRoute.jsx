@@ -17,7 +17,7 @@ function AuthRoute() {
     useEffect(() => {
         if(!!principalData) {
             alert("잘못된 접근입니다. (토큰이 있음)")
-            window.location.replace("/")
+            window.location.replace("/admin/")
         }
     }, [principalData]);
 

@@ -145,7 +145,7 @@ function OrderListPage(props) {
                                     <tr>
                                         <td>{order.tableNumber}</td>
                                         <td>{order.orderNumber}</td>
-                                        <td onClick={() => navigate(`/order/detail/${order.orderNumber}`)}>{formatMenuList(order.menu)}</td>
+                                        <td onClick={() => navigate(`/admin/order/detail/${order.orderNumber}`)}>{formatMenuList(order.menu)}</td>
                                         <td>{order.orderTotalPrice}</td>
                                         <td>{formatDate(order.paymentDate)}</td>
                                     </tr>

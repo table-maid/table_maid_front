@@ -1,9 +1,9 @@
 /**@jsxImportSource @emotion/react */
-import UserCurrentTime from "../../UserCurrentTime/UserCurrentTime";
 import * as s from "./style";
 import { FaWifi } from "react-icons/fa";
 import { CiBatteryFull } from "react-icons/ci";
 import { TbAntennaBars5 } from "react-icons/tb";
+import UserCurrentTime from "../../UserCurrentTime/UserCurrentTime";
 
 function UserRootContainer({ children }) {
   return (

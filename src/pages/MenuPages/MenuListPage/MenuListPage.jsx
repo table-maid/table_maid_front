@@ -277,7 +277,7 @@ function MenuListPage(props) {
                     </td>
                     <td
                       onClick={() =>
-                        navigate(`/menu/management/detail/${menu.menuId}`)
+                        navigate(`/admin/menu/management/detail/${menu.menuId}`)
                       }
                     >
                       {menu.menuName}

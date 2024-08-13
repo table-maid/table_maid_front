@@ -90,7 +90,7 @@ const MenuManagementDetailPage = () => {
     try {
       await updateMenuDetail(menuDetail);
       alert("메뉴 수정 완료");
-      navigate("/menu/management/list");
+      navigate("/admin/menu/management/list");
     } catch (error) {
       console.error(error);
     }

@@ -28,7 +28,7 @@ function DashboardPage(props) {
     useSalesData(selectSalesData);
 
   const handleClick = () => {
-    navigate("/sales/sale");
+    navigate("/admin/sales/sale");
   };
 
   const selectSalesQuery = useQuery(

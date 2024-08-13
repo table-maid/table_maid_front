@@ -76,7 +76,7 @@ function MenuSalesPage(props) {
   return (
     <SalesModal>
       <div>
-        <button onClick={() => navigate('/sales/menu')} css={s.backButton} ><IoClose size={"50"}/></button>
+        <button onClick={() => navigate('/admin/sales/menu')} css={s.backButton} ><IoClose size={"50"}/></button>
         <div css={s.buttonContainer}>
           <div css={s.ChoiceContainer}>
             <button

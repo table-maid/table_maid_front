@@ -18,7 +18,7 @@ function SigninPage() {
       .then((response) => {
         const accessToken = response.data;
         localStorage.setItem("AccessToken", accessToken);
-        window.location.replace("/main");
+        window.location.replace("/admin/main");
       })
       .catch((error) => {
         alert(error.response.data);
@@ -51,15 +51,15 @@ function SigninPage() {
             로그인
           </button>
           <div css={s.search}>
-            <Link to={"/auth/search/username"} css={s.link}>아이디 찾기</Link>
-            <Link to={"/auth/search/password"} css={s.link}>비밀번호 찾기</Link>
+            <Link to={"/admin/auth/search/username"} css={s.link}>아이디 찾기</Link>
+            <Link to={"/admin/auth/search/password"} css={s.link}>비밀번호 찾기</Link>
           </div>
         </div>
       </div>
       <div css={s.singUpBox}>
         <span css={s.singUp}>
           <p>계정이 없으신가요 ?</p>
-          <Link to={"/auth/agreement"} css={s.link2}>
+          <Link to={"/admin/auth/agreement"} css={s.link2}>
             가입하기
           </Link>
         </span>

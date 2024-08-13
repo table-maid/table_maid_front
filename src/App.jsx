@@ -1,9 +1,9 @@
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import "./App.css";
 import AdminRoute from "./Routes/AdminRoute";
 import MenuRoute from "./Routes/MenuRoute";
 import UserRoute from "./Routes/UserRoute";
 import BackgroundLayout from "./components/BackgroundLayout/BackgroundLayout";
-import RootHeader from "./components/RootHeader/RootHeader";
 import AdminRootLayout from "./components/RootLayout/AdminRootLayout/AdminRootLayout";
 import UserRootLayout from "./components/RootLayout/UserRootLayout/UserRootLayout";
 import AdminRootContainer from "./components/RooutContainer/AdminRootContainer/AdminRootContainer";
@@ -11,25 +11,34 @@ import UserRootContainer from "./components/RooutContainer/UserRootContainer/Use
 
 function App() {
   return (
-    <>
       <BackgroundLayout>
-    
-        <AdminRootLayout>
-         <AdminRootContainer>
-         <AdminRoute />
-         <MenuRoute />
-         </AdminRootContainer>
-        </AdminRootLayout>
+        <Routes>
+          {/* Admin 관련 경로 */}
+          <Route
+            path="/admin/*"
+            element={
+              <AdminRootLayout>
+                <AdminRootContainer>
+                  <AdminRoute />
+                  <MenuRoute />
+                </AdminRootContainer>
+              </AdminRootLayout>
+            }
+          />
 
-        {/* <UserRootLayout>
-          <UserRootContainer>
-            <RootHeader />
-            <UserRoute /> 
-          </UserRootContainer>
-        </UserRootLayout> */}
-
+          {/* User 관련 경로 */}
+          <Route
+            path="/user/*"
+            element={
+              <UserRootLayout>
+                <UserRootContainer>
+                  <UserRoute />
+                </UserRootContainer>
+              </UserRootLayout>
+            }
+          />
+        </Routes>
       </BackgroundLayout>
-    </>
   );
 }
 

@@ -24,7 +24,7 @@ function OrderDetailPage(props) {
             if (window.confirm("환불처리 하시겠습니까?")) {
                 await addRefundDetail(orderDetail);
                 window.alert("환불처리가 완료되었습니다.");
-                navigate("/order/list");
+                navigate("/admin/order/list");
             }
         } catch (error) {
             console.error(error);
