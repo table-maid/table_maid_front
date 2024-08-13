@@ -8,9 +8,9 @@ export const layout = css`
 `;
 
 export const backButton = css`
-position: fixed;
-top: 60px;
-left: 140px;
+position: relative;
+right: 10px;
+transform: translate(50%, 50%);
 background-color: transparent;
 border: none;
 `
