@@ -21,6 +21,7 @@ function TACPage() {
   const oAuth2Name = searchParams.get("name");
   const provider = searchParams.get("provider");
 
+  const navigator = useNavigate();
 
   useEffect(() => {
     const allChecked = Object.values(check)
@@ -38,12 +39,12 @@ function TACPage() {
       alert("필수 항목에 동의해야 합니다.");
       return;
     } else {
-      navigator("/auth/signup/adminInfo");
+      navigator("/admin/auth/signup/adminInfo");
     }
   };
 
   const handleClick = () => {
-    navigator("/auth/signin");
+    navigator("/admin/auth/signin");
   };
 
 
