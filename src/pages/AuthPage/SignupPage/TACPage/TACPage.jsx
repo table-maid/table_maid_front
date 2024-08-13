@@ -20,7 +20,7 @@ function TACPage() {
   const [searchParams] = useSearchParams();
   const oAuth2Name = searchParams.get("name");
   const provider = searchParams.get("provider");
-  const navigator = useNavigate();
+
 
   useEffect(() => {
     const allChecked = Object.values(check)

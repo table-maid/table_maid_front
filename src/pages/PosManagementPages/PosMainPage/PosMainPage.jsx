@@ -40,7 +40,6 @@ function PosMainPage() {
   const [floors, setFloors] = useState([]);
   const [isOpenFloorList, setIsOpenFloorList] = useState(false);
 
-
   const {
     tableColors,
     updateTableColor,
@@ -60,7 +59,7 @@ function PosMainPage() {
         const currentFloor = response.data.find(
           (floor) => floor.floorNum === nowSelectFloor
         );
-  
+
         if (currentFloor) {
           const tables = currentFloor.tables || [];
           console.log("Selected floor tables:", tables);
@@ -74,7 +73,6 @@ function PosMainPage() {
       }
     }
   );
-  
 
   // SSE 구독 로직
   useEffect(() => {
@@ -124,7 +122,6 @@ function PosMainPage() {
     };
   }, [selectedTableIndex]);
 
-
   // 로컬 스토리지 변화를 감지하여 상태 업데이트
   useEffect(() => {
     const interval = setInterval(() => {
@@ -140,7 +137,7 @@ function PosMainPage() {
     setSelectedTableIndex(index);
     setCurrentTableData(tables[index]);
     loadMenuData(index); // 메뉴 데이터 로드
-    navigate(`/pos/table/detail/${index + 1}`);
+    navigate(`/admin/pos/table/detail/${index + 1}`);
   };
 
   const loadMenuData = (index) => {
@@ -187,7 +184,7 @@ function PosMainPage() {
     const newTables = [...tables];
     newTables[targetIndex] = {
       ...targetTable,
-      selectedItems: sourceTable.selectedItems || [], 
+      selectedItems: sourceTable.selectedItems || [],
       totalPrice: sourceTable.totalPrice,
     };
     newTables[sourceIndex] = {
@@ -235,9 +232,31 @@ function PosMainPage() {
 
     const newMergeGroups = { ...mergeGroups };
 
+    let mergedData = [];
     selectedTableIndices.forEach((index) => {
+      const tableKey = `table${index + 1}`;
+      let storedData = localStorage.getItem(tableKey);
+
+      // 테이블이 비어 있을 경우, 빈 배열로 초기화
+      if (!storedData) {
+        storedData = JSON.stringify([]);
+        localStorage.setItem(tableKey, storedData);
+      }
+
+      // 합석 전 데이터 백업
+      localStorage.setItem(`${tableKey}_backup`, storedData);
+
       newMergeGroups[index] = { color: mergeColor, groupId };
       updateTableColor(index, mergeColor);
+
+      const parsedData = storedData ? JSON.parse(storedData) : [];
+      mergedData = [...mergedData, ...parsedData];
+    });
+
+    // 합석된 모든 테이블에 병합된 데이터를 저장
+    selectedTableIndices.forEach((index) => {
+      const tableKey = `table${index + 1}`;
+      localStorage.setItem(tableKey, JSON.stringify(mergedData));
     });
 
     setMergeGroups(newMergeGroups);
@@ -347,37 +366,41 @@ function PosMainPage() {
     });
 
     setSelectedTableIndex(tableIndex);
-    navigate(`/pos/table/detail/${tableIndex + 1}`);
+    navigate(`/admin/pos/table/detail/${tableIndex + 1}`);
   };
 
   const handleSeparateTable = () => {
-    if (selectedTableIndices.length !== 1) {
-      alert("합석된 테이블을 선택해주세요.");
-      return;
+    if (selectedTableIndices.length === 0) {
+        alert("분리할 테이블을 선택해주세요.");
+        return;
     }
-
-    const tableIndex = selectedTableIndices[0];
-
-    if (!mergeGroups[tableIndex]) {
-      alert("합석된 테이블만 분리할 수 있습니다.");
-      return;
-    }
-
-    const newColor = getRandomUniquePastelColor(usedColors.current);
-    usedColors.current.add(newColor);
 
     const newMergeGroups = { ...mergeGroups };
 
-    if (mergeGroups[tableIndex]) {
-      delete newMergeGroups[tableIndex];
-    }
+    selectedTableIndices.forEach((tableIndex) => {
+        // 합석된 테이블인지 확인
+        if (mergeGroups[tableIndex]) {
+            const tableKey = `table${tableIndex + 1}`;
+            const backupData = localStorage.getItem(`${tableKey}_backup`);
 
-    updateTableColor(tableIndex, newColor);
+            if (backupData) {
+                localStorage.setItem(tableKey, backupData);
+                localStorage.removeItem(`${tableKey}_backup`); // 백업 데이터 제거
+            }
+
+            // 새로운 색상 지정
+            const newColor = getRandomUniquePastelColor(usedColors.current);
+            usedColors.current.add(newColor);
+            updateTableColor(tableIndex, newColor);
+
+            // 합석 그룹에서 테이블 제거
+            delete newMergeGroups[tableIndex];
+        }
+    });
 
     setMergeGroups(newMergeGroups);
     setSelectedTableIndices([]);
   };
-
   const handleOrderDetails = () => {
     if (selectedTableIndices.length !== 1) {
       alert("하나의 테이블을 선택해주세요.");
@@ -386,11 +409,11 @@ function PosMainPage() {
     const tableIndex = selectedTableIndices[0];
     setSelectedTableIndex(tableIndex);
     setCurrentTableData(tables[tableIndex]);
-    navigate(`/pos/table/detail/${tableIndex + 1}`);
+    navigate(`/admin/pos/table/detail/${tableIndex + 1}`);
   };
 
   const handlePreferences = () => {
-    navigate(`/pos/table/edit`);
+    navigate(`/admin/pos/table/edit`);
   };
 
   const renderTables = () => {
@@ -398,16 +421,16 @@ function PosMainPage() {
       const tableKey = `table${index + 1}`;
       const storedData = localStorage.getItem(tableKey);
       const orders = storedData ? JSON.parse(storedData) : [];
-      const selectedItems = orders; 
-  
+      const selectedItems = orders;
+
       const headerColor = mergeGroups[index]
         ? mergeGroups[index].color
         : groupPayment[index]
         ? groupPayment[index].color
         : selectedItems.length > 0
         ? tableColors[index]
-        : "transparent"; 
-  
+        : "transparent";
+
       const isSelected = selectedTableIndices.includes(index);
 
       return (
@@ -431,7 +454,7 @@ function PosMainPage() {
 
   const getColumns = (tableCount) => {
     for (let buttonCount of buttons) {
-      const [rows, columns] = buttonCount.split('X').map(Number);
+      const [rows, columns] = buttonCount.split("X").map(Number);
       if (rows * columns === tableCount) {
         return rows;
       }
@@ -441,16 +464,14 @@ function PosMainPage() {
   };
 
   const handleSelectFloor = (floorNum) => {
-    const selectedFloor = floors.find(floor => floor.floorNum === floorNum);
-    if(selectedFloor) {
-      setTables(selectedFloor.tables.map(table => ({ ...table, checked: false})));
+    const selectedFloor = floors.find((floor) => floor.floorNum === floorNum);
+    if (selectedFloor) {
+      setTables(selectedFloor.tables.map((table) => ({ ...table, checked: false })));
       setColumns(getColumns(selectedFloor.tables.length));
     }
     setNowSelectFloor(floorNum);
-  }
-  const currentFloor = floors.find(
-    (floor) => floor.floorNum === nowSelectFloor
-  );
+  };
+  const currentFloor = floors.find((floor) => floor.floorNum === nowSelectFloor);
   const floorName = currentFloor ? currentFloor.floorName : "층 선택";
 
   return (
@@ -478,7 +499,10 @@ function PosMainPage() {
           <button css={s.managementButton} onClick={handleGroupPayment}>
             단체결제
           </button>
-          <button onClick={() => setIsOpenFloorList(!isOpenFloorList)} css={s.managementButton}>
+          <button
+            onClick={() => setIsOpenFloorList(!isOpenFloorList)}
+            css={s.managementButton}
+          >
             {floorName}
           </button>
           <div>
@@ -486,7 +510,7 @@ function PosMainPage() {
               floors.map((floor, index) => (
                 <div key={index}>
                   <button onClick={() => handleSelectFloor(floor.floorNum)} css={s.floorbutton}>
-                    {floor.floorName }
+                    {floor.floorName}
                   </button>
                 </div>
               ))}
@@ -494,9 +518,10 @@ function PosMainPage() {
           <button css={s.managementButton} onClick={handleOrderDetails}>
             주문내역
           </button>
-          
-          <button css={s.setting} onClick={handlePreferences} >
-          <IoSettingsSharp size={30}/></button>
+
+          <button css={s.setting} onClick={handlePreferences}>
+            <IoSettingsSharp size={30} />
+          </button>
         </div>
       </div>
     </div>

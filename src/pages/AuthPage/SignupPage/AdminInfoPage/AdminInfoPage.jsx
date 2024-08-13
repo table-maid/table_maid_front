@@ -263,7 +263,7 @@ function AdminInfoPage() {
   };
 
   const handleClick = () => {
-    navigate("/auth/signin");
+    navigate("/admin/auth/signin");
   };
 
 

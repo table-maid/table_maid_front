@@ -46,7 +46,7 @@ function SearchUserNamePage() {
   };
 
   const handleClick = () => {
-    navigate("/auth/signin");
+    navigate("/admin/auth/signin");
   };
 
   return (

@@ -47,7 +47,7 @@ function MenuListPage(props) {
   );
 
   const handleMenuClick = (menuId) => {
-    navigate(`/sales/menu/detail/${menuId}`);
+    navigate(`/admin/sales/menu/detail/${menuId}`);
   };
 
   const handleCategoryId = (category) => {

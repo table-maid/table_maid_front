@@ -132,15 +132,15 @@ function AdminMainPage(props) {
 
     localStorage.removeItem("AccessToken");
     alert("로그아웃 성공");
-    window.location.replace("/auth/signin");
+    window.location.replace("/admin/auth/signin");
   };
 
   const handleHoleClick = () => {
-    window.location.replace("/pos/main");
+    window.location.replace("/admin/pos/main");
   };
 
   const handleSalesClick = () => {
-    window.location.replace("/sales/home");
+    window.location.replace("/admin/sales/home");
   };
 
   const getCurrentMonthEnd = () => {
