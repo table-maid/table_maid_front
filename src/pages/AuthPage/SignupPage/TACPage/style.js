@@ -14,9 +14,9 @@ export const pageLayout = css`
 `;
 
 export const backButton = css`
-position: fixed;
-top: 60px;
-left: 140px;
+position: relative;
+right: 43%;
+transform: translate(-100%, 50%);
 background-color: transparent;
 border: none;
 `

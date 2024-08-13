@@ -31,9 +31,10 @@ export const userPasswordContainer = css`
 `;
 
 export const backButton = css`
-position: fixed;
-top: 60px;
-left: 140px;
+position: relative;
+right: 43%;
+top: -8.5%;
+transform: translate(-100%, -100%);
 background-color: transparent;
 border: none;
 `

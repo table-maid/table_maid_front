@@ -23,12 +23,11 @@ export const tableSection = css`
 
 export const tableHeader = css`
   display: flex;
-  justify-content: space-between;
+  justify-content: end;
   align-items: center;
   font-size: 24px;
   font-weight: bold;
   margin-bottom: 20px;
-
 `;
 
 export const tableNumber = css`
